@@ -58,4 +58,4 @@ const Cliente = db.define('Cliente', {
 });
 
 //Exportación del modelo Cliente
-module.exports = Cliente
+module.exports = Cliente;
