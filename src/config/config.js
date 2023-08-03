@@ -7,4 +7,4 @@ module.exports = {
     USERNAME_DB: process.env.USERNAME_DB,
     PASSWORD_DB: process.env.PASSWORD_DB,
     HOST_DB: process.env.HOST_DB
-}
+};
