@@ -1,7 +1,18 @@
-const { PORT } = require('./config/config');                           //Cargamos la variable de entorno PORT
-const express = require('express');                                    //Cargamos los métodos necesarios de express
+const { PORT } = require('./config/config');
+const express = require('express');
+const db = require('./database/db_connection');
 
-const app = express();                                                 //Creamos una instancia de la aplicación de express
+const app = express();    
+
+//Conexión a la base de datos
+(async () => {
+    try {
+        await db.authenticate();
+        await db.sync();
+    } catch (error) {
+        throw new Error(error);
+    }
+})()
 
 //Configuración de cors
 app.use((req, res, next) => {
@@ -12,7 +23,7 @@ app.use((req, res, next) => {
     next();
 });
 
-//Configuramos un manejo de rutas inexistentes
+//Configuración del manejo de rutas inexistentes
 app.get('*', (req, res) => {
     //Enviamos un estado de error 404 y un objeto
     res.status(404).send({
@@ -21,7 +32,7 @@ app.get('*', (req, res) => {
     });
 });
 
-//Iniciamos el servidor 
+//Inicializando el servidor 
 app.listen(PORT, () => {
     console.log(`Servidor inicializado en el puerto: ${ PORT }`);
 });
