@@ -12,7 +12,8 @@ const Estado = db.define('Estado', {
         type: DataTypes.STRING,
         allowNull: false,
         unique: true,
-        values: ['Pendiente', 'Activo', 'Inactivo']
+        values: ['Pendiente', 'Activo', 'Inactivo'],
+        defaultValue: 'Activo'
     }
 });
 
