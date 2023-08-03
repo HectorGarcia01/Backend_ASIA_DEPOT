@@ -12,7 +12,8 @@ const Rol = db.define('Rol', {
     Nombre_Rol: {
         type: DataTypes.STRING,
         allowNull: false,
-        values: ['User', 'Admin', 'SuperAdmin']
+        values: ['User', 'Admin', 'SuperAdmin'],
+        defaultValue: 'User'
     },
     ID_Cliente_FK: {
         type: DataTypes.INTEGER,
