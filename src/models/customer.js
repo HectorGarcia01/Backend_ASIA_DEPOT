@@ -5,6 +5,7 @@ const db = require('../database/db_connection');
  * Creación del modelo Cliente
  * Fecha creación: 03/08/2023
  * Autor: Hector Armando García González
+ * Referencias: Modelo Estado (state.js) y Modelo Direccion (address.js)
  */
 
 const Cliente = db.define('Cliente', {
