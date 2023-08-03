@@ -1,6 +1,7 @@
 const { PORT } = require('./config/config');
 const express = require('express');
 const db = require('./database/db_connection');
+const datosPredefinidos = require('./controllers/seed.controller');
 
 const app = express();    
 
@@ -9,6 +10,7 @@ const app = express();
     try {
         await db.authenticate();
         await db.sync();
+        await datosPredefinidos();
     } catch (error) {
         throw new Error(error);
     }
