@@ -29,7 +29,7 @@ const Direccion = db.define('Direccion', {
     },
     ID_Cliente_FK: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
         references: {
             model: 'Cliente',
             key: 'id'
@@ -37,7 +37,7 @@ const Direccion = db.define('Direccion', {
     },
     ID_Empleado_FK: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
         references: {
             model: 'Empleado',
             key: 'id'
