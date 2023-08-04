@@ -43,7 +43,7 @@ const Cliente = db.define('Cliente', {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: 'Estado',
+            model: 'Estados',
             key: 'id'
         }
     }
