@@ -19,7 +19,7 @@ const Rol = db.define('Rol', {
         type: DataTypes.INTEGER,
         allowNull: true,
         references: {
-            model: 'Cliente',
+            model: 'Clientes',
             key: 'id'
         }
     },
@@ -27,7 +27,7 @@ const Rol = db.define('Rol', {
         type: DataTypes.INTEGER,
         allowNull: true,
         references: {
-            model: 'Empleado',
+            model: 'Empleados',
             key: 'id'
         }
     }
