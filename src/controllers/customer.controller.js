@@ -62,6 +62,12 @@ const crearCliente = async (req, res) => {
         }
 
         const rolCliente = await Rol.create({ ID_Cliente_FK: nuevoCliente.id });
+        
+        const generarToken = await nuevoCliente.generarToken();
+        const tokenCliente = await Token.create({ 
+            Token_Usuario: generarToken, 
+            ID_Cliente_FK: nuevoCliente.id 
+        });
 
         res.status(201).send({ nuevoCliente });
     } catch (error) {
