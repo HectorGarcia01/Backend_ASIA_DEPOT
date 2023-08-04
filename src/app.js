@@ -2,6 +2,7 @@ const { PORT } = require('./config/config');
 const express = require('express');
 const db = require('./database/db_connection');
 const datosPredefinidos = require('./controllers/state.controller');
+const rutasCliente = require('./routes/customer.routes');
 
 const app = express();    
 
@@ -24,6 +25,11 @@ app.use((req, res, next) => {
     res.setHeader("Access-Control-Allow-Headers", "Origin, Content-Type, Authorization");
     next();
 });
+
+app.use(express.json());
+
+//Configuración de rutas
+app.use(rutasCliente);
 
 //Configuración del manejo de rutas inexistentes
 app.get('*', (req, res) => {
