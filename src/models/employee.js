@@ -43,7 +43,7 @@ const Empleado = db.define('Empleado', {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: 'Estado',
+            model: 'Estados',
             key: 'id'
         }
     }
