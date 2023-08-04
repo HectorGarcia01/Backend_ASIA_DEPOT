@@ -5,7 +5,7 @@ const db = require('../database/db_connection');
  * Creación del modelo Empleado
  * Fecha creación: 03/08/2023
  * Autor: Hector Armando García González
- * Referencias: Modelo Estado (state.js) y Modelo Direccion (address.js)
+ * Referencias: Modelo Estado (state.js)
  */
 
 const Empleado = db.define('Empleado', {
@@ -44,14 +44,6 @@ const Empleado = db.define('Empleado', {
         allowNull: false,
         references: {
             model: 'Estado',
-            key: 'id'
-        }
-    },
-    ID_Direccion_FK: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-            model: 'Direccion',
             key: 'id'
         }
     }
