@@ -14,7 +14,8 @@ const Direccion = db.define('Direccion', {
     },
     Municipio: {
         type: DataTypes.STRING,
-        allowNull: true
+        allowNull: true,
+        unique: true
     }
 });
 
