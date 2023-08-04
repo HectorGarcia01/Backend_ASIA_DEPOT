@@ -1,4 +1,5 @@
 const { DataTypes } = require('sequelize');
+const bcrypt = require('bcryptjs');
 const db = require('../database/db_connection');
 
 /**
@@ -48,6 +49,21 @@ const Cliente = db.define('Cliente', {
         }
     }
 });
+
+/**
+ * Hook para el cifrado de contraseña
+ * Fecha creación: 03/08/2023
+ * Autor: Hector Armando García González
+ * Referencias: Datos del cliente actual
+ */
+
+Cliente.beforeCreate(async (cliente) => {
+    try {
+        cliente.Password_Cliente = await bcrypt.hash(cliente.Password_Cliente, 8);
+    } catch (error) {
+        throw new Error(error);
+    }
+})
 
 //Exportación del modelo Cliente
 module.exports = Cliente;
