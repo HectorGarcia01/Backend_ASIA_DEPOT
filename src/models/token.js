@@ -13,11 +13,6 @@ const Token = db.define('Token', {
         type: DataTypes.STRING,
         allowNull: false
     },
-    Tipo_Usuario: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        values: ['Cliente', 'Empleado']
-    },
     ID_Cliente_FK: {
         type: DataTypes.INTEGER,
         allowNull: true,
