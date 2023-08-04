@@ -6,5 +6,6 @@ module.exports = {
     DATABASE: process.env.DATABASE,
     USERNAME_DB: process.env.USERNAME_DB,
     PASSWORD_DB: process.env.PASSWORD_DB,
-    HOST_DB: process.env.HOST_DB
+    HOST_DB: process.env.HOST_DB,
+    KEY_TOKEN: process.env.KEY_TOKEN
 };
