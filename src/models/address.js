@@ -15,10 +15,6 @@ const Direccion = db.define('Direccion', {
     Municipio: {
         type: DataTypes.STRING,
         allowNull: true
-    },
-    Calle: {
-        type: DataTypes.STRING,
-        allowNull: true
     }
 });
 
