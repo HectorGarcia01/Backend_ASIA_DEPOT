@@ -25,7 +25,7 @@ const Cliente = db.define('Cliente', {
         allowNull: false
     },
     NIT_Cliente: {
-        type: DataTypes.STRING,
+        type: DataTypes.INTEGER,
         allowNull: true
     },
     Correo_Cliente: {
