@@ -51,7 +51,7 @@ const esquemaValidacionEmpleado = Joi.object({
             return errorPersonalizado("La contraseña es obligatoria y debe tener al menos 8 carácteres, al menos una letra mayúscula, una letra minúscula, un número y no puede contener espacios.", error)
         }),
     Repetir_Password_Empleado: Joi.string()
-        .valid(Joi.ref('Password_Cliente'))
+        .valid(Joi.ref('Password_Empleado'))
         .required()
         .error((error) => {
             return errorPersonalizado("Las contraseñas no coinciden.", error)
