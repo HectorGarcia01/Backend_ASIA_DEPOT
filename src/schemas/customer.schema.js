@@ -48,7 +48,7 @@ const esquemaValidacionCliente = Joi.object({
         .required()
         .trim()
         .error((error) => {
-            return errorPersonalizado("La contraseña debe tener al menos 8 carácteres, al menos una letra mayúscula, una letra minúscula, un número y no puede contener espacios.", error)
+            return errorPersonalizado("La contraseña es obligatoria y debe tener al menos 8 carácteres, al menos una letra mayúscula, una letra minúscula, un número y no puede contener espacios.", error)
         }),
     Repetir_Password_Cliente: Joi.string()
         .valid(Joi.ref('Password_Cliente'))
