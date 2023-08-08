@@ -1,3 +1,4 @@
+const Sequelize = require('sequelize') ;
 const Cliente = require('../models/customer');
 const Direccion = require('../models/address');
 const Rol = require('../models/role');
@@ -71,7 +72,11 @@ const crearCliente = async (req, res) => {
 
         res.status(201).send({ nuevoCliente });
     } catch (error) {
-        res.status(500).send({ error })
+        if (error instanceof Sequelize.UniqueConstraintError) {
+            res.status(400).send({ msg: '¡El cliente ya existe!' });
+        } else {
+            res.status(500).send({ error: 'Error interno del servidor.' });
+        }
     }
 };
 
