@@ -70,7 +70,7 @@ const crearCliente = async (req, res) => {
             ID_Cliente_FK: nuevoCliente.id 
         });
 
-        res.status(201).send({ nuevoCliente });
+        res.status(201).send({ nuevoCliente, direccionCliente });
     } catch (error) {
         if (error instanceof Sequelize.UniqueConstraintError) {
             res.status(400).send({ msg: '¡El cliente ya existe!' });
@@ -80,6 +80,7 @@ const crearCliente = async (req, res) => {
     }
 };
 
+//Exportación de controladores para el cliente
 module.exports = {
     crearCliente
 };
