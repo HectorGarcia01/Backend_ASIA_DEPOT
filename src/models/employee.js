@@ -64,5 +64,22 @@ Empleado.beforeCreate(async (empleado) => {
     }
 });
 
+/**
+ * Método personalizado para generar tokens
+ * Fecha creación: 03/08/2023
+ * Autor: Hector Armando García González
+ * Referencias: Variable de entorno para llave secreta (config.js)
+ */
+
+Empleado.prototype.generarToken = async function () {
+    try {
+        const empleado = this;
+        const token = jwt.sign({ id: empleado.id.toString() }, KEY_TOKEN);
+        return token;
+    } catch (error) {
+        throw new Error({ mensajeError: "Error al generar token.", error });
+    }
+}
+
 //Exportación del modelo Empleado
 module.exports = Empleado;
