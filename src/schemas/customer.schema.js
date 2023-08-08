@@ -23,7 +23,7 @@ const esquemaValidacionCliente = Joi.object({
             return errorPersonalizado("El apellido es obligatorio.", error)
         }),
     Telefono_Cliente: Joi.string()
-        .pattern(new RegExp('^[3|4|5]{8}'))
+        .pattern(new RegExp('^[345][0-9]{7}'))
         .required()
         .trim()
         .error((error) => {
