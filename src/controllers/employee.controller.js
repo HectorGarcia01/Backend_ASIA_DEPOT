@@ -75,7 +75,11 @@ const crearEmpleado = async (req, res) => {
         
         res.status(201).send({ nuevoEmpleado, direccionEmpleado });
     } catch (error) {
-        res.status(500).send({ error })
+        if (error instanceof Sequelize.UniqueConstraintError) {
+            res.status(400).send({ msg: '¡El cliente ya existe!' });
+        } else {
+            res.status(500).send({ error: 'Error interno del servidor.' });
+        }
     }
 };
 
