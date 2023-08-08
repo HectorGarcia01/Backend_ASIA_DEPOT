@@ -22,7 +22,7 @@ const Empleado = db.define('Empleado', {
         allowNull: false
     },
     NIT_Empleado: {
-        type: DataTypes.STRING,
+        type: DataTypes.INTEGER,
         allowNull: true
     },
     Correo_Empleado: {
