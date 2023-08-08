@@ -49,5 +49,20 @@ const Empleado = db.define('Empleado', {
     }
 });
 
+/**
+ * Hook para el cifrado de contraseña
+ * Fecha creación: 03/08/2023
+ * Autor: Hector Armando García González
+ * Referencias: Datos del empleado actual
+ */
+
+Empleado.beforeCreate(async (empleado) => {
+    try {
+        empleado.Password_Empleado = await bcrypt.hash(empleado.Password_Empleado, 8);
+    } catch (error) {
+        throw new Error({ mensajeError: "Error al cifrar la contraseña.", error });
+    }
+});
+
 //Exportación del modelo Empleado
 module.exports = Empleado;
