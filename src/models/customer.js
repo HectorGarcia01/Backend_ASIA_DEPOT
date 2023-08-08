@@ -54,7 +54,7 @@ const Cliente = db.define('Cliente', {
 
 /**
  * Hook para el cifrado de contraseña
- * Fecha creación: 04/08/2023
+ * Fecha creación: 03/08/2023
  * Autor: Hector Armando García González
  * Referencias: Datos del cliente actual
  */
@@ -69,7 +69,7 @@ Cliente.beforeCreate(async (cliente) => {
 
 /**
  * Método personalizado para generar tokens
- * Fecha creación: 04/08/2023
+ * Fecha creación: 03/08/2023
  * Autor: Hector Armando García González
  * Referencias: Variable de entorno para llave secreta (config.js)
  */
