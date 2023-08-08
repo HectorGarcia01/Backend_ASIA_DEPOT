@@ -3,6 +3,7 @@ const express = require('express');
 const db = require('./database/db_connection');
 const datosPredefinidos = require('./controllers/state.controller');
 const rutasCliente = require('./routes/customer.routes');
+const rutasEmpleado = require('./routes/employee.routes');
 
 const app = express();    
 
@@ -30,6 +31,7 @@ app.use(express.json());
 
 //Configuración de rutas
 app.use(rutasCliente);
+app.use(rutasEmpleado);
 
 //Configuración del manejo de rutas inexistentes
 app.get('*', (req, res) => {
