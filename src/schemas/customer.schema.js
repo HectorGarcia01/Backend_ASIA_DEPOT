@@ -32,14 +32,14 @@ const esquemaValidacionCliente = Joi.object({
     NIT_Cliente: Joi.number()
         .integer()
         .error((error) => {
-            return customError("El NIT es obligatorio y debe ser numérico.", error)
+            return errorPersonalizado("El NIT es obligatorio y debe ser numérico.", error)
         }),
     Correo_Cliente: Joi.string()
         .email({ tlds: { allow: ['com'] } })
         .required()
         .trim()
         .error((error) => {
-            return customError("El correo electrónico es obligatorio, debe de tener la extensión 'com' y debe ser válido.", error)
+            return errorPersonalizado("El correo electrónico es obligatorio, debe de tener la extensión 'com' y debe ser válido.", error)
         }),
     Password_Cliente: Joi.string()
         .pattern(new RegExp('^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?!.*\\s).*$'))
@@ -48,13 +48,13 @@ const esquemaValidacionCliente = Joi.object({
         .required()
         .trim()
         .error((error) => {
-            return customError("La contraseña debe tener al menos 8 carácteres, al menos una letra mayúscula, una letra minúscula, un número y no puede contener espacios.", error)
+            return errorPersonalizado("La contraseña debe tener al menos 8 carácteres, al menos una letra mayúscula, una letra minúscula, un número y no puede contener espacios.", error)
         }),
     Repetir_Password_Cliente: Joi.string()
         .valid(Joi.ref('Password_Cliente'))
         .required()
         .error((error) => {
-            return customError("Las contraseñas no coinciden.", error)
+            return errorPersonalizado("Las contraseñas no coinciden.", error)
         }),
     Departamento: Joi.string()
         .trim(),
