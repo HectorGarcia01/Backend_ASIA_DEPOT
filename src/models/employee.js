@@ -1,5 +1,8 @@
 const { DataTypes } = require('sequelize');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const db = require('../database/db_connection');
+const { KEY_TOKEN } = require('../config/config');
 
 /**
  * Creación del modelo Empleado
