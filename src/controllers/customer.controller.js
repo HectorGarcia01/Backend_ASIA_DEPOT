@@ -1,4 +1,4 @@
-const Sequelize = require('sequelize') ;
+const Sequelize = require('sequelize');
 const Cliente = require('../models/customer');
 const Direccion = require('../models/address');
 const Rol = require('../models/role');
