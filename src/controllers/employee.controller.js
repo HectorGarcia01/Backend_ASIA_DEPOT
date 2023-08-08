@@ -53,7 +53,7 @@ const crearEmpleado = async (req, res) => {
         });
 
         if (Departamento || Municipio || Calle || Direccion_Referencia) {
-            const direccionEmpleado = await Direccion.create({
+            await Direccion.create({
                 Departamento,
                 Municipio,
                 Calle,
@@ -62,18 +62,18 @@ const crearEmpleado = async (req, res) => {
             });
         }
 
-        const rolEmpleado = await Rol.create({ 
+        await Rol.create({ 
             Nombre_Rol: 'Admin',
             ID_Empleado_FK: nuevoEmpleado.id 
         });
 
         const generarToken = await nuevoEmpleado.generarToken();
-        const tokenEmpleado = await Token.create({
+        await Token.create({
             Token_Usuario: generarToken,
             ID_Empleado_FK: nuevoEmpleado.id
         });
         
-        res.status(201).send({ nuevoEmpleado, direccionEmpleado });
+        res.status(201).send({ nuevoEmpleado });
     } catch (error) {
         if (error instanceof Sequelize.UniqueConstraintError) {
             res.status(400).send({ msg: '¡El cliente ya existe!' });
