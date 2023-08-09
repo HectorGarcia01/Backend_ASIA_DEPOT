@@ -39,7 +39,17 @@ const crearEmpleado = async (req, res) => {
         });
 
         if (!estadoEmpleado) {
-            return res.status(404).send({ msg: "Estado no encontrado" });
+            return res.status(404).send({ msg: "Estado no encontrado." });
+        }
+
+        const rolEmpleado = await Rol.findOne({
+            where: {
+                Nombre_Rol: 'Admin'
+            }
+        });
+
+        if (!rolEmpleado) {
+            return res.status(404).send({ msg: "Rol no encontrado." });
         }
         
         const nuevoEmpleado = await Empleado.create({
@@ -49,7 +59,8 @@ const crearEmpleado = async (req, res) => {
             NIT_Empleado,
             Correo_Empleado,
             Password_Empleado,
-            ID_Estado_FK: estadoEmpleado.id
+            ID_Estado_FK: estadoEmpleado.id,
+            ID_Rol_FK: rolEmpleado.id
         });
 
         if (Departamento || Municipio || Calle || Direccion_Referencia) {
@@ -61,11 +72,6 @@ const crearEmpleado = async (req, res) => {
                 ID_Empleado_FK: nuevoEmpleado.id
             });
         }
-
-        await Rol.create({ 
-            Nombre_Rol: 'Admin',
-            ID_Empleado_FK: nuevoEmpleado.id 
-        });
 
         const generarToken = await nuevoEmpleado.generarToken();
         await Token.create({
