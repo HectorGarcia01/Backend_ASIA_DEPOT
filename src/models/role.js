@@ -14,22 +14,6 @@ const Rol = db.define('Rol', {
         allowNull: false,
         values: ['User', 'Admin', 'SuperAdmin'],
         defaultValue: 'User'
-    },
-    ID_Cliente_FK: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-        references: {
-            model: 'Clientes',
-            key: 'id'
-        }
-    },
-    ID_Empleado_FK: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-        references: {
-            model: 'Empleados',
-            key: 'id'
-        }
     }
 });
 
