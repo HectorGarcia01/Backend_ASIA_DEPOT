@@ -39,7 +39,17 @@ const crearCliente = async (req, res) => {
         });
 
         if (!estadoCliente) {
-            return res.status(404).send({ msg: "Estado no encontrado" });
+            return res.status(404).send({ msg: "Estado no encontrado." });
+        }
+
+        const rolCliente = await Rol.findOne({
+            where: {
+                Nombre_Rol: 'User'
+            }
+        });
+
+        if (!rolCliente) {
+            return res.status(404).send({ msg: "Rol no encontrado." });
         }
 
         const nuevoCliente = await Cliente.create({
@@ -49,7 +59,8 @@ const crearCliente = async (req, res) => {
             NIT_Cliente,
             Correo_Cliente,
             Password_Cliente,
-            ID_Estado_FK: estadoCliente.id
+            ID_Estado_FK: estadoCliente.id,
+            ID_Rol_FK: rolCliente.id
         });
 
         if (Departamento || Municipio || Calle || Direccion_Referencia) {
@@ -61,8 +72,6 @@ const crearCliente = async (req, res) => {
                 ID_Cliente_FK: nuevoCliente.id
             });
         }
-
-        await Rol.create({ ID_Cliente_FK: nuevoCliente.id });
         
         const generarToken = await nuevoCliente.generarToken();
         await Token.create({ 
