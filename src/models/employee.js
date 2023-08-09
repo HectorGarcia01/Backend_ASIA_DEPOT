@@ -8,7 +8,9 @@ const { KEY_TOKEN } = require('../config/config');
  * Creación del modelo Empleado
  * Fecha creación: 03/08/2023
  * Autor: Hector Armando García González
- * Referencias: Modelo Estado (state.js)
+ * Referencias: 
+ *              Modelo Estado (state.js).
+ *              Modelo Rol (role.js).
  */
 
 const Empleado = db.define('Empleado', {
@@ -47,6 +49,14 @@ const Empleado = db.define('Empleado', {
         allowNull: false,
         references: {
             model: 'Estados',
+            key: 'id'
+        }
+    },
+    ID_Rol_FK: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+            model: 'Rols',
             key: 'id'
         }
     }
