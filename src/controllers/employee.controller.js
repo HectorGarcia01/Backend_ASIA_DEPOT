@@ -10,7 +10,7 @@ const Token = require('../models/token');
  * Fecha creación: 03/08/2023
  * Autor: Hector Armando García González
  * Referencias: 
- *              Modelo Empleado (customer.js), 
+ *              Modelo Empleado (employee.js), 
  *              Modelo Direccion (address.js), 
  *              Modelo Rol (role.js), 
  *              Modelo Estado (state.js)
