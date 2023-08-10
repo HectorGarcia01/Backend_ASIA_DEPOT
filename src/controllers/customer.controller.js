@@ -39,7 +39,7 @@ const crearCliente = async (req, res) => {
         });
 
         if (!estadoCliente) {
-            return res.status(404).send({ msg: "Estado no encontrado." });
+            return res.status(404).send({ error: "Estado no encontrado." });
         }
 
         const rolCliente = await Rol.findOne({
@@ -49,7 +49,7 @@ const crearCliente = async (req, res) => {
         });
 
         if (!rolCliente) {
-            return res.status(404).send({ msg: "Rol no encontrado." });
+            return res.status(404).send({ error: "Rol no encontrado." });
         }
 
         const nuevoCliente = await Cliente.create({
@@ -82,9 +82,9 @@ const crearCliente = async (req, res) => {
         res.status(201).send({ nuevoCliente });
     } catch (error) {
         if (error instanceof Sequelize.UniqueConstraintError) {
-            res.status(400).send({ msg: '¡El cliente ya existe!' });
+            res.status(400).send({ error: "¡El cliente ya existe!" });
         } else {
-            res.status(500).send({ error: 'Error interno del servidor.' });
+            res.status(500).send({ error: "Error interno del servidor." });
         }
     }
 };
