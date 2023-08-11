@@ -73,9 +73,9 @@ const crearCliente = async (req, res) => {
             });
         }
         
-        const generarToken = await nuevoCliente.generarToken();
+        const token = await nuevoCliente.generarToken();
         await Token.create({ 
-            Token_Usuario: generarToken, 
+            Token_Usuario: token, 
             ID_Cliente_FK: nuevoCliente.id 
         });
 
