@@ -70,11 +70,7 @@ const Cliente = db.define('Cliente', {
  */
 
 Cliente.beforeCreate(async (cliente) => {
-    try {
-        cliente.Password_Cliente = await bcrypt.hash(cliente.Password_Cliente, 8);
-    } catch (error) {
-        throw new Error("Error al cifrar la contraseña.", error);
-    }
+    cliente.Password_Cliente = await bcrypt.hash(cliente.Password_Cliente, 8);
 });
 
 /**
@@ -85,13 +81,9 @@ Cliente.beforeCreate(async (cliente) => {
  */
 
 Cliente.prototype.generarToken = async function () {
-    try {
-        const cliente = this;
-        const token = jwt.sign({ id: cliente.id.toString() }, KEY_TOKEN);
-        return token;
-    } catch (error) {
-        throw new Error("Error al generar token.", error);
-    }
+    const cliente = this;
+    const token = jwt.sign({ id: cliente.id.toString() }, KEY_TOKEN);
+    return token;
 }
 
 /**
@@ -101,27 +93,23 @@ Cliente.prototype.generarToken = async function () {
  */
 
 Cliente.prototype.validarCredenciales = async (Correo_Cliente, Password_Cliente) => {
-    try {
-        const cliente = await Cliente.findOne({
-            where: {
-                Correo_Cliente
-            }
-        });
-
-        if (!cliente) {
-            return false;
+    const cliente = await Cliente.findOne({
+        where: {
+            Correo_Cliente
         }
+    });
 
-        const passwordValida = await bcrypt.compare(Password_Cliente, cliente.Password_Cliente);
-
-        if (!passwordValida) {
-            throw new Error("Credenciales inválidas.");
-        }
-
-        return cliente;
-    } catch (error) {
-        throw new Error("Error al iniciar sesión.", error);
+    if (!cliente) {
+        return false;
     }
+
+    const passwordValida = await bcrypt.compare(Password_Cliente, cliente.Password_Cliente);
+
+    if (!passwordValida) {
+        throw new Error("Credenciales inválidas.");
+    }
+
+    return cliente;
 };
 
 //Exportación del modelo Cliente
