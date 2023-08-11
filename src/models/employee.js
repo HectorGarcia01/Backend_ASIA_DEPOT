@@ -70,11 +70,7 @@ const Empleado = db.define('Empleado', {
  */
 
 Empleado.beforeCreate(async (empleado) => {
-    try {
-        empleado.Password_Empleado = await bcrypt.hash(empleado.Password_Empleado, 8);
-    } catch (error) {
-        throw new Error({ mensajeError: "Error al cifrar la contraseña.", error });
-    }
+    empleado.Password_Empleado = await bcrypt.hash(empleado.Password_Empleado, 8);
 });
 
 /**
@@ -85,13 +81,9 @@ Empleado.beforeCreate(async (empleado) => {
  */
 
 Empleado.prototype.generarToken = async function () {
-    try {
-        const empleado = this;
-        const token = jwt.sign({ id: empleado.id.toString() }, KEY_TOKEN);
-        return token;
-    } catch (error) {
-        throw new Error({ mensajeError: "Error al generar token.", error });
-    }
+    const empleado = this;
+    const token = jwt.sign({ id: empleado.id.toString() }, KEY_TOKEN);
+    return token;
 }
 
 /**
@@ -101,27 +93,23 @@ Empleado.prototype.generarToken = async function () {
  */
 
 Empleado.prototype.validarCredenciales = async (Correo_Empleado, Password_Empleado) => {
-    try {
-        const empleado = await Empleado.findOne({
-            where: {
-                Correo_Empleado
-            }
-        });
-
-        if (!empleado) {
-            return false;
+    const empleado = await Empleado.findOne({
+        where: {
+            Correo_Empleado
         }
+    });
 
-        const passwordValida = await bcrypt.compare(Password_Empleado, empleado.Password_Empleado);
-
-        if (!passwordValida) {
-            throw new Error("Credenciales inválidas.");
-        }
-
-        return empleado;
-    } catch (error) {
-        throw new Error("Error al iniciar sesión.", error);
+    if (!empleado) {
+        return false;
     }
+
+    const passwordValida = await bcrypt.compare(Password_Empleado, empleado.Password_Empleado);
+
+    if (!passwordValida) {
+        throw new Error("Credenciales inválidas.");
+    }
+
+    return empleado;
 };
 
 //Exportación del modelo Empleado
