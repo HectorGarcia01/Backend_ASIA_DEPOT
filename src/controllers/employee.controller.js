@@ -73,9 +73,9 @@ const crearEmpleado = async (req, res) => {
             });
         }
 
-        const generarToken = await nuevoEmpleado.generarToken();
+        const token = await nuevoEmpleado.generarToken();
         await Token.create({
-            Token_Usuario: generarToken,
+            Token_Usuario: token,
             ID_Empleado_FK: nuevoEmpleado.id
         });
         
