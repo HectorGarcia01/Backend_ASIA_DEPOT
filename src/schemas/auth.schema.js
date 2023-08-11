@@ -23,4 +23,4 @@ const esquemaValidacionLogin = Joi.object({
 });
 
 //Exportación del esquema de validación para el correo del login
-module.exports = esquemaValidacionCorreo;
+module.exports = esquemaValidacionLogin;
