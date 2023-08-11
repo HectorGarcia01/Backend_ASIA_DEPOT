@@ -14,7 +14,7 @@ const Token = require('../models/token');
  *              Modelo Token (token.js)
  */
 
-const autenticación = (rol) => async (req, res, next) => {
+const autenticación = async (req, res, next) => {
     try {
         if (!req.header('Authorization')) {
             throw new Error("¡No se proporcionó un token!");
@@ -28,23 +28,19 @@ const autenticación = (rol) => async (req, res, next) => {
             }
         });
 
-        let usuario;
+        const cliente = await Cliente.findOne({
+            where: {
+                id: decodificarToken.id,
+                ID_Rol_FK: id
+            }
+        });
 
-        if (rol === 'User') {
-            usuario = await Cliente.findOne({
-                where: {
-                    id: decodificarToken.id,
-                    ID_Rol_FK: id
-                }
-            });
-        } else {
-            usuario = await Empleado.findOne({
-                where: {
-                    id: decodificarToken.id,
-                    ID_Rol_FK: id
-                }
-            });
-        }
+        const usuario = cliente || await Empleado.findOne({
+            where: {
+                id: decodificarToken.id,
+                ID_Rol_FK: id
+            }
+        });
 
         if (!usuario) {
             throw new Error("El token es inválido.");
