@@ -73,7 +73,7 @@ Cliente.beforeCreate(async (cliente) => {
     try {
         cliente.Password_Cliente = await bcrypt.hash(cliente.Password_Cliente, 8);
     } catch (error) {
-        throw new Error({ mensajeError: "Error al cifrar la contraseña.", error });
+        throw new Error("Error al cifrar la contraseña.", error);
     }
 });
 
@@ -90,9 +90,39 @@ Cliente.prototype.generarToken = async function () {
         const token = jwt.sign({ id: cliente.id.toString() }, KEY_TOKEN);
         return token;
     } catch (error) {
-        throw new Error({ mensajeError: "Error al generar token.", error });
+        throw new Error("Error al generar token.", error);
     }
 }
+
+/**
+ * Método personalizado para validar credenciales
+ * Fecha creación: 04/08/2023
+ * Autor: Hector Armando García González
+ */
+
+Cliente.prototype.validarCredenciales = async (Correo_Cliente, Password_Cliente) => {
+    try {
+        const cliente = await Cliente.findOne({
+            where: {
+                Correo_Cliente
+            }
+        });
+
+        if (!cliente) {
+            return false;
+        }
+
+        const passwordValida = await bcrypt.compare(Password_Cliente, cliente.Password_Cliente);
+
+        if (!passwordValida) {
+            throw new Error("Credenciales inválidas.");
+        }
+
+        return cliente;
+    } catch (error) {
+        throw new Error("Error al iniciar sesión.", error);
+    }
+};
 
 //Exportación del modelo Cliente
 module.exports = Cliente;
