@@ -1,7 +1,7 @@
 const { PORT } = require('./config/config');
 const express = require('express');
 const db = require('./database/db_connection');
-const datosPredefinidos = require('./controllers/state.controller');
+const datosPredefinidos = require('./controllers/seed_data.controller');
 const rutasCliente = require('./routes/customer.routes');
 const rutasEmpleado = require('./routes/employee.routes');
 
