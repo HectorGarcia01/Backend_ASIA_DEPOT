@@ -94,5 +94,35 @@ Empleado.prototype.generarToken = async function () {
     }
 }
 
+/**
+ * Método personalizado para validar credenciales
+ * Fecha creación: 04/08/2023
+ * Autor: Hector Armando García González
+ */
+
+Empleado.prototype.validarCredenciales = async (Correo_Empleado, Password_Empleado) => {
+    try {
+        const empleado = await Empleado.findOne({
+            where: {
+                Correo_Empleado
+            }
+        });
+
+        if (!empleado) {
+            return false;
+        }
+
+        const passwordValida = await bcrypt.compare(Password_Empleado, empleado.Password_Empleado);
+
+        if (!passwordValida) {
+            throw new Error("Credenciales inválidas.");
+        }
+
+        return empleado;
+    } catch (error) {
+        throw new Error("Error al iniciar sesión.", error);
+    }
+};
+
 //Exportación del modelo Empleado
 module.exports = Empleado;
