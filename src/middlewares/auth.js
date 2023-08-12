@@ -17,7 +17,7 @@ const Token = require('../models/token');
 const autenticación = async (req, res, next) => {
     try {
         if (!req.header('Authorization')) {
-            throw new Error("¡No se proporcionó un token!");
+            throw new Error("Por favor autenticarse.");
         }
 
         const Token_Usuario = req.header('Authorization').replace('Bearer ', '');
