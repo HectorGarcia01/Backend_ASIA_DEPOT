@@ -25,7 +25,7 @@ const Factura_Compra = db.define('Factura_Compra', {
     },
     ID_Proveedor_FK: {
         type: DataTypes.INTEGER,
-        allowNull: true,
+        allowNull: false,
         references: {
             model: 'Proveedors',
             key: 'id'
