@@ -22,27 +22,26 @@ const autenticación = async (req, res, next) => {
 
         const Token_Usuario = req.header('Authorization').replace('Bearer ', '');
         const decodificarToken = jwt.verify(Token_Usuario, KEY_TOKEN);
-        const { id } = Token.findOne({
-            where: {
-                Token_Usuario
-            }
-        });
 
         const cliente = await Cliente.findOne({
             where: {
-                id: decodificarToken.id,
-                ID_Rol_FK: id
+                id: decodificarToken.id
             }
         });
 
         const usuario = cliente || await Empleado.findOne({
             where: {
-                id: decodificarToken.id,
-                ID_Rol_FK: id
+                id: decodificarToken.id
             }
         });
 
-        if (!usuario) {
+        const validarToken = await Token.findOne({
+            where: {
+                Token_Usuario
+            }
+        });
+
+        if (!usuario || !validarToken) {
             throw new Error("El token es inválido.");
         }
 
