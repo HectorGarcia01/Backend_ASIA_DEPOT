@@ -6,7 +6,8 @@ const db = require('../database/db_connection');
  * Fecha creación: 12/08/2023
  * Autor: Hector Armando García González
  * Referencias:
- *              
+ *              Modelo Factura_Compra (purchase_invoice.js),
+ *              Modelo Producto (product.js)
  */
 
 const Detalle_Compra = db.define('Detalle_Compra', {
