@@ -27,7 +27,7 @@ const Detalle_Venta = db.define('Detalle_Venta', {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: 'Factura_Ventas',
+            model: 'Factura_Venta',
             key: 'id'
         }
     },
