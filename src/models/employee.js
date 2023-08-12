@@ -82,7 +82,7 @@ Empleado.beforeCreate(async (empleado) => {
 
 Empleado.prototype.generarToken = async function () {
     const empleado = this;
-    const token = jwt.sign({ id: empleado.id.toString() }, KEY_TOKEN);
+    const token = jwt.sign({ id: empleado.id.toString(), rol: 'Admin' }, KEY_TOKEN);
     return token;
 }
 
