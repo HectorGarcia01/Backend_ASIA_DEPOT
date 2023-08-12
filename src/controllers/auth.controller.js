@@ -82,8 +82,39 @@ const cerrarSesion = async (req, res) => {
     }
 };
 
+/**
+ * Función para cerrar todas las sesiones
+ * Fecha creación: 05/08/2023
+ * Autor: Hector Armando García González
+ * Referencias: 
+ *              Modelo Token (token.js)
+ */
+
+const cerrarTodasSesiones = async (req, res) => {
+    try {
+        const { id } = req.usuario;
+
+        if (Nombre_Rol === 'User') {
+            tokenEliminado = await Token.destroy({
+                where: {
+                    ID_Cliente_FK: id
+                }
+            });
+        } else {
+            tokenEliminado = await Token.destroy({
+                where: {
+                    ID_Empleado_FK: id
+                }
+            });
+        }
+    } catch (error) {
+        res.status(500).send({ error: "Error interno del servidor." });
+    }
+};
+
 //Exportación del controlador de autenticación
 module.exports = {
     iniciarSesion,
-    cerrarSesion
+    cerrarSesion,
+    cerrarTodasSesiones
 };
