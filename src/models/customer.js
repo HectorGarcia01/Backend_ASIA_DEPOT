@@ -82,7 +82,7 @@ Cliente.beforeCreate(async (cliente) => {
 
 Cliente.prototype.generarToken = async function () {
     const cliente = this;
-    const token = jwt.sign({ id: cliente.id.toString() }, KEY_TOKEN);
+    const token = jwt.sign({ id: cliente.id.toString(), rol: 'User' }, KEY_TOKEN);
     return token;
 }
 
