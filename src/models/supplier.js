@@ -3,8 +3,10 @@ const db = require('../database/db_connection');
 
 /**
  * Creación del modelo Proveedor
- * Fecha creación: 03/08/2023
+ * Fecha creación: 12/08/2023
  * Autor: Hector Armando García González
+ * Referencias:
+ *              Modelo Estado (state.js)
  */
 
 const Proveedor = db.define('Proveedor', {
