@@ -6,7 +6,10 @@ const db = require('../database/db_connection');
  * Fecha creación: 12/08/2023
  * Autor: Hector Armando García González
  * Referencias:
- *              
+ *              Modelo Empleado (employee.js),
+ *              Modelo Cliente (customer.js),
+ *              Modelo Metodo_Pago (payment_method.js),
+ *              Modelo Tipo_Envio (shipping_type.js)
  */
 
 const Factura_Venta = db.define('Factura_Venta', {
