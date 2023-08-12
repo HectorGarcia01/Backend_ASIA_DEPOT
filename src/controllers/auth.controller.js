@@ -25,7 +25,7 @@ const iniciarSesion = async (req, res) => {
         const usuario = cliente || await empleadoBuild.validarCredenciales(correo, password);
 
         if (!usuario) {
-            res.status(401).send({ error: "Credenciales inválidas." });
+            return res.status(401).send({ error: "Credenciales inválidas." });
         }
 
         const { Nombre_Rol } = await Rol.findOne({
