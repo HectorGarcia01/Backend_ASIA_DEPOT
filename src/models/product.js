@@ -45,7 +45,7 @@ const Producto = db.define('Producto', {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: 'Categorias',
+            model: 'Categoria',
             key: 'id'
         }
     }
