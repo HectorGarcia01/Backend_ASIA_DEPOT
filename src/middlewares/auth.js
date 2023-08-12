@@ -3,6 +3,7 @@ const { KEY_TOKEN } = require('../config/config');
 const Cliente = require('../models/customer');
 const Empleado = require('../models/employee');
 const Token = require('../models/token');
+const Rol = require('../models/role');
 
 /**
  * Middleware de autenticación
@@ -23,15 +24,23 @@ const autenticación = async (req, res, next) => {
         const Token_Usuario = req.header('Authorization').replace('Bearer ', '');
         const decodificarToken = jwt.verify(Token_Usuario, KEY_TOKEN);
 
+        const { id } = await Rol.findOne({
+            where: {
+                Nombre_Rol: decodificarToken.rol
+            }
+        });
+
         const cliente = await Cliente.findOne({
             where: {
-                id: decodificarToken.id
+                id: decodificarToken.id,
+                ID_Rol_FK: id
             }
         });
 
         const usuario = cliente || await Empleado.findOne({
             where: {
-                id: decodificarToken.id
+                id: decodificarToken.id,
+                ID_Rol_FK: id
             }
         });
 
@@ -48,6 +57,7 @@ const autenticación = async (req, res, next) => {
         req.usuario = usuario;
         req.token = Token_Usuario;
 
+        console.log(usuario);
         next();
     } catch (error) {
         res.status(401).send({ error: error.message });
