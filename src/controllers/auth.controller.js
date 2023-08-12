@@ -4,8 +4,8 @@ const Rol = require('../models/role');
 const Token = require('../models/token');
 
 /**
- * Inicio de sesión
- * Fecha creación: 04/08/2023
+ * Función para iniciar sesión
+ * Fecha creación: 05/08/2023
  * Autor: Hector Armando García González
  * Referencias: 
  *              Modelo Cliente (customer.js), 
@@ -54,7 +54,36 @@ const iniciarSesion = async (req, res) => {
     }
 };
 
+/**
+ * Función para cerrar sesión
+ * Fecha creación: 05/08/2023
+ * Autor: Hector Armando García González
+ * Referencias: 
+ *              Modelo Token (token.js)
+ */
+
+const cerrarSesion = async (req, res) => {
+    try {
+        const Token_Usuario = req.token;
+
+        const tokenEliminado = await Token.destroy({
+            where: {
+                Token_Usuario
+            }
+        });
+
+        if(tokenEliminado === 0) {
+            return res.status(404).send({ error: "Error al cerrar sesión." });
+        }
+
+        res.status(200).send({ msg: "Sesión cerrada correctamente." });
+    } catch (error) {
+        res.status(500).send({ error: "Error interno del servidor." });
+    }
+};
+
 //Exportación del controlador de autenticación
 module.exports = {
-    iniciarSesion
+    iniciarSesion,
+    cerrarSesion
 };
