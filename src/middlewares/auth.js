@@ -55,6 +55,7 @@ const autenticacion = async (req, res, next) => {
         }
 
         req.usuario = usuario;
+        req.rol = decodificarToken.rol;
         req.token = Token_Usuario;
 
         next();
