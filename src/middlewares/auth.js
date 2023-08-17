@@ -15,7 +15,7 @@ const Rol = require('../models/role');
  *              Modelo Token (token.js)
  */
 
-const autenticación = async (req, res, next) => {
+const autenticacion = async (req, res, next) => {
     try {
         if (!req.header('Authorization')) {
             throw new Error("Por favor autenticarse.");
@@ -57,11 +57,10 @@ const autenticación = async (req, res, next) => {
         req.usuario = usuario;
         req.token = Token_Usuario;
 
-        console.log(usuario);
         next();
     } catch (error) {
         res.status(401).send({ error: error.message });
     }
 };
 
-module.exports = autenticación;
+module.exports = autenticacion;
