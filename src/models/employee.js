@@ -80,9 +80,8 @@ Empleado.beforeCreate(async (empleado) => {
  * Referencias: Variable de entorno para llave secreta (config.js)
  */
 
-Empleado.prototype.generarToken = async function () {
-    const empleado = this;
-    const token = jwt.sign({ id: empleado.id.toString(), rol: 'Admin' }, KEY_TOKEN);
+Empleado.prototype.generarToken = (id, rol) => {
+    const token = jwt.sign({ id: id.toString(), rol }, KEY_TOKEN);
     return token;
 }
 
