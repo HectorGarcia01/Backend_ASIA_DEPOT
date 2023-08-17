@@ -34,7 +34,7 @@ const iniciarSesion = async (req, res) => {
             }
         });
 
-        const Token_Usuario = await usuario.generarToken();
+        const Token_Usuario = await usuario.generarToken(usuario.id, Nombre_Rol);
 
         if (Nombre_Rol === 'User') {
             await Token.create({
