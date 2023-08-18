@@ -117,6 +117,8 @@ const verPerfilCliente = async (req, res) => {
  * Función para actualizar datos del cliente
  * Fecha creación: 16/08/2023
  * Autor: Hector Armando García González
+ * Referencias: 
+ *              Modelo Direccion (address.js)
  */
 
 const actualizarCliente = async (req, res) => {
@@ -140,7 +142,7 @@ const actualizarCliente = async (req, res) => {
     } catch (error) {
         res.status(500).send({ error: "Error interno del servidor." });
     }
-}
+};
 
 //Exportación de controladores para el cliente
 module.exports = {
