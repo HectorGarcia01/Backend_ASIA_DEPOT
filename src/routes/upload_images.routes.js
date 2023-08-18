@@ -2,7 +2,8 @@ const express = require('express');
 const router = new express.Router();
 const {
     guardarImagenUsuario,
-    verImagenUsuario
+    verImagenUsuario,
+    eliminarImagenUsuario
 } = require('../controllers/upload_images.controller');
 const middlewareAuth = require('../middlewares/auth');
 const middlewareRol = require('../middlewares/check_rol');
@@ -20,6 +21,7 @@ router.post(
     }
 );
 router.get('/superAdmin/ver/avatar', middlewareAuth, middlewareRol('SuperAdmin'), verImagenUsuario);
+router.delete('/superAdmin/eliminar/avatar', middlewareAuth, middlewareRol('SuperAdmin'), eliminarImagenUsuario);
 
 //Configuración de rutas (endpoints) para el Admin
 router.post(
@@ -33,6 +35,7 @@ router.post(
     }
 );
 router.get('/admin/ver/avatar', middlewareAuth, middlewareRol('Admin'), verImagenUsuario);
+router.delete('/admin/eliminar/avatar', middlewareAuth, middlewareRol('Admin'), eliminarImagenUsuario);
 
 //Configuración de rutas (endpoints) para el User
 router.post(
@@ -46,6 +49,7 @@ router.post(
     }
 );
 router.get('/usuario/ver/avatar', middlewareAuth, middlewareRol('User'), verImagenUsuario);
+router.delete('/usuario/eliminar/avatar', middlewareAuth, middlewareRol('User'), eliminarImagenUsuario);
 
 //Configuración de rutas (endpoints) para el producto
 
