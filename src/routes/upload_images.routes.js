@@ -1,7 +1,8 @@
 const express = require('express');
 const router = new express.Router();
 const {
-    guardarImagenUsuario
+    guardarImagenUsuario,
+    verImagenUsuario
 } = require('../controllers/upload_images.controller');
 const middlewareAuth = require('../middlewares/auth');
 const middlewareRol = require('../middlewares/check_rol');
@@ -18,7 +19,7 @@ router.post(
         res.status(400).send({ error: error.message });
     }
 );
-router.get('superAdmin/ver/avatar');
+router.get('/superAdmin/ver/avatar', middlewareAuth, middlewareRol('SuperAdmin'), verImagenUsuario);
 
 //Configuración de rutas (endpoints) para el Admin
 router.post(
@@ -31,7 +32,7 @@ router.post(
         res.status(400).send({ error: error.message });
     }
 );
-router.get('admin/ver/avatar');
+router.get('/admin/ver/avatar', middlewareAuth, middlewareRol('Admin'), verImagenUsuario);
 
 //Configuración de rutas (endpoints) para el User
 router.post(
@@ -44,7 +45,7 @@ router.post(
         res.status(400).send({ error: error.message });
     }
 );
-router.get('usuario/ver/avatar');
+router.get('/usuario/ver/avatar', middlewareAuth, middlewareRol('User'), verImagenUsuario);
 
 //Configuración de rutas (endpoints) para el producto
 
