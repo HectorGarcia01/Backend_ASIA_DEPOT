@@ -5,6 +5,7 @@ const datosPredefinidos = require('./controllers/seed_data.controller');
 const rutasCliente = require('./routes/customer.routes');
 const rutasEmpleado = require('./routes/employee.routes');
 const rutasAutenticacion = require('./routes/auth.routes');
+const rutasImagen = require('./routes/upload_images.routes');
 
 const app = express();    
 
@@ -34,6 +35,7 @@ app.use(express.json());
 app.use(rutasCliente);
 app.use(rutasEmpleado);
 app.use(rutasAutenticacion);
+app.use(rutasImagen);
 
 //Configuración del manejo de rutas inexistentes
 app.get('*', (req, res) => {
