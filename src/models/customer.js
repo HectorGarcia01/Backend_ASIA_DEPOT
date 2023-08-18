@@ -80,9 +80,8 @@ Cliente.beforeCreate(async (cliente) => {
  * Referencias: Variable de entorno para llave secreta (config.js)
  */
 
-Cliente.prototype.generarToken = async function () {
-    const cliente = this;
-    const token = jwt.sign({ id: cliente.id.toString(), rol: 'User' }, KEY_TOKEN);
+Cliente.prototype.generarToken = (id, rol) => {
+    const token = jwt.sign({ id: id.toString(), rol }, KEY_TOKEN);
     return token;
 }
 

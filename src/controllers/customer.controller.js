@@ -73,7 +73,7 @@ const crearCliente = async (req, res) => {
             });
         }
         
-        const token = await nuevoCliente.generarToken();
+        const token = await nuevoCliente.generarToken(nuevoCliente.id, rolCliente.Nombre_Rol);
         await Token.create({ 
             Token_Usuario: token, 
             ID_Cliente_FK: nuevoCliente.id 
