@@ -45,5 +45,22 @@ const Direccion = db.define('Direccion', {
     }
 });
 
+/**
+ * Método personalizado para filtrar información
+ * Fecha creación: 04/08/2023
+ * Autor: Hector Armando García González
+ */
+
+Direccion.prototype.toJSON = function () {
+    const direccion = { ...this.get() };
+
+    delete direccion.ID_Cliente_FK;
+    delete direccion.ID_Empleado_FK;
+    delete direccion.createdAt;
+    delete direccion.updatedAt;
+
+    return direccion;
+};
+
 //Exportación del modelo Direccion
 module.exports = Direccion;
