@@ -19,11 +19,11 @@ router.post(
     crearEmpleado
 );
 router.get('/superAdmin/ver/perfil', middlewareAuth, middlewareRol('SuperAdmin'), verPerfilEmpleado);
-router.patch('/superAdmin/actualizar/perfil', middlewareAuth, middlewareRol('User'), actualizarEmpleado);
+router.patch('/superAdmin/actualizar/perfil', middlewareAuth, middlewareRol('SuperAdmin'), actualizarEmpleado);
 
 //Configuración de rutas (endpoints) para el Admin
 router.get('/admin/ver/perfil', middlewareAuth, middlewareRol('Admin'), verPerfilEmpleado);
-router.patch('/admin/actualizar/perfil', middlewareAuth, middlewareRol('User'), actualizarEmpleado);
+router.patch('/admin/actualizar/perfil', middlewareAuth, middlewareRol('Admin'), actualizarEmpleado);
 
 //Exportación de todas las rutas de empleado
 module.exports = router;
