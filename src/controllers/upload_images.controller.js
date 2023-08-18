@@ -1,7 +1,7 @@
 const sharp = require('sharp');
 
 /**
- * Función para subir imágenes
+ * Función para subir/actualizar imágenes
  * Fecha creación: 16/08/2023
  * Autor: Hector Armando García González
  */
@@ -24,8 +24,30 @@ const guardarImagenUsuario = async (req, res) => {
     }
 };
 
+/**
+ * Función para obtener imágen
+ * Fecha creación: 16/08/2023
+ * Autor: Hector Armando García González
+ */
+
+const verImagenUsuario = async (req, res) => {
+    try {
+        const { usuario } = req;
+        const avatar = usuario.Avatar_Cliente || usuario.Avatar_Empleado;
+
+        if (!avatar) {
+            return res.status(404).send({ error: "No posees foto de perfil." });
+        }
+
+        res.set('Content-Type', 'image/png');
+        res.status(200).send(avatar);
+    } catch (error) {
+        res.status(500).send({ error: "Error interno del servidor." });
+    }
+};
 
 //Exportación de controladores para el manejo de imágen
 module.exports = {
-    guardarImagenUsuario
+    guardarImagenUsuario,
+    verImagenUsuario
 };
