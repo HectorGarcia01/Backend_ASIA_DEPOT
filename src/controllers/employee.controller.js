@@ -113,8 +113,38 @@ const verPerfilEmpleado = async (req, res) => {
     }
 };
 
+/**
+ * Función para actualizar datos del empleado
+ * Fecha creación: 16/08/2023
+ * Autor: Hector Armando García González
+ */
+
+const actualizarEmpleado = async (req, res) => {
+    try {
+        const { usuario } = req;
+        const nuevosCambios = Object.keys(req.body);
+
+        const cambiosPermitidos = ['Nombre_Empleado', 'Apellido_Empleado', 'Telefono_Empleado', 'NIT_Empleado', 'Departamento', 'Municipio', 'Calle', 'Direccion_Referencia'];
+        const validarCambios = nuevosCambios.every((nuevoCambio) => cambiosPermitidos.includes(nuevoCambio));
+
+        if (!validarCambios) {
+            return res.status(400).send({ error: '¡Actualización inválida!' });
+        }
+
+        nuevosCambios.forEach((nuevoCambio) => usuario[nuevoCambio] = req.body[nuevoCambio]);
+
+        //Aún queda pendiente lo de actualizar la dirección ***********************************
+
+        await usuario.save();
+        res.status(200).send({ usuario, msg: "Datos actualizados con éxito." });
+    } catch (error) {
+        res.status(500).send({ error: "Error interno del servidor." });
+    }
+};
+
 //Exportación de controladores para el empleado
 module.exports = {
     crearEmpleado,
-    verPerfilEmpleado
+    verPerfilEmpleado,
+    actualizarEmpleado
 };
