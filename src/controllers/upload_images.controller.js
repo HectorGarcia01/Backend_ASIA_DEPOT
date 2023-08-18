@@ -1,7 +1,7 @@
 const sharp = require('sharp');
 
 /**
- * Función para subir/actualizar imágenes
+ * Función para subir/actualizar imágen del Cliente/Empleado
  * Fecha creación: 16/08/2023
  * Autor: Hector Armando García González
  */
@@ -25,7 +25,7 @@ const guardarImagenUsuario = async (req, res) => {
 };
 
 /**
- * Función para obtener imágen
+ * Función para obtener imágen del Cliente/Empleado
  * Fecha creación: 16/08/2023
  * Autor: Hector Armando García González
  */
@@ -46,8 +46,32 @@ const verImagenUsuario = async (req, res) => {
     }
 };
 
+/**
+ * Función para eliminar imágen del Cliente/Empleado
+ * Fecha creación: 16/08/2023
+ * Autor: Hector Armando García González
+ */
+
+const eliminarImagenUsuario = async (req, res) => {
+    try {
+        const { usuario, rol } = req;
+
+        if (rol === 'User') {
+            usuario.Avatar_Cliente = null;
+        } else {
+            usuario.Avatar_Empleado = null;
+        }
+
+        await usuario.save();
+        res.status(200).send({ msg: "Foto de perfil eliminada con éxito." });
+    } catch (error) {
+        res.status(500).send({ error: "Error interno del servidor." });
+    }
+}
+
 //Exportación de controladores para el manejo de imágen
 module.exports = {
     guardarImagenUsuario,
-    verImagenUsuario
+    verImagenUsuario,
+    eliminarImagenUsuario
 };
