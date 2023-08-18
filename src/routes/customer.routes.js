@@ -12,7 +12,7 @@ const middlewareRol = require('../middlewares/check_rol');
 
 router.post('/nuevo/cliente', middlewareValidate(esquemaValidacion), crearCliente);
 router.get('/usuario/ver/perfil', middlewareAuth, middlewareRol('User'), verPerfilCliente);
-router.patch('/usuario/actualizar', middlewareAuth, middlewareRol('User'), actualizarCliente);
+router.patch('/usuario/actualizar/perfil', middlewareAuth, middlewareRol('User'), actualizarCliente);
 
 //Exportación de todas las rutas de cliente
 module.exports = router;
