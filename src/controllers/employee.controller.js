@@ -6,7 +6,7 @@ const Estado = require('../models/state');
 const Token = require('../models/token');
 
 /**
- * Crear un nuevo empleado
+ * Función para crear un nuevo empleado
  * Fecha creación: 03/08/2023
  * Autor: Hector Armando García González
  * Referencias: 
@@ -79,7 +79,7 @@ const crearEmpleado = async (req, res) => {
             ID_Empleado_FK: nuevoEmpleado.id
         });
         
-        res.status(201).send({ nuevoEmpleado });
+        res.status(201).send({ msg: "Empleado creado con éxito." });
     } catch (error) {
         if (error instanceof Sequelize.UniqueConstraintError) {
             res.status(400).send({ error: "¡El empleado ya existe!" });
