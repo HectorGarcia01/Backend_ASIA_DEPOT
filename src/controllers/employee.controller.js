@@ -173,7 +173,6 @@ const verEmpleados = async (req, res) => {
  * Autor: Hector Armando García González
  * Referencias:
  *              Modelo Empleado (employee.js),
- *              Modelo Estado (state.js)
  */
 
 const verEmpleadoId = async (req, res) => {
