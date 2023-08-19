@@ -3,7 +3,8 @@ const router = new express.Router();
 const {
     crearEmpleado,
     verPerfilEmpleado,
-    actualizarEmpleado
+    actualizarEmpleado,
+    eliminarEmpleadoId
 } = require('../controllers/employee.controller');
 const esquemaValidacion = require('../schemas/employee.schema');
 const middlewareValidate = require('../middlewares/validate');
@@ -20,6 +21,7 @@ router.post(
 );
 router.get('/superAdmin/ver/perfil', middlewareAuth, middlewareRol('SuperAdmin'), verPerfilEmpleado);
 router.patch('/superAdmin/actualizar/perfil', middlewareAuth, middlewareRol('SuperAdmin'), actualizarEmpleado);
+router.delete('/superAdmin/eliminar/empleado/:id', middlewareAuth, middlewareRol('SuperAdmin'), eliminarEmpleadoId);
 
 //Configuración de rutas (endpoints) para el Admin
 router.get('/admin/ver/perfil', middlewareAuth, middlewareRol('Admin'), verPerfilEmpleado);
