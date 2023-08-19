@@ -4,6 +4,7 @@ const {
     crearEmpleado,
     verPerfilEmpleado,
     actualizarEmpleado,
+    verEmpleados,
     eliminarEmpleadoId
 } = require('../controllers/employee.controller');
 const esquemaValidacion = require('../schemas/employee.schema');
@@ -20,6 +21,7 @@ router.post(
     crearEmpleado
 );
 router.get('/superAdmin/ver/perfil', middlewareAuth, middlewareRol('SuperAdmin'), verPerfilEmpleado);
+router.get('/superAdmin/ver/empleados', middlewareAuth, middlewareRol('SuperAdmin'), verEmpleados);
 router.patch('/superAdmin/actualizar/perfil', middlewareAuth, middlewareRol('SuperAdmin'), actualizarEmpleado);
 router.delete('/superAdmin/eliminar/empleado/:id', middlewareAuth, middlewareRol('SuperAdmin'), eliminarEmpleadoId);
 
