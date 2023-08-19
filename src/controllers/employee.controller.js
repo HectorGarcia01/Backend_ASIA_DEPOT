@@ -168,6 +168,30 @@ const verEmpleados = async (req, res) => {
 };
 
 /**
+ * Función para ver un empleado por ID
+ * Fecha creación: 16/08/2023
+ * Autor: Hector Armando García González
+ * Referencias:
+ *              Modelo Empleado (employee.js),
+ *              Modelo Estado (state.js)
+ */
+
+const verEmpleadoId = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const empleado = await Empleado.findByPk(id);
+
+        if (!empleado) {
+            return res.status(404).send({ error: "Empleado no encontrado." });
+        }
+
+        res.status(200).send({ empleado });
+    } catch (error) {
+        res.status(500).send({ errr: "Error interno del servidor.", error });
+    }
+};
+
+/**
  * Función para eliminar de forma lógica un empleado por id
  * Fecha creación: 16/08/2023
  * Autor: Hector Armando García González
@@ -203,6 +227,7 @@ const eliminarEmpleadoId = async (req, res) => {
 module.exports = {
     crearEmpleado,
     verPerfilEmpleado,
+    verEmpleadoId,
     actualizarEmpleado,
     verEmpleados,
     eliminarEmpleadoId
