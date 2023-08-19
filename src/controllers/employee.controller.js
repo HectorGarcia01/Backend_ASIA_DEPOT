@@ -107,7 +107,7 @@ const verPerfilEmpleado = async (req, res) => {
             }
         });
 
-        res.status(200).send({ usuario, direccionEmpleado });
+        res.status(200).send({ empleado: usuario, direccionEmpleado });
     } catch (error) {
         res.status(500).send({ error: "Error interno del servidor." });
     }
@@ -117,6 +117,8 @@ const verPerfilEmpleado = async (req, res) => {
  * Función para actualizar datos del empleado
  * Fecha creación: 16/08/2023
  * Autor: Hector Armando García González
+ * Referencias:
+ *              Modelo Direccion (address.js)
  */
 
 const actualizarEmpleado = async (req, res) => {
@@ -136,7 +138,39 @@ const actualizarEmpleado = async (req, res) => {
         //Aún queda pendiente lo de actualizar la dirección ***********************************
 
         await usuario.save();
-        res.status(200).send({ usuario, msg: "Datos actualizados con éxito." });
+        res.status(200).send({ empleado: usuario, msg: "Datos actualizados con éxito." });
+    } catch (error) {
+        res.status(500).send({ error: "Error interno del servidor." });
+    }
+};
+
+/**
+ * Función para eliminar de forma lógica un empleado por id
+ * Fecha creación: 16/08/2023
+ * Autor: Hector Armando García González
+ * Referencias:
+ *              Modelo Empleado (employee.js),
+ *              Modelo Estado (state.js)
+ */
+
+const eliminarEmpleadoId = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const empleado = await Empleado.findByPk(id);
+
+        if (!empleado) {
+            return res.status(404).send({ error: "Empleado no encontrado." });
+        }
+
+        const estadoEmpleado = await Estado.findOne({
+            where: {
+                Tipo_Estado: "Inactivo"
+            }
+        });
+
+        empleado.ID_Estado_FK = estadoEmpleado.id;
+        await empleado.save();
+        res.status(200).send({ msg: "Empleado eliminado con éxito." });
     } catch (error) {
         res.status(500).send({ error: "Error interno del servidor." });
     }
@@ -146,5 +180,6 @@ const actualizarEmpleado = async (req, res) => {
 module.exports = {
     crearEmpleado,
     verPerfilEmpleado,
-    actualizarEmpleado
+    actualizarEmpleado,
+    eliminarEmpleadoId
 };
