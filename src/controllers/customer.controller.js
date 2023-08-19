@@ -6,7 +6,7 @@ const Estado = require('../models/state');
 const Token = require('../models/token');
 
 /**
- * Crear un nuevo cliente
+ * Función para crear un nuevo cliente
  * Fecha creación: 03/08/2023
  * Autor: Hector Armando García González
  * Referencias: 
@@ -79,10 +79,10 @@ const crearCliente = async (req, res) => {
             ID_Cliente_FK: nuevoCliente.id 
         });
 
-        res.status(201).send({ nuevoCliente });
+        res.status(201).send({ msg: "Se ha registrado con éxito." });
     } catch (error) {
         if (error instanceof Sequelize.UniqueConstraintError) {
-            res.status(400).send({ error: "¡El cliente ya existe!" });
+            res.status(400).send({ error: "¡El usuario ya existe!" });
         } else {
             res.status(500).send({ error: "Error interno del servidor." });
         }
@@ -113,8 +113,40 @@ const verPerfilCliente = async (req, res) => {
     }
 };
 
+/**
+ * Función para actualizar datos del cliente
+ * Fecha creación: 16/08/2023
+ * Autor: Hector Armando García González
+ * Referencias: 
+ *              Modelo Direccion (address.js)
+ */
+
+const actualizarCliente = async (req, res) => {
+    try {
+        const { usuario } = req;
+        const nuevosCambios = Object.keys(req.body);
+
+        const cambiosPermitidos = ['Nombre_Cliente', 'Apellido_Cliente', 'Telefono_Cliente', 'NIT_Cliente', 'Departamento', 'Municipio', 'Calle', 'Direccion_Referencia'];
+        const validarCambios = nuevosCambios.every((nuevoCambio) => cambiosPermitidos.includes(nuevoCambio));
+
+        if (!validarCambios) {
+            return res.status(400).send({ error: '¡Actualización inválida!' });
+        }
+
+        nuevosCambios.forEach((nuevoCambio) => usuario[nuevoCambio] = req.body[nuevoCambio]);
+
+        //Aún queda pendiente lo de actualizar la dirección ***********************************
+
+        await usuario.save();
+        res.status(200).send({ usuario, msg: "Datos actualizados con éxito." });
+    } catch (error) {
+        res.status(500).send({ error: "Error interno del servidor." });
+    }
+};
+
 //Exportación de controladores para el cliente
 module.exports = {
     crearCliente,
-    verPerfilCliente
+    verPerfilCliente,
+    actualizarCliente
 };

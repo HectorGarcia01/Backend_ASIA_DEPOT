@@ -111,5 +111,24 @@ Cliente.prototype.validarCredenciales = async (Correo_Cliente, Password_Cliente)
     return cliente;
 };
 
+/**
+ * Método personalizado para filtrar información
+ * Fecha creación: 04/08/2023
+ * Autor: Hector Armando García González
+ */
+
+Cliente.prototype.toJSON = function () {
+    const cliente = { ...this.get() };
+
+    delete cliente.Avatar_Cliente;
+    delete cliente.Password_Cliente;
+    delete cliente.createdAt;
+    delete cliente.updatedAt;
+    delete cliente.ID_Estado_FK;
+    delete cliente.ID_Rol_FK;
+
+    return cliente;
+};
+
 //Exportación del modelo Cliente
 module.exports = Cliente;

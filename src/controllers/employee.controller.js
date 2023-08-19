@@ -6,7 +6,7 @@ const Estado = require('../models/state');
 const Token = require('../models/token');
 
 /**
- * Crear un nuevo empleado
+ * Función para crear un nuevo empleado
  * Fecha creación: 03/08/2023
  * Autor: Hector Armando García González
  * Referencias: 
@@ -79,7 +79,7 @@ const crearEmpleado = async (req, res) => {
             ID_Empleado_FK: nuevoEmpleado.id
         });
         
-        res.status(201).send({ nuevoEmpleado });
+        res.status(201).send({ msg: "Empleado creado con éxito." });
     } catch (error) {
         if (error instanceof Sequelize.UniqueConstraintError) {
             res.status(400).send({ error: "¡El empleado ya existe!" });
@@ -107,7 +107,116 @@ const verPerfilEmpleado = async (req, res) => {
             }
         });
 
-        res.status(200).send({ usuario, direccionEmpleado });
+        res.status(200).send({ empleado: usuario, direccionEmpleado });
+    } catch (error) {
+        res.status(500).send({ error: "Error interno del servidor." });
+    }
+};
+
+/**
+ * Función para actualizar datos del empleado
+ * Fecha creación: 16/08/2023
+ * Autor: Hector Armando García González
+ * Referencias:
+ *              Modelo Direccion (address.js)
+ */
+
+const actualizarEmpleado = async (req, res) => {
+    try {
+        const { usuario } = req;
+        const nuevosCambios = Object.keys(req.body);
+
+        const cambiosPermitidos = ['Nombre_Empleado', 'Apellido_Empleado', 'Telefono_Empleado', 'NIT_Empleado', 'Departamento', 'Municipio', 'Calle', 'Direccion_Referencia'];
+        const validarCambios = nuevosCambios.every((nuevoCambio) => cambiosPermitidos.includes(nuevoCambio));
+
+        if (!validarCambios) {
+            return res.status(400).send({ error: '¡Actualización inválida!' });
+        }
+
+        nuevosCambios.forEach((nuevoCambio) => usuario[nuevoCambio] = req.body[nuevoCambio]);
+
+        //Aún queda pendiente lo de actualizar la dirección ***********************************
+
+        await usuario.save();
+        res.status(200).send({ empleado: usuario, msg: "Datos actualizados con éxito." });
+    } catch (error) {
+        res.status(500).send({ error: "Error interno del servidor." });
+    }
+};
+
+/**
+ * Función para ver todos los empleados
+ * Fecha creación: 16/08/2023
+ * Autor: Hector Armando García González
+ * Referencias:
+ *              Modelo Empleado (employee.js),
+ *              Modelo Estado (state.js)
+ */
+
+const verEmpleados = async (req, res) => {
+    try {
+        const empleados = await Empleado.findAll({});
+
+        if (empleados.length === 0) {
+            return res.status(404).send({ error: "No existe ningún empleado registrado." });
+        }
+
+        res.status(200).send({ empleados });
+    } catch (error) {
+        res.status(500).send({ errr: "Error interno del servidor.", error });
+    }
+};
+
+/**
+ * Función para ver un empleado por ID
+ * Fecha creación: 16/08/2023
+ * Autor: Hector Armando García González
+ * Referencias:
+ *              Modelo Empleado (employee.js),
+ */
+
+const verEmpleadoId = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const empleado = await Empleado.findByPk(id);
+
+        if (!empleado) {
+            return res.status(404).send({ error: "Empleado no encontrado." });
+        }
+
+        res.status(200).send({ empleado });
+    } catch (error) {
+        res.status(500).send({ errr: "Error interno del servidor.", error });
+    }
+};
+
+/**
+ * Función para eliminar de forma lógica un empleado por id
+ * Fecha creación: 16/08/2023
+ * Autor: Hector Armando García González
+ * Referencias:
+ *              Modelo Empleado (employee.js),
+ *              Modelo Estado (state.js)
+ */
+
+const eliminarEmpleadoId = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const empleado = await Empleado.findByPk(id);
+
+        if (!empleado) {
+            return res.status(404).send({ error: "Empleado no encontrado." });
+        }
+
+        const estadoEmpleado = await Estado.findOne({
+            where: {
+                Tipo_Estado: "Inactivo"
+            }
+        });
+
+        empleado.ID_Estado_FK = estadoEmpleado.id;
+        await empleado.save();
+        res.status(200).send({ msg: "Empleado eliminado con éxito." });
     } catch (error) {
         res.status(500).send({ error: "Error interno del servidor." });
     }
@@ -116,5 +225,9 @@ const verPerfilEmpleado = async (req, res) => {
 //Exportación de controladores para el empleado
 module.exports = {
     crearEmpleado,
-    verPerfilEmpleado
+    verPerfilEmpleado,
+    verEmpleadoId,
+    actualizarEmpleado,
+    verEmpleados,
+    eliminarEmpleadoId
 };

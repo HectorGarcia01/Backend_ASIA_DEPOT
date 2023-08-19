@@ -111,5 +111,23 @@ Empleado.prototype.validarCredenciales = async (Correo_Empleado, Password_Emplea
     return empleado;
 };
 
+/**
+ * Método personalizado para filtrar información
+ * Fecha creación: 04/08/2023
+ * Autor: Hector Armando García González
+ */
+
+Empleado.prototype.toJSON = function () {
+    const empleado = { ...this.get() };
+    
+    delete empleado.Avatar_Empleado;
+    delete empleado.Password_Empleado;
+    delete empleado.createdAt;
+    delete empleado.updatedAt;
+    delete empleado.ID_Rol_FK;
+    
+    return empleado;
+};
+
 //Exportación del modelo Empleado
 module.exports = Empleado;
