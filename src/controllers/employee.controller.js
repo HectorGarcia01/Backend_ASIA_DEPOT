@@ -145,6 +145,29 @@ const actualizarEmpleado = async (req, res) => {
 };
 
 /**
+ * Función para ver todos los empleados
+ * Fecha creación: 16/08/2023
+ * Autor: Hector Armando García González
+ * Referencias:
+ *              Modelo Empleado (employee.js),
+ *              Modelo Estado (state.js)
+ */
+
+const verEmpleados = async (req, res) => {
+    try {
+        const empleados = await Empleado.findAll({});
+
+        if (empleados.length === 0) {
+            return res.status(404).send({ error: "No existe ningún empleado registrado." });
+        }
+
+        res.status(200).send({ empleados });
+    } catch (error) {
+        res.status(500).send({ errr: "Error interno del servidor.", error });
+    }
+};
+
+/**
  * Función para eliminar de forma lógica un empleado por id
  * Fecha creación: 16/08/2023
  * Autor: Hector Armando García González
@@ -181,5 +204,6 @@ module.exports = {
     crearEmpleado,
     verPerfilEmpleado,
     actualizarEmpleado,
+    verEmpleados,
     eliminarEmpleadoId
 };
