@@ -15,4 +15,4 @@ module.exports = (esquemaValidacion) => {
             res.status(400).send({ error: error.message });
         }
     }
-}
+};
