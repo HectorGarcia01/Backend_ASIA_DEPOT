@@ -32,7 +32,7 @@ const esquemaValidacionCliente = Joi.object({
     NIT_Cliente: Joi.number()
         .integer()
         .error((error) => {
-            return errorPersonalizado("El NIT es obligatorio y debe ser numérico.", error);
+            return errorPersonalizado("El NIT debe ser numérico.", error);
         }),
     Correo_Cliente: Joi.string()
         .email({ tlds: { allow: ['com'] } })
