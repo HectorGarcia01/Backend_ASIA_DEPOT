@@ -1,9 +1,9 @@
 const jwt = require('jsonwebtoken');
 const { KEY_TOKEN } = require('../config/config');
-const Cliente = require('../models/customer');
-const Empleado = require('../models/employee');
-const Token = require('../models/token');
-const Rol = require('../models/role');
+const CustomerModel = require('../models/customer');
+const EmployeeModel = require('../models/employee');
+const TokenModel = require('../models/token');
+const RoleModel = require('../models/role');
 
 /**
  * Middleware de autenticación
@@ -15,48 +15,48 @@ const Rol = require('../models/role');
  *              Modelo Token (token.js)
  */
 
-const autenticacion = async (req, res, next) => {
+const authentication = async (req, res, next) => {
     try {
         if (!req.header('Authorization')) {
             throw new Error("Por favor autenticarse.");
         }
 
-        const Token_Usuario = req.header('Authorization').replace('Bearer ', '');
-        const decodificarToken = jwt.verify(Token_Usuario, KEY_TOKEN);
+        const userToken = req.header('Authorization').replace('Bearer ', '');
+        const decodedToken = jwt.verify(userToken, KEY_TOKEN);
 
-        const { id } = await Rol.findOne({
+        const { id } = await RoleModel.findOne({
             where: {
-                Nombre_Rol: decodificarToken.rol
+                Nombre_Rol: decodedToken.rol
             }
         });
 
-        const cliente = await Cliente.findOne({
+        const customer = await CustomerModel.findOne({
             where: {
-                id: decodificarToken.id,
+                id: decodedToken.id,
                 ID_Rol_FK: id
             }
         });
 
-        const usuario = cliente || await Empleado.findOne({
+        const user = customer || await EmployeeModel.findOne({
             where: {
-                id: decodificarToken.id,
+                id: decodedToken.id,
                 ID_Rol_FK: id
             }
         });
 
-        const validarToken = await Token.findOne({
+        const validateToken = await TokenModel.findOne({
             where: {
-                Token_Usuario
+                Token_Usuario: userToken
             }
         });
 
-        if (!usuario || !validarToken) {
+        if (!user || !validateToken) {
             throw new Error("El token es inválido.");
         }
 
-        req.usuario = usuario;
-        req.rol = decodificarToken.rol;
-        req.token = Token_Usuario;
+        req.user = user;
+        req.role = decodedToken.rol;
+        req.token = userToken;
 
         next();
     } catch (error) {
@@ -64,4 +64,4 @@ const autenticacion = async (req, res, next) => {
     }
 };
 
-module.exports = autenticacion;
+module.exports = authentication;
