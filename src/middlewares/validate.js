@@ -6,10 +6,10 @@
  *              Cada esquema de validación de la carpeta "schemas".
  */
 
-module.exports = (esquemaValidacion) => {
+module.exports = (schema) => {
     return async (req, res, next) => {
         try {
-            await esquemaValidacion.validateAsync(req.body);
+            await schema.validateAsync(req.body);
             next();
         } catch (error) {
             res.status(400).send({ error: error.message });
