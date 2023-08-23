@@ -1,11 +1,11 @@
 const { PORT } = require('./config/config');
 const express = require('express');
 const db = require('./database/db_connection');
-const datosPredefinidos = require('./controllers/seed_data.controller');
-const rutasCliente = require('./routes/customer.routes');
-const rutasEmpleado = require('./routes/employee.routes');
-const rutasAutenticacion = require('./routes/auth.routes');
-const rutasImagen = require('./routes/upload_images.routes');
+const predefinedData = require('./controllers/seed_data.controller');
+const customerRoutes = require('./routes/customer.routes');
+const employeeRoutes = require('./routes/employee.routes');
+const authRoutes = require('./routes/auth.routes');
+const imagesRoutes = require('./routes/upload_images.routes');
 
 const app = express();    
 
@@ -14,7 +14,7 @@ const app = express();
     try {
         await db.authenticate();
         await db.sync();
-        await datosPredefinidos();
+        await predefinedData();
     } catch (error) {
         throw new Error(error);
     }
@@ -32,10 +32,10 @@ app.use((req, res, next) => {
 app.use(express.json());
 
 //Configuración de rutas
-app.use(rutasCliente);
-app.use(rutasEmpleado);
-app.use(rutasAutenticacion);
-app.use(rutasImagen);
+app.use(customerRoutes);
+app.use(employeeRoutes);
+app.use(authRoutes);
+app.use(imagesRoutes);
 
 //Configuración del manejo de rutas inexistentes
 app.get('*', (req, res) => {
