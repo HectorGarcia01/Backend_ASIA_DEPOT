@@ -1,55 +1,55 @@
 const express = require('express');
 const router = new express.Router();
 const {
-    guardarImagenUsuario,
-    verImagenUsuario,
-    eliminarImagenUsuario
+    addUserAvatar,
+    getUserAvatar,
+    deleteUserAvatar
 } = require('../controllers/upload_images.controller');
-const middlewareAuth = require('../middlewares/auth');
-const middlewareRol = require('../middlewares/check_rol');
-const middlewareUpload = require('../middlewares/upload_images');
+const authMiddleware = require('../middlewares/auth');
+const roleMiddleware = require('../middlewares/check_rol');
+const uploadMiddleware = require('../middlewares/upload_images');
 
 //Configuración de rutas (endpoints) para el SuperAdmin
 router.post(
     '/superAdmin/subir/avatar', 
-    middlewareAuth, 
-    middlewareRol('SuperAdmin'), 
-    middlewareUpload.single('avatar'),
-    guardarImagenUsuario,
+    authMiddleware, 
+    roleMiddleware('SuperAdmin'), 
+    uploadMiddleware.single('avatar'),
+    addUserAvatar,
     (error, req, res, next) => {
         res.status(400).send({ error: error.message });
     }
 );
-router.get('/superAdmin/ver/avatar', middlewareAuth, middlewareRol('SuperAdmin'), verImagenUsuario);
-router.delete('/superAdmin/eliminar/avatar', middlewareAuth, middlewareRol('SuperAdmin'), eliminarImagenUsuario);
+router.get('/superAdmin/ver/avatar', authMiddleware, roleMiddleware('SuperAdmin'), getUserAvatar);
+router.delete('/superAdmin/eliminar/avatar', authMiddleware, roleMiddleware('SuperAdmin'), deleteUserAvatar);
 
 //Configuración de rutas (endpoints) para el Admin
 router.post(
     '/admin/subir/avatar',
-    middlewareAuth,
-    middlewareRol('Admin'),
-    middlewareUpload.single('avatar'),
-    guardarImagenUsuario,
+    authMiddleware,
+    roleMiddleware('Admin'),
+    uploadMiddleware.single('avatar'),
+    addUserAvatar,
     (error, req, res, next) => {
         res.status(400).send({ error: error.message });
     }
 );
-router.get('/admin/ver/avatar', middlewareAuth, middlewareRol('Admin'), verImagenUsuario);
-router.delete('/admin/eliminar/avatar', middlewareAuth, middlewareRol('Admin'), eliminarImagenUsuario);
+router.get('/admin/ver/avatar', authMiddleware, roleMiddleware('Admin'), getUserAvatar);
+router.delete('/admin/eliminar/avatar', authMiddleware, roleMiddleware('Admin'), deleteUserAvatar);
 
 //Configuración de rutas (endpoints) para el User
 router.post(
     '/usuario/subir/avatar',
-    middlewareAuth,
-    middlewareRol('User'),
-    middlewareUpload.single('avatar'),
-    guardarImagenUsuario,
+    authMiddleware,
+    roleMiddleware('User'),
+    uploadMiddleware.single('avatar'),
+    addUserAvatar,
     (error, req, res, next) => {
         res.status(400).send({ error: error.message });
     }
 );
-router.get('/usuario/ver/avatar', middlewareAuth, middlewareRol('User'), verImagenUsuario);
-router.delete('/usuario/eliminar/avatar', middlewareAuth, middlewareRol('User'), eliminarImagenUsuario);
+router.get('/usuario/ver/avatar', authMiddleware, roleMiddleware('User'), getUserAvatar);
+router.delete('/usuario/eliminar/avatar', authMiddleware, roleMiddleware('User'), deleteUserAvatar);
 
 //Configuración de rutas (endpoints) para el producto
 

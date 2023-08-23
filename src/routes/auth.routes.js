@@ -1,17 +1,17 @@
 const express = require('express');
 const router = new express.Router();
 const {
-    iniciarSesion,
-    cerrarSesion,
-    cerrarTodasSesiones
+    login,
+    logout,
+    logoutAll
 } = require('../controllers/auth.controller');
-const esquemaValidacion = require('../schemas/auth.schema');
-const middlewareValidate = require('../middlewares/validate');
-const middlewareAuth =  require('../middlewares/auth');
+const authSchema = require('../schemas/auth.schema');
+const validateMiddleware = require('../middlewares/validate');
+const authMiddleware =  require('../middlewares/auth');
 
-router.post('/usuario/login', middlewareValidate(esquemaValidacion), iniciarSesion);
-router.post('/usuario/logout', middlewareAuth, cerrarSesion);
-router.post('/usuario/logoutAll', middlewareAuth, cerrarTodasSesiones);
+router.post('/usuario/login', validateMiddleware(authSchema), login);
+router.post('/usuario/logout', authMiddleware, logout);
+router.post('/usuario/logoutAll', authMiddleware, logoutAll);
 
 //Exportación de todas las rutas de autenticación
 module.exports = router;

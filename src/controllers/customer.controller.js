@@ -1,9 +1,9 @@
 const Sequelize = require('sequelize');
-const Cliente = require('../models/customer');
-const Direccion = require('../models/address');
-const Rol = require('../models/role');
-const Estado = require('../models/state');
-const Token = require('../models/token');
+const CustomerModel = require('../models/customer');
+const AddressModel = require('../models/address');
+const RoleModel = require('../models/role');
+const StateModel = require('../models/state');
+const TokenModel = require('../models/token');
 
 /**
  * Función para crear un nuevo cliente
@@ -17,7 +17,7 @@ const Token = require('../models/token');
  *              Modelo Token (token.js)
  */
 
-const crearCliente = async (req, res) => {
+const addCustomer = async (req, res) => {
     try {
         const {
             Nombre_Cliente,
@@ -32,51 +32,51 @@ const crearCliente = async (req, res) => {
             Direccion_Referencia
         } = req.body;
 
-        const estadoCliente = await Estado.findOne({
+        const stateCustomer = await StateModel.findOne({
             where: {
                 Tipo_Estado: 'Pendiente'
             }
         });
 
-        if (!estadoCliente) {
+        if (!stateCustomer) {
             return res.status(404).send({ error: "Estado no encontrado." });
         }
 
-        const rolCliente = await Rol.findOne({
+        const roleCustomer = await RoleModel.findOne({
             where: {
                 Nombre_Rol: 'User'
             }
         });
 
-        if (!rolCliente) {
+        if (!roleCustomer) {
             return res.status(404).send({ error: "Rol no encontrado." });
         }
 
-        const nuevoCliente = await Cliente.create({
+        const newCustomer = await CustomerModel.create({
             Nombre_Cliente,
             Apellido_Cliente,
             Telefono_Cliente,
             NIT_Cliente,
             Correo_Cliente,
             Password_Cliente,
-            ID_Estado_FK: estadoCliente.id,
-            ID_Rol_FK: rolCliente.id
+            ID_Estado_FK: stateCustomer.id,
+            ID_Rol_FK: roleCustomer.id
         });
 
         if (Departamento || Municipio || Calle || Direccion_Referencia) {
-            await Direccion.create({
+            await AddressModel.create({
                 Departamento,
                 Municipio,
                 Calle,
                 Direccion_Referencia,
-                ID_Cliente_FK: nuevoCliente.id
+                ID_Cliente_FK: newCustomer.id
             });
         }
         
-        const token = await nuevoCliente.generarToken(nuevoCliente.id, rolCliente.Nombre_Rol);
-        await Token.create({ 
+        const token = await newCustomer.generateAuthToken(newCustomer.id, roleCustomer.Nombre_Rol);
+        await TokenModel.create({ 
             Token_Usuario: token, 
-            ID_Cliente_FK: nuevoCliente.id 
+            ID_Cliente_FK: newCustomer.id 
         });
 
         res.status(201).send({ msg: "Se ha registrado con éxito." });
@@ -97,17 +97,17 @@ const crearCliente = async (req, res) => {
  *              Modelo Direccion (address.js)
  */
 
-const verPerfilCliente = async (req, res) => {
+const customerProfile = async (req, res) => {
     try {
-        const { usuario } = req;
+        const { user } = req;
 
-        const direccionCliente = await Direccion.findOne({
+        const addressCustomer = await AddressModel.findOne({
             where: {
-                ID_Cliente_FK: usuario.id
+                ID_Cliente_FK: user.id
             }
         });
 
-        res.status(200).send({ usuario, direccionCliente });
+        res.status(200).send({ customer: user, addressCustomer });
     } catch (error) {
         res.status(500).send({ error: "Error interno del servidor." });
     }
@@ -121,24 +121,24 @@ const verPerfilCliente = async (req, res) => {
  *              Modelo Direccion (address.js)
  */
 
-const actualizarCliente = async (req, res) => {
+const updateCustomer = async (req, res) => {
     try {
-        const { usuario } = req;
-        const nuevosCambios = Object.keys(req.body);
+        const { user } = req;
+        const updates = Object.keys(req.body);
 
-        const cambiosPermitidos = ['Nombre_Cliente', 'Apellido_Cliente', 'Telefono_Cliente', 'NIT_Cliente', 'Departamento', 'Municipio', 'Calle', 'Direccion_Referencia'];
-        const validarCambios = nuevosCambios.every((nuevoCambio) => cambiosPermitidos.includes(nuevoCambio));
+        const allowedUpdates = ['Nombre_Cliente', 'Apellido_Cliente', 'Telefono_Cliente', 'NIT_Cliente', 'Departamento', 'Municipio', 'Calle', 'Direccion_Referencia'];
+        const isValidOperation = updates.every((update) => allowedUpdates.includes(update));
 
-        if (!validarCambios) {
+        if (!isValidOperation) {
             return res.status(400).send({ error: '¡Actualización inválida!' });
         }
 
-        nuevosCambios.forEach((nuevoCambio) => usuario[nuevoCambio] = req.body[nuevoCambio]);
+        updates.forEach((update) => user[update] = req.body[update]);
 
         //Aún queda pendiente lo de actualizar la dirección ***********************************
 
-        await usuario.save();
-        res.status(200).send({ usuario, msg: "Datos actualizados con éxito." });
+        await user.save();
+        res.status(200).send({ msg: "Datos actualizados con éxito." });
     } catch (error) {
         res.status(500).send({ error: "Error interno del servidor." });
     }
@@ -146,7 +146,7 @@ const actualizarCliente = async (req, res) => {
 
 //Exportación de controladores para el cliente
 module.exports = {
-    crearCliente,
-    verPerfilCliente,
-    actualizarCliente
+    addCustomer,
+    customerProfile,
+    updateCustomer
 };

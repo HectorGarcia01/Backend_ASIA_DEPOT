@@ -1,7 +1,7 @@
-const Estado = require('../models/state');
-const Rol = require('../models/role');
-const tiposEstados = require('../utils/seed/state_seed_data');
-const tiposRoles = require('../utils/seed/role_seed_data');
+const StateModel = require('../models/state');
+const RoleModel = require('../models/role');
+const typeStates = require('../utils/seed/state_seed_data');
+const typeRoles = require('../utils/seed/role_seed_data');
 
 /**
  * Insertar datos predefinidos para el modelo Estado
@@ -13,19 +13,19 @@ const tiposRoles = require('../utils/seed/role_seed_data');
  *              Para estados predefinidos (state_seed_data.js).
  *              Para roles predefinidos (role_seed_data.js).
  */
-const insertarDatosPredefinidos = async () => {
+const insertPredefinedData = async () => {
     try {
-        const estadosExistentes = await Estado.findAll();
+        const existingState = await StateModel.findAll();
 
-        if (estadosExistentes.length === 0) {
-            await Estado.bulkCreate(tiposEstados);
+        if (existingState.length === 0) {
+            await StateModel.bulkCreate(typeStates);
             console.log("Datos predefinidos de estados insertados con éxito.");
         }
 
-        const rolesExistentes = await Rol.findAll();
+        const existingRole = await RoleModel.findAll();
 
-        if (rolesExistentes.length === 0) {
-            await Rol.bulkCreate(tiposRoles);
+        if (existingRole.length === 0) {
+            await RoleModel.bulkCreate(typeRoles);
             console.log("Datos predefinidos de roles insertados con éxito.");
         }
     } catch (error) {
@@ -33,4 +33,4 @@ const insertarDatosPredefinidos = async () => {
     }
 };
 
-module.exports = insertarDatosPredefinidos;
+module.exports = insertPredefinedData;

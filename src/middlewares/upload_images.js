@@ -6,7 +6,7 @@ const multer = require('multer');
  * Autor: Hector Armando García González
  */
 
-const validarImagen = multer({
+const validateImage = multer({
     limits: {
         fileSize: 2000000 //Máximo 2MB
     },
@@ -19,4 +19,4 @@ const validarImagen = multer({
     }
 });
 
-module.exports = validarImagen;
+module.exports = validateImage;

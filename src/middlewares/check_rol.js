@@ -4,9 +4,9 @@
  * Autor: Hector Armando García González
  */
 
-const validarRol = (rol) => (req, res, next) => {
+const checkRol = (role) => (req, res, next) => {
     try {
-        if (req.rol !== rol) {
+        if (req.role !== role) {
             throw new Error("No tienes los permisos necesarios para realizar esta acción.");
         }
 
@@ -16,4 +16,4 @@ const validarRol = (rol) => (req, res, next) => {
     }
 };
 
-module.exports = validarRol;
+module.exports = checkRol;

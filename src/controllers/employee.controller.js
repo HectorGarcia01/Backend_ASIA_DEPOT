@@ -1,9 +1,9 @@
 const Sequelize = require('sequelize');
-const Empleado = require('../models/employee');
-const Direccion = require('../models/address');
-const Rol = require('../models/role');
-const Estado = require('../models/state');
-const Token = require('../models/token');
+const EmployeeModel = require('../models/employee');
+const AddressModel = require('../models/address');
+const RoleModel = require('../models/role');
+const StateModel = require('../models/state');
+const TokenModel = require('../models/token');
 
 /**
  * Función para crear un nuevo empleado
@@ -17,7 +17,7 @@ const Token = require('../models/token');
  *              Modelo Token (token.js)
  */
 
-const crearEmpleado = async (req, res) => {
+const addEmployee = async (req, res) => {
     try {
         const {
             Nombre_Empleado,
@@ -32,51 +32,51 @@ const crearEmpleado = async (req, res) => {
             Direccion_Referencia
         } = req.body;
 
-        const estadoEmpleado = await Estado.findOne({
+        const stateEmployee = await StateModel.findOne({
             where: {
                 Tipo_Estado: 'Pendiente'
             }
         });
 
-        if (!estadoEmpleado) {
+        if (!stateEmployee) {
             return res.status(404).send({ error: "Estado no encontrado." });
         }
 
-        const rolEmpleado = await Rol.findOne({
+        const roleEmployee = await RoleModel.findOne({
             where: {
                 Nombre_Rol: 'Admin'
             }
         });
 
-        if (!rolEmpleado) {
+        if (!roleEmployee) {
             return res.status(404).send({ error: "Rol no encontrado." });
         }
         
-        const nuevoEmpleado = await Empleado.create({
+        const newEmployee = await EmployeeModel.create({
             Nombre_Empleado,
             Apellido_Empleado,
             Telefono_Empleado,
             NIT_Empleado,
             Correo_Empleado,
             Password_Empleado,
-            ID_Estado_FK: estadoEmpleado.id,
-            ID_Rol_FK: rolEmpleado.id
+            ID_Estado_FK: stateEmployee.id,
+            ID_Rol_FK: roleEmployee.id
         });
 
         if (Departamento || Municipio || Calle || Direccion_Referencia) {
-            await Direccion.create({
+            await AddressModel.create({
                 Departamento,
                 Municipio,
                 Calle,
                 Direccion_Referencia,
-                ID_Empleado_FK: nuevoEmpleado.id
+                ID_Empleado_FK: newEmployee.id
             });
         }
 
-        const token = await nuevoEmpleado.generarToken(nuevoEmpleado.id, rolEmpleado.Nombre_Rol);
-        await Token.create({
+        const token = await newEmployee.generateAuthToken(newEmployee.id, roleEmployee.Nombre_Rol);
+        await TokenModel.create({
             Token_Usuario: token,
-            ID_Empleado_FK: nuevoEmpleado.id
+            ID_Empleado_FK: newEmployee.id
         });
         
         res.status(201).send({ msg: "Empleado creado con éxito." });
@@ -97,17 +97,17 @@ const crearEmpleado = async (req, res) => {
  *              Modelo Direccion (address.js)
  */
 
-const verPerfilEmpleado = async (req, res) => {
+const employeeProfile = async (req, res) => {
     try {
-        const { usuario } = req;
+        const { user } = req;
 
-        const direccionEmpleado = await Direccion.findOne({
+        const addressEmployee = await AddressModel.findOne({
             where: {
-                ID_Empleado_FK: usuario.id
+                ID_Empleado_FK: user.id
             }
         });
 
-        res.status(200).send({ empleado: usuario, direccionEmpleado });
+        res.status(200).send({ employee: user, addressEmployee });
     } catch (error) {
         res.status(500).send({ error: "Error interno del servidor." });
     }
@@ -121,24 +121,24 @@ const verPerfilEmpleado = async (req, res) => {
  *              Modelo Direccion (address.js)
  */
 
-const actualizarEmpleado = async (req, res) => {
+const updateEmployee = async (req, res) => {
     try {
-        const { usuario } = req;
-        const nuevosCambios = Object.keys(req.body);
+        const { user } = req;
+        const updates = Object.keys(req.body);
 
-        const cambiosPermitidos = ['Nombre_Empleado', 'Apellido_Empleado', 'Telefono_Empleado', 'NIT_Empleado', 'Departamento', 'Municipio', 'Calle', 'Direccion_Referencia'];
-        const validarCambios = nuevosCambios.every((nuevoCambio) => cambiosPermitidos.includes(nuevoCambio));
+        const allowedUpdates = ['Nombre_Empleado', 'Apellido_Empleado', 'Telefono_Empleado', 'NIT_Empleado', 'Departamento', 'Municipio', 'Calle', 'Direccion_Referencia'];
+        const isValidOperation = updates.every((update) => allowedUpdates.includes(update));
 
-        if (!validarCambios) {
+        if (!isValidOperation) {
             return res.status(400).send({ error: '¡Actualización inválida!' });
         }
 
-        nuevosCambios.forEach((nuevoCambio) => usuario[nuevoCambio] = req.body[nuevoCambio]);
+        updates.forEach((update) => user[update] = req.body[update]);
 
         //Aún queda pendiente lo de actualizar la dirección ***********************************
 
-        await usuario.save();
-        res.status(200).send({ empleado: usuario, msg: "Datos actualizados con éxito." });
+        await user.save();
+        res.status(200).send({ msg: "Datos actualizados con éxito." });
     } catch (error) {
         res.status(500).send({ error: "Error interno del servidor." });
     }
@@ -153,15 +153,15 @@ const actualizarEmpleado = async (req, res) => {
  *              Modelo Estado (state.js)
  */
 
-const verEmpleados = async (req, res) => {
+const readEmployees = async (req, res) => {
     try {
-        const empleados = await Empleado.findAll({});
+        const employees = await EmployeeModel.findAll({});
 
-        if (empleados.length === 0) {
+        if (employees.length === 0) {
             return res.status(404).send({ error: "No existe ningún empleado registrado." });
         }
 
-        res.status(200).send({ empleados });
+        res.status(200).send({ employees });
     } catch (error) {
         res.status(500).send({ errr: "Error interno del servidor.", error });
     }
@@ -175,18 +175,18 @@ const verEmpleados = async (req, res) => {
  *              Modelo Empleado (employee.js),
  */
 
-const verEmpleadoId = async (req, res) => {
+const readEmployeeId = async (req, res) => {
     try {
         const { id } = req.params;
-        const empleado = await Empleado.findByPk(id);
+        const employee = await EmployeeModel.findByPk(id);
 
-        if (!empleado) {
+        if (!employee) {
             return res.status(404).send({ error: "Empleado no encontrado." });
         }
 
-        res.status(200).send({ empleado });
+        res.status(200).send({ employee });
     } catch (error) {
-        res.status(500).send({ errr: "Error interno del servidor.", error });
+        res.status(500).send({ error: "Error interno del servidor." });
     }
 };
 
@@ -199,23 +199,23 @@ const verEmpleadoId = async (req, res) => {
  *              Modelo Estado (state.js)
  */
 
-const eliminarEmpleadoId = async (req, res) => {
+const deleteEmployeeId = async (req, res) => {
     try {
         const { id } = req.params;
-        const empleado = await Empleado.findByPk(id);
+        const employee = await EmployeeModel.findByPk(id);
 
-        if (!empleado) {
+        if (!employee) {
             return res.status(404).send({ error: "Empleado no encontrado." });
         }
 
-        const estadoEmpleado = await Estado.findOne({
+        const stateEmployee = await StateModel.findOne({
             where: {
                 Tipo_Estado: "Inactivo"
             }
         });
 
-        empleado.ID_Estado_FK = estadoEmpleado.id;
-        await empleado.save();
+        employee.ID_Estado_FK = stateEmployee.id;
+        await employee.save();
         res.status(200).send({ msg: "Empleado eliminado con éxito." });
     } catch (error) {
         res.status(500).send({ error: "Error interno del servidor." });
@@ -224,10 +224,10 @@ const eliminarEmpleadoId = async (req, res) => {
 
 //Exportación de controladores para el empleado
 module.exports = {
-    crearEmpleado,
-    verPerfilEmpleado,
-    verEmpleadoId,
-    actualizarEmpleado,
-    verEmpleados,
-    eliminarEmpleadoId
+    addEmployee,
+    employeeProfile,
+    updateEmployee,
+    readEmployees,
+    readEmployeeId,
+    deleteEmployeeId
 };

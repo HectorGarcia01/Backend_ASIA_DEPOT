@@ -1,7 +1,7 @@
-const Cliente = require('../models/customer');
-const Empleado = require('../models/employee');
-const Rol = require('../models/role');
-const Token = require('../models/token');
+const CustomerModel = require('../models/customer');
+const EmployeeModel = require('../models/employee');
+const RoleModel = require('../models/role');
+const TokenModel = require('../models/token');
 
 /**
  * Función para iniciar sesión
@@ -14,41 +14,41 @@ const Token = require('../models/token');
  *              Modelo Token (token.js)
  */
 
-const iniciarSesion = async (req, res) => {
+const login = async (req, res) => {
     try {
         const { correo, password } = req.body;
         
-        const clienteBuild = Cliente.build();
-        const empleadoBuild = Empleado.build();
+        const customerBuild = CustomerModel.build();
+        const employeeBuild = EmployeeModel.build();
 
-        const cliente = await clienteBuild.validarCredenciales(correo, password);
-        const usuario = cliente || await empleadoBuild.validarCredenciales(correo, password);
+        const customer = await customerBuild.findByCredentials(correo, password);
+        const user = customer || await employeeBuild.findByCredentials(correo, password);
 
-        if (!usuario) {
+        if (!user) {
             return res.status(401).send({ error: "Credenciales inválidas." });
         }
 
-        const { Nombre_Rol } = await Rol.findOne({
+        const { Nombre_Rol } = await RoleModel.findOne({
             where: {
-                id: usuario.ID_Rol_FK
+                id: user.ID_Rol_FK
             }
         });
 
-        const Token_Usuario = await usuario.generarToken(usuario.id, Nombre_Rol);
+        const userToken = await user.generateAuthToken(user.id, Nombre_Rol);
 
         if (Nombre_Rol === 'User') {
-            await Token.create({
-                Token_Usuario,
-                ID_Cliente_FK: usuario.id
+            await TokenModel.create({
+                Token_Usuario: userToken,
+                ID_Cliente_FK: user.id
             });
         } else {
-            await Token.create({
-                Token_Usuario,
-                ID_Empleado_FK: usuario.id
+            await TokenModel.create({
+                Token_Usuario: userToken,
+                ID_Empleado_FK: user.id
             });
         }        
 
-        res.status(200).send({ usuario, Nombre_Rol, Token_Usuario });
+        res.status(200).send({ user, userRole: Nombre_Rol, userToken });
     } catch (error) {
         res.status(401).send({ error: error.message });
     }
@@ -62,17 +62,17 @@ const iniciarSesion = async (req, res) => {
  *              Modelo Token (token.js)
  */
 
-const cerrarSesion = async (req, res) => {
+const logout = async (req, res) => {
     try {
-        const Token_Usuario = req.token;
+        const userToken = req.token;
 
-        const tokenEliminado = await Token.destroy({
+        const removedToken = await TokenModel.destroy({
             where: {
-                Token_Usuario
+                Token_Usuario: userToken
             }
         });
 
-        if(tokenEliminado === 0) {
+        if (removedToken === 0) {
             return res.status(404).send({ error: "Error al cerrar sesión." });
         }
 
@@ -90,23 +90,30 @@ const cerrarSesion = async (req, res) => {
  *              Modelo Token (token.js)
  */
 
-const cerrarTodasSesiones = async (req, res) => {
+const logoutAll = async (req, res) => {
     try {
-        const { id } = req.usuario;
+        const { user, role } = req;
+        let removedToken;
 
-        if (Nombre_Rol === 'User') {
-            tokenEliminado = await Token.destroy({
+        if (role === 'User') {
+            removedToken = await TokenModel.destroy({
                 where: {
-                    ID_Cliente_FK: id
+                    ID_Cliente_FK: user.id
                 }
             });
         } else {
-            tokenEliminado = await Token.destroy({
+            removedToken = await TokenModel.destroy({
                 where: {
-                    ID_Empleado_FK: id
+                    ID_Empleado_FK: user.id
                 }
             });
         }
+
+        if (removedToken === 0) {
+            return res.status(404).send({ error: "Error al cerrar todas las sesiones." });
+        }
+
+        res.status(200).send({ msg: "Sesiones cerradas correctamente." });
     } catch (error) {
         res.status(500).send({ error: "Error interno del servidor." });
     }
@@ -114,7 +121,7 @@ const cerrarTodasSesiones = async (req, res) => {
 
 //Exportación del controlador de autenticación
 module.exports = {
-    iniciarSesion,
-    cerrarSesion,
-    cerrarTodasSesiones
+    login,
+    logout,
+    logoutAll
 };

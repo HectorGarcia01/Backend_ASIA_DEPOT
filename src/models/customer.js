@@ -69,8 +69,8 @@ const Cliente = db.define('Cliente', {
  * Referencias: Datos del cliente actual
  */
 
-Cliente.beforeCreate(async (cliente) => {
-    cliente.Password_Cliente = await bcrypt.hash(cliente.Password_Cliente, 8);
+Cliente.beforeCreate(async (customer) => {
+    customer.Password_Cliente = await bcrypt.hash(customer.Password_Cliente, 8);
 });
 
 /**
@@ -80,7 +80,7 @@ Cliente.beforeCreate(async (cliente) => {
  * Referencias: Variable de entorno para llave secreta (config.js)
  */
 
-Cliente.prototype.generarToken = (id, rol) => {
+Cliente.prototype.generateAuthToken = (id, rol) => {
     const token = jwt.sign({ id: id.toString(), rol }, KEY_TOKEN);
     return token;
 }
@@ -91,24 +91,24 @@ Cliente.prototype.generarToken = (id, rol) => {
  * Autor: Hector Armando García González
  */
 
-Cliente.prototype.validarCredenciales = async (Correo_Cliente, Password_Cliente) => {
-    const cliente = await Cliente.findOne({
+Cliente.prototype.findByCredentials = async (Correo_Cliente, Password_Cliente) => {
+    const customer = await Cliente.findOne({
         where: {
             Correo_Cliente
         }
     });
 
-    if (!cliente) {
+    if (!customer) {
         return false;
     }
 
-    const passwordValida = await bcrypt.compare(Password_Cliente, cliente.Password_Cliente);
+    const isMatch = await bcrypt.compare(Password_Cliente, customer.Password_Cliente);
 
-    if (!passwordValida) {
+    if (!isMatch) {
         throw new Error("Credenciales inválidas.");
     }
 
-    return cliente;
+    return customer;
 };
 
 /**
@@ -118,16 +118,15 @@ Cliente.prototype.validarCredenciales = async (Correo_Cliente, Password_Cliente)
  */
 
 Cliente.prototype.toJSON = function () {
-    const cliente = { ...this.get() };
+    const customer = { ...this.get() };
 
-    delete cliente.Avatar_Cliente;
-    delete cliente.Password_Cliente;
-    delete cliente.createdAt;
-    delete cliente.updatedAt;
-    delete cliente.ID_Estado_FK;
-    delete cliente.ID_Rol_FK;
+    delete customer.Avatar_Cliente;
+    delete customer.Password_Cliente;
+    delete customer.createdAt;
+    delete customer.updatedAt;
+    delete customer.ID_Rol_FK;
 
-    return cliente;
+    return customer;
 };
 
 //Exportación del modelo Cliente
