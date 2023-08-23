@@ -34,7 +34,7 @@ const login = async (req, res) => {
             }
         });
 
-        const userToken = await user.generateAuthToken(usuario.id, Nombre_Rol);
+        const userToken = await user.generateAuthToken(user.id, Nombre_Rol);
 
         if (Nombre_Rol === 'User') {
             await TokenModel.create({
