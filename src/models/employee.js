@@ -69,8 +69,8 @@ const Empleado = db.define('Empleado', {
  * Referencias: Datos del empleado actual
  */
 
-Empleado.beforeCreate(async (empleado) => {
-    empleado.Password_Empleado = await bcrypt.hash(empleado.Password_Empleado, 8);
+Empleado.beforeCreate(async (employee) => {
+    employee.Password_Empleado = await bcrypt.hash(employee.Password_Empleado, 8);
 });
 
 /**
@@ -80,7 +80,7 @@ Empleado.beforeCreate(async (empleado) => {
  * Referencias: Variable de entorno para llave secreta (config.js)
  */
 
-Empleado.prototype.generarToken = (id, rol) => {
+Empleado.prototype.generateAuthToken = (id, rol) => {
     const token = jwt.sign({ id: id.toString(), rol }, KEY_TOKEN);
     return token;
 }
@@ -91,24 +91,24 @@ Empleado.prototype.generarToken = (id, rol) => {
  * Autor: Hector Armando García González
  */
 
-Empleado.prototype.validarCredenciales = async (Correo_Empleado, Password_Empleado) => {
-    const empleado = await Empleado.findOne({
+Empleado.prototype.findByCredentials = async (Correo_Empleado, Password_Empleado) => {
+    const employee = await Empleado.findOne({
         where: {
             Correo_Empleado
         }
     });
 
-    if (!empleado) {
+    if (!employee) {
         return false;
     }
 
-    const passwordValida = await bcrypt.compare(Password_Empleado, empleado.Password_Empleado);
+    const isMatch = await bcrypt.compare(Password_Empleado, employee.Password_Empleado);
 
-    if (!passwordValida) {
+    if (!isMatch) {
         throw new Error("Credenciales inválidas.");
     }
 
-    return empleado;
+    return employee;
 };
 
 /**
@@ -118,15 +118,15 @@ Empleado.prototype.validarCredenciales = async (Correo_Empleado, Password_Emplea
  */
 
 Empleado.prototype.toJSON = function () {
-    const empleado = { ...this.get() };
+    const employee = { ...this.get() };
     
-    delete empleado.Avatar_Empleado;
-    delete empleado.Password_Empleado;
-    delete empleado.createdAt;
-    delete empleado.updatedAt;
-    delete empleado.ID_Rol_FK;
+    delete employee.Avatar_Empleado;
+    delete employee.Password_Empleado;
+    delete employee.createdAt;
+    delete employee.updatedAt;
+    delete employee.ID_Rol_FK;
     
-    return empleado;
+    return employee;
 };
 
 //Exportación del modelo Empleado
