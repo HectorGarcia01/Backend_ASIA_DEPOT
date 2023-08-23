@@ -99,15 +99,15 @@ const addCustomer = async (req, res) => {
 
 const customerProfile = async (req, res) => {
     try {
-        const { usuario } = req;
+        const { user } = req;
 
         const addressCustomer = await AddressModel.findOne({
             where: {
-                ID_Cliente_FK: usuario.id
+                ID_Cliente_FK: user.id
             }
         });
 
-        res.status(200).send({ customer: usuario, addressCustomer });
+        res.status(200).send({ customer: user, addressCustomer });
     } catch (error) {
         res.status(500).send({ error: "Error interno del servidor." });
     }
@@ -123,7 +123,7 @@ const customerProfile = async (req, res) => {
 
 const updateCustomer = async (req, res) => {
     try {
-        const { usuario } = req;
+        const { user } = req;
         const updates = Object.keys(req.body);
 
         const allowedUpdates = ['Nombre_Cliente', 'Apellido_Cliente', 'Telefono_Cliente', 'NIT_Cliente', 'Departamento', 'Municipio', 'Calle', 'Direccion_Referencia'];
@@ -133,11 +133,11 @@ const updateCustomer = async (req, res) => {
             return res.status(400).send({ error: '¡Actualización inválida!' });
         }
 
-        updates.forEach((update) => usuario[update] = req.body[update]);
+        updates.forEach((update) => user[update] = req.body[update]);
 
         //Aún queda pendiente lo de actualizar la dirección ***********************************
 
-        await usuario.save();
+        await user.save();
         res.status(200).send({ msg: "Datos actualizados con éxito." });
     } catch (error) {
         res.status(500).send({ error: "Error interno del servidor." });
