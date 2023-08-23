@@ -124,7 +124,6 @@ Cliente.prototype.toJSON = function () {
     delete customer.Password_Cliente;
     delete customer.createdAt;
     delete customer.updatedAt;
-    delete customer.ID_Estado_FK;
     delete customer.ID_Rol_FK;
 
     return customer;
