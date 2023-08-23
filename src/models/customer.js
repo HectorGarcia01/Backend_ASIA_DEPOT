@@ -102,7 +102,7 @@ Cliente.prototype.findByCredentials = async (Correo_Cliente, Password_Cliente) =
         return false;
     }
 
-    const isMatch = await bcrypt.compare(Password_Cliente, cliente.Password_Cliente);
+    const isMatch = await bcrypt.compare(Password_Cliente, customer.Password_Cliente);
 
     if (!isMatch) {
         throw new Error("Credenciales inválidas.");
