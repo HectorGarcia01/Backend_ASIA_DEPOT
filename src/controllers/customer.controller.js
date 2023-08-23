@@ -42,7 +42,7 @@ const addCustomer = async (req, res) => {
             return res.status(404).send({ error: "Estado no encontrado." });
         }
 
-        const roleCustomer = await Rol.findOne({
+        const roleCustomer = await RoleModel.findOne({
             where: {
                 Nombre_Rol: 'User'
             }
