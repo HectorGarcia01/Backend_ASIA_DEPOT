@@ -6,18 +6,18 @@ const sharp = require('sharp');
  * Autor: Hector Armando García González
  */
 
-const guardarImagenUsuario = async (req, res) => {
+const addUserAvatar = async (req, res) => {
     try {
-        const { usuario, rol } = req;
+        const { user, role } = req;
         const buffer = await sharp(req.file.buffer).resize({ width: 250, height: 250 }).png().toBuffer();
         
-        if (rol === 'User') {
-            usuario.Avatar_Cliente = buffer;
+        if (role === 'User') {
+            user.Avatar_Cliente = buffer;
         } else {
-            usuario.Avatar_Empleado = buffer;
+            user.Avatar_Empleado = buffer;
         }
 
-        await usuario.save();
+        await user.save();
         res.status(200).send({ msg: "Foto de perfil guardada con éxito." });
     } catch (error) {
         res.status(500).send({ error: "Error interno del servidor." });
@@ -30,10 +30,10 @@ const guardarImagenUsuario = async (req, res) => {
  * Autor: Hector Armando García González
  */
 
-const verImagenUsuario = async (req, res) => {
+const getUserAvatar = async (req, res) => {
     try {
-        const { usuario } = req;
-        const avatar = usuario.Avatar_Cliente || usuario.Avatar_Empleado;
+        const { user } = req;
+        const avatar = user.Avatar_Cliente || user.Avatar_Empleado;
 
         if (!avatar) {
             return res.status(404).send({ error: "No posees foto de perfil." });
@@ -52,17 +52,17 @@ const verImagenUsuario = async (req, res) => {
  * Autor: Hector Armando García González
  */
 
-const eliminarImagenUsuario = async (req, res) => {
+const deleteUserAvatar = async (req, res) => {
     try {
-        const { usuario, rol } = req;
+        const { user, role } = req;
 
-        if (rol === 'User') {
-            usuario.Avatar_Cliente = null;
+        if (role === 'User') {
+            user.Avatar_Cliente = null;
         } else {
-            usuario.Avatar_Empleado = null;
+            user.Avatar_Empleado = null;
         }
 
-        await usuario.save();
+        await user.save();
         res.status(200).send({ msg: "Foto de perfil eliminada con éxito." });
     } catch (error) {
         res.status(500).send({ error: "Error interno del servidor." });
@@ -71,7 +71,7 @@ const eliminarImagenUsuario = async (req, res) => {
 
 //Exportación de controladores para el manejo de imágen
 module.exports = {
-    guardarImagenUsuario,
-    verImagenUsuario,
-    eliminarImagenUsuario
+    addUserAvatar,
+    getUserAvatar,
+    deleteUserAvatar
 };
