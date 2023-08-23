@@ -1,5 +1,5 @@
 const Joi = require('joi');
-const errorPersonalizado = require('../utils/custom_error');
+const customError = require('../utils/custom_error');
 
 /**
  * Esquema de validación de credenciales
@@ -9,13 +9,13 @@ const errorPersonalizado = require('../utils/custom_error');
  *              custom_error.js (para errores personalizados)
  */
 
-const esquemaValidacionLogin = Joi.object({
+const loginValidateScheme = Joi.object({
     correo: Joi.string()
         .email({ tlds: { allow: ['com'] } })
         .required()
         .trim()
         .error((error) => {
-            return errorPersonalizado("Correo inválido.", error);
+            return customError("Correo inválido.", error);
         }),
     password: Joi.string()
         .required()
@@ -23,4 +23,4 @@ const esquemaValidacionLogin = Joi.object({
 });
 
 //Exportación del esquema de validación para el correo del login
-module.exports = esquemaValidacionLogin;
+module.exports = loginValidateScheme;
