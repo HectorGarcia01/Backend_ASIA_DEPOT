@@ -4,12 +4,12 @@
  * Autor: Hector Armando García González
  */
 
-const errorPersonalizado = (mensaje, detalle) => {
-    const error = new Error(mensaje);
-    error.detalle = detalle;
+const customError = (message, detail) => {
+    const error = new Error(message);
+    error.detail = detail;
 
     return error;
 };
 
 //Exportación de la función de errores personalizados
-module.exports = errorPersonalizado;
+module.exports = customError;
