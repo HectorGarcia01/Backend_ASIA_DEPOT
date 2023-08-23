@@ -99,15 +99,15 @@ const addEmployee = async (req, res) => {
 
 const employeeProfile = async (req, res) => {
     try {
-        const { usuario } = req;
+        const { user } = req;
 
         const addressEmployee = await AddressModel.findOne({
             where: {
-                ID_Empleado_FK: usuario.id
+                ID_Empleado_FK: user.id
             }
         });
 
-        res.status(200).send({ employee: usuario, addressEmployee });
+        res.status(200).send({ employee: user, addressEmployee });
     } catch (error) {
         res.status(500).send({ error: "Error interno del servidor." });
     }
@@ -123,7 +123,7 @@ const employeeProfile = async (req, res) => {
 
 const updateEmployee = async (req, res) => {
     try {
-        const { usuario } = req;
+        const { user } = req;
         const updates = Object.keys(req.body);
 
         const allowedUpdates = ['Nombre_Empleado', 'Apellido_Empleado', 'Telefono_Empleado', 'NIT_Empleado', 'Departamento', 'Municipio', 'Calle', 'Direccion_Referencia'];
@@ -133,11 +133,11 @@ const updateEmployee = async (req, res) => {
             return res.status(400).send({ error: '¡Actualización inválida!' });
         }
 
-        updates.forEach((update) => usuario[update] = req.body[update]);
+        updates.forEach((update) => user[update] = req.body[update]);
 
         //Aún queda pendiente lo de actualizar la dirección ***********************************
 
-        await usuario.save();
+        await user.save();
         res.status(200).send({ msg: "Datos actualizados con éxito." });
     } catch (error) {
         res.status(500).send({ error: "Error interno del servidor." });
