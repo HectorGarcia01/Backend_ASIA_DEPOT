@@ -101,13 +101,13 @@ const customerProfile = async (req, res) => {
     try {
         const { usuario } = req;
 
-        const addressCustomer = await Direccion.findOne({
+        const addressCustomer = await AddressModel.findOne({
             where: {
                 ID_Cliente_FK: usuario.id
             }
         });
 
-        res.status(200).send({ user: usuario, addressCustomer });
+        res.status(200).send({ customer: usuario, addressCustomer });
     } catch (error) {
         res.status(500).send({ error: "Error interno del servidor." });
     }
