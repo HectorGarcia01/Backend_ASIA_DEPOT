@@ -15,15 +15,15 @@ const { KEY_TOKEN } = require('../config/config');
 
 const Cliente = db.define('Cliente', {
     Nombre_Cliente: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(30),
         allowNull: false
     },
     Apellido_Cliente: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(30),
         allowNull: false
     },
     Telefono_Cliente: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(8),
         allowNull: false
     },
     NIT_Cliente: {
@@ -31,7 +31,7 @@ const Cliente = db.define('Cliente', {
         allowNull: true
     },
     Correo_Cliente: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(30),
         allowNull: false,
         low: true,
         unique: true
@@ -83,7 +83,7 @@ Cliente.beforeCreate(async (customer) => {
 Cliente.prototype.generateAuthToken = (id, rol) => {
     const token = jwt.sign({ id: id.toString(), rol }, KEY_TOKEN);
     return token;
-}
+};
 
 /**
  * Método personalizado para validar credenciales

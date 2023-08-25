@@ -48,7 +48,124 @@ const addSupplier = async (req, res) => {
     }
 };
 
+/**
+ * Función para ver todos los proveedores
+ * Fecha creación: 23/08/2023
+ * Autor: Hector Armando García González
+ * Referencias:
+ *              Modelo Proveedor (supplier.js),
+ *              Modelo Estado (state.js)
+ */
+
+const readSuppliers = async (req, res) => {
+    try {
+        const suppliers = await SupplierModel.findAll({});
+
+        if (suppliers.length === 0) {
+            return res.status(404).send({ error: "No existe ningún proveedor registrado." });
+        }
+
+        res.status(200).send({ suppliers });
+    } catch (error) {
+        res.status(500).send({ error: "Error interno del servidor." });
+    }
+};
+
+/**
+ * Función para ver un proveedor por ID
+ * Fecha creación: 23/08/2023
+ * Autor: Hector Armando García González
+ * Referencias:
+ *              Modelo Proveedor (supplier.js),
+ */
+
+const readSupplierId = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const supplier = await SupplierModel.findByPk(id);
+
+        if (!supplier) {
+            return res.status(404).send({ error: "Proveedor no encontrado." });
+        }
+
+        res.status(200).send({ supplier });
+    } catch (error) {
+        res.status(500).send({ error: "Error interno del servidor." });
+    }
+};
+
+/**
+ * Función para actualizar datos de un proveedor por ID
+ * Fecha creación: 23/08/2023
+ * Autor: Hector Armando García González
+ * Referencias:
+ *              Modelo Proveedor (supplier.js)
+ */
+
+const updateSupplierId = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const updates = Object.keys(req.body);
+
+        const allowedUpdates = ['Nombre_Proveedor', 'Apellido_Proveedor', 'Telefono_Proveedor', 'Correo_Proveedor'];
+        const isValidOperation = updates.every((update) => allowedUpdates.includes(update));
+
+        if (!isValidOperation) {
+            return res.status(400).send({ error: '¡Actualización inválida!' });
+        }
+
+        const supplier = await SupplierModel.findByPk(id);
+
+        if (!supplier) {
+            return res.status(404).send({ error: "Proveedor no encontrado." });
+        }
+
+        updates.forEach((update) => supplier[update] = req.body[update]);
+
+        await supplier.save();
+        res.status(200).send({ msg: "Datos actualizados con éxito." });
+    } catch (error) {
+        res.status(500).send({ error: "Error interno del servidor." });
+    }
+};
+
+/**
+ * Función para eliminar de forma lógica un proveedor por id
+ * Fecha creación: 23/08/2023
+ * Autor: Hector Armando García González
+ * Referencias:
+ *              Modelo Proveedor (supplier.js),
+ *              Modelo Estado (state.js)
+ */
+
+const deleteSupplierId = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const supplier = await SupplierModel.findByPk(id);
+
+        if (!supplier) {
+            return res.status(404).send({ error: "Proveedor no encontrado." });
+        }
+
+        const stateSupplier = await StateModel.findOne({
+            where: {
+                Tipo_Estado: "Inactivo"
+            }
+        });
+
+        supplier.ID_Estado_FK = stateSupplier.id;
+        await supplier.save();
+        res.status(200).send({ msg: "Proveedor eliminado con éxito." });
+    } catch (error) {
+        res.status(500).send({ error: "Error interno del servidor." });
+    }
+};
+
 //Exportación de controladores para el proveedor
 module.exports = {
-    addSupplier
+    addSupplier,
+    readSuppliers,
+    readSupplierId,
+    updateSupplierId,
+    deleteSupplierId
 };

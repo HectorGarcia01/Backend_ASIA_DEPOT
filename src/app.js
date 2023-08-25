@@ -6,6 +6,7 @@ const customerRoutes = require('./routes/customer.routes');
 const employeeRoutes = require('./routes/employee.routes');
 const authRoutes = require('./routes/auth.routes');
 const imagesRoutes = require('./routes/upload_images.routes');
+const supplierRoutes = require('./routes/supplier.routes');
 
 const app = express();    
 
@@ -36,6 +37,7 @@ app.use(customerRoutes);
 app.use(employeeRoutes);
 app.use(authRoutes);
 app.use(imagesRoutes);
+app.use(supplierRoutes);
 
 //Configuración del manejo de rutas inexistentes
 app.get('*', (req, res) => {

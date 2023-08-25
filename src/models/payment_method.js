@@ -9,7 +9,7 @@ const db = require('../database/db_connection');
 
 const Tipo_Envio = db.define('Tipo_Envio', {
     Nombre_Envio: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(40),
         allowNull: false
     }
 });

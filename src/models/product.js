@@ -12,11 +12,11 @@ const db = require('../database/db_connection');
 
 const Producto = db.define('Producto', {
     Nombre_Producto: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(30),
         allowNull: false
     },
     Marca_Producto: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(30),
         allowNull: false
     },
     Precio_Promedio: {
@@ -24,7 +24,7 @@ const Producto = db.define('Producto', {
         allowNull: false
     },
     Descripcion_Producto: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(50),
         allowNull: false,
         low: true,
         unique: true

@@ -12,19 +12,19 @@ const db = require('../database/db_connection');
 
 const Direccion = db.define('Direccion', {
     Departamento: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(20),
         allowNull: true
     },
     Municipio: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(20),
         allowNull: true
     },
     Calle: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(20),
         allowNull: true
     },
     Direccion_Referencia: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(50),
         allowNull: true
     },
     ID_Cliente_FK: {
@@ -52,14 +52,14 @@ const Direccion = db.define('Direccion', {
  */
 
 Direccion.prototype.toJSON = function () {
-    const direccion = { ...this.get() };
+    const address = { ...this.get() };
 
-    delete direccion.ID_Cliente_FK;
-    delete direccion.ID_Empleado_FK;
-    delete direccion.createdAt;
-    delete direccion.updatedAt;
+    delete address.ID_Cliente_FK;
+    delete address.ID_Empleado_FK;
+    delete address.createdAt;
+    delete address.updatedAt;
 
-    return direccion;
+    return address;
 };
 
 //Exportación del modelo Direccion

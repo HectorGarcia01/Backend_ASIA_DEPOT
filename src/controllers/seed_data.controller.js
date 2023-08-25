@@ -4,7 +4,7 @@ const typeStates = require('../utils/seed/state_seed_data');
 const typeRoles = require('../utils/seed/role_seed_data');
 
 /**
- * Insertar datos predefinidos para el modelo Estado
+ * Insertar datos predefinidos para el modelo Estado y Rol
  * Fecha creación: 03/08/2023
  * Autor: Hector Armando García González
  * Referencias: 
