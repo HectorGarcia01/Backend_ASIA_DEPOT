@@ -11,21 +11,21 @@ const db = require('../database/db_connection');
 
 const Proveedor = db.define('Proveedor', {
     Nombre_Proveedor: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(30),
         allowNull: false,
         unique: true
     },
     Apellido_Proveedor: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(30),
         allowNull: false,
         unique: true
     },
     Telefono_Proveedor: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(8),
         allowNull: false
     },
     Correo_Proveedor: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(30),
         allowNull: false,
         low: true,
         unique: true
