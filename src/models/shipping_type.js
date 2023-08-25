@@ -9,7 +9,7 @@ const db = require('../database/db_connection');
 
 const Metodo_Pago = db.define('Metodo_Pago', {
     Tipo_Pago: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(30),
         allowNull: false
     }
 });
