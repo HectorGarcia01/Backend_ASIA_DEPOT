@@ -52,14 +52,14 @@ const Direccion = db.define('Direccion', {
  */
 
 Direccion.prototype.toJSON = function () {
-    const direccion = { ...this.get() };
+    const address = { ...this.get() };
 
-    delete direccion.ID_Cliente_FK;
-    delete direccion.ID_Empleado_FK;
-    delete direccion.createdAt;
-    delete direccion.updatedAt;
+    delete address.ID_Cliente_FK;
+    delete address.ID_Empleado_FK;
+    delete address.createdAt;
+    delete address.updatedAt;
 
-    return direccion;
+    return address;
 };
 
 //Exportación del modelo Direccion
