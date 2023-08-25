@@ -48,7 +48,31 @@ const addSupplier = async (req, res) => {
     }
 };
 
+/**
+ * Función para ver todos los empleados
+ * Fecha creación: 23/08/2023
+ * Autor: Hector Armando García González
+ * Referencias:
+ *              Modelo Empleado (employee.js),
+ *              Modelo Estado (state.js)
+ */
+
+const readSuppliers = async (req, res) => {
+    try {
+        const suppliers = await SupplierModel.findAll({});
+
+        if (suppliers.length === 0) {
+            return res.status(404).send({ error: "No existe ningún proveedor registrado." });
+        }
+
+        res.status(200).send({ suppliers });
+    } catch (error) {
+        res.status(500).send({ error: "Error interno del servidor." });
+    }
+};
+
 //Exportación de controladores para el proveedor
 module.exports = {
-    addSupplier
+    addSupplier,
+    readSuppliers
 };
