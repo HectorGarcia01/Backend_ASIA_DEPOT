@@ -71,8 +71,32 @@ const readSuppliers = async (req, res) => {
     }
 };
 
+/**
+ * Función para ver un empleado por ID
+ * Fecha creación: 23/08/2023
+ * Autor: Hector Armando García González
+ * Referencias:
+ *              Modelo Empleado (employee.js),
+ */
+
+const readSupplierId = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const supplier = await SupplierModel.findByPk(id);
+
+        if (!supplier) {
+            return res.status(404).send({ error: "Proveedor no encontrado." });
+        }
+
+        res.status(200).send({ supplier });
+    } catch (error) {
+        res.status(500).send({ error: "Error interno del servidor." });
+    }
+};
+
 //Exportación de controladores para el proveedor
 module.exports = {
     addSupplier,
-    readSuppliers
+    readSuppliers,
+    readSupplierId
 };
