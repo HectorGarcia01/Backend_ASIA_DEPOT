@@ -2,7 +2,8 @@ const express = require('express');
 const router = new express.Router();
 const {
     addSupplier,
-    readSuppliers
+    readSuppliers,
+    readSupplierId
 } = require('../controllers/supplier.controller');
 const supplierSchema = require('../schemas/supplier.schema');
 const validateMiddleware = require('../middlewares/validate');
@@ -18,6 +19,7 @@ router.post(
     addSupplier
 );
 router.get('/superAdmin/ver/proveedores', authMiddleware, roleMiddleware('SuperAdmin'), readSuppliers);
+router.get('/superAdmin/ver/proveedor/:id', authMiddleware, roleMiddleware('SuperAdmin'), readSupplierId);
 
 //Configuración de rutas (endpoints) para el Admin
 router.post(
@@ -28,6 +30,7 @@ router.post(
     addSupplier
 );
 router.get('/admin/ver/proveedores', authMiddleware, roleMiddleware('Admin'), readSuppliers);
+router.get('/admin/ver/proveedor/:id', authMiddleware, roleMiddleware('Admin'), readSupplierId);
 
 //Exportación de todas las rutas de empleado
 module.exports = router;
