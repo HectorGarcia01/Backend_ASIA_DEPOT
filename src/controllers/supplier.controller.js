@@ -95,6 +95,41 @@ const readSupplierId = async (req, res) => {
 };
 
 /**
+ * Función para actualizar datos de un proveedor por ID
+ * Fecha creación: 23/08/2023
+ * Autor: Hector Armando García González
+ * Referencias:
+ *              Modelo Proveedor (supplier.js)
+ */
+
+const updateSupplierId = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const updates = Object.keys(req.body);
+
+        const allowedUpdates = ['Nombre_Proveedor', 'Apellido_Proveedor', 'Telefono_Proveedor', 'Correo_Proveedor'];
+        const isValidOperation = updates.every((update) => allowedUpdates.includes(update));
+
+        if (!isValidOperation) {
+            return res.status(400).send({ error: '¡Actualización inválida!' });
+        }
+
+        const supplier = await SupplierModel.findByPk(id);
+
+        if (!supplier) {
+            return res.status(404).send({ error: "Proveedor no encontrado." });
+        }
+
+        updates.forEach((update) => supplier[update] = req.body[update]);
+
+        await supplier.save();
+        res.status(200).send({ msg: "Datos actualizados con éxito." });
+    } catch (error) {
+        res.status(500).send({ error: "Error interno del servidor." });
+    }
+};
+
+/**
  * Función para eliminar de forma lógica un proveedor por id
  * Fecha creación: 23/08/2023
  * Autor: Hector Armando García González
@@ -131,5 +166,6 @@ module.exports = {
     addSupplier,
     readSuppliers,
     readSupplierId,
+    updateSupplierId,
     deleteSupplierId
 };
