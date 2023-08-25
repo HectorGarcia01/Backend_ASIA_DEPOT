@@ -17,8 +17,7 @@ const Proveedor = db.define('Proveedor', {
     },
     Apellido_Proveedor: {
         type: DataTypes.STRING(30),
-        allowNull: false,
-        unique: true
+        allowNull: false
     },
     Telefono_Proveedor: {
         type: DataTypes.STRING(8),
