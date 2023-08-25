@@ -4,6 +4,7 @@ const {
     addSupplier,
     readSuppliers,
     readSupplierId,
+    updateSupplierId,
     deleteSupplierId
 } = require('../controllers/supplier.controller');
 const supplierSchema = require('../schemas/supplier.schema');
@@ -21,6 +22,7 @@ router.post(
 );
 router.get('/superAdmin/ver/proveedores', authMiddleware, roleMiddleware('SuperAdmin'), readSuppliers);
 router.get('/superAdmin/ver/proveedor/:id', authMiddleware, roleMiddleware('SuperAdmin'), readSupplierId);
+router.patch('/superAdmin/actualizar/proveedor/:id', authMiddleware, roleMiddleware('SuperAdmin'), updateSupplierId);
 router.delete('/superAdmin/eliminar/proveedor/:id', authMiddleware, roleMiddleware('SuperAdmin'), deleteSupplierId);
 
 //Configuración de rutas (endpoints) para el Admin
@@ -33,6 +35,7 @@ router.post(
 );
 router.get('/admin/ver/proveedores', authMiddleware, roleMiddleware('Admin'), readSuppliers);
 router.get('/admin/ver/proveedor/:id', authMiddleware, roleMiddleware('Admin'), readSupplierId);
+router.patch('/admin/actualizar/proveedor/:id', authMiddleware, roleMiddleware('Admin'), updateSupplierId);
 router.delete('/admin/eliminar/proveedor/:id', authMiddleware, roleMiddleware('Admin'), deleteSupplierId);
 
 //Exportación de todas las rutas de empleado
