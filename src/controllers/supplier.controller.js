@@ -49,11 +49,11 @@ const addSupplier = async (req, res) => {
 };
 
 /**
- * Función para ver todos los empleados
+ * Función para ver todos los proveedores
  * Fecha creación: 23/08/2023
  * Autor: Hector Armando García González
  * Referencias:
- *              Modelo Empleado (employee.js),
+ *              Modelo Proveedor (supplier.js),
  *              Modelo Estado (state.js)
  */
 
@@ -72,11 +72,11 @@ const readSuppliers = async (req, res) => {
 };
 
 /**
- * Función para ver un empleado por ID
+ * Función para ver un proveedor por ID
  * Fecha creación: 23/08/2023
  * Autor: Hector Armando García González
  * Referencias:
- *              Modelo Empleado (employee.js),
+ *              Modelo Proveedor (supplier.js),
  */
 
 const readSupplierId = async (req, res) => {
@@ -94,9 +94,42 @@ const readSupplierId = async (req, res) => {
     }
 };
 
+/**
+ * Función para eliminar de forma lógica un proveedor por id
+ * Fecha creación: 23/08/2023
+ * Autor: Hector Armando García González
+ * Referencias:
+ *              Modelo Proveedor (supplier.js),
+ *              Modelo Estado (state.js)
+ */
+
+const deleteSupplierId = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const supplier = await SupplierModel.findByPk(id);
+
+        if (!supplier) {
+            return res.status(404).send({ error: "Proveedor no encontrado." });
+        }
+
+        const stateSupplier = await StateModel.findOne({
+            where: {
+                Tipo_Estado: "Inactivo"
+            }
+        });
+
+        supplier.ID_Estado_FK = stateSupplier.id;
+        await supplier.save();
+        res.status(200).send({ msg: "Proveedor eliminado con éxito." });
+    } catch (error) {
+        res.status(500).send({ error: "Error interno del servidor." });
+    }
+};
+
 //Exportación de controladores para el proveedor
 module.exports = {
     addSupplier,
     readSuppliers,
-    readSupplierId
+    readSupplierId,
+    deleteSupplierId
 };
