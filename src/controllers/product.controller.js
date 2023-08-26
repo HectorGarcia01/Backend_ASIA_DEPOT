@@ -121,7 +121,7 @@ const readProductId = async (req, res) => {
  *              Modelo Producto (product.js)
  */
 
-const updateProduct = async (req, res) => {
+const updateProductId = async (req, res) => {
     try {
         const { id } = req.params;
         const updates = Object.keys(req.body);
@@ -156,9 +156,41 @@ const updateProduct = async (req, res) => {
     }
 };
 
+/**
+ * Función para eliminar de forma lógica un producto por id
+ * Fecha creación: 24/08/2023
+ * Autor: Hector Armando García González
+ * Referencias:
+ *              Modelo Producto (product.js)
+ */
+
+const deleteProductId = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const product = await ProductModel.findByPk(id);
+
+        if (!product) {
+            return res.status(404).send({ error: "Producto no encontrado." });
+        }
+
+        const stateProduct = await StateModel.findOne({
+            where: {
+                Tipo_Estado: "Inactivo"
+            }
+        });
+
+        product.ID_Estado_FK = stateProduct.id;
+        await product.save();
+        res.status(200).send({ msg: "Producto eliminado con éxito." });
+    } catch (error) {
+        res.status(500).send({ error: "Error interno del servidor." });
+    }
+};
+
 module.exports = {
     addProduct,
     readProducts,
     readProductId,
-    updateProduct
+    updateProductId,
+    deleteProductId
 };
