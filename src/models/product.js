@@ -13,12 +13,12 @@ const db = require('../database/db_connection');
 const Producto = db.define('Producto', {
     Nombre_Producto: {
         type: DataTypes.STRING(30),
-        allowNull: false,
-        unique: true
+        allowNull: false
     },
-    Marca_Producto: {
+    Marca_Producto: { //hacerla en una nueva entidad
         type: DataTypes.STRING(30),
-        allowNull: true
+        allowNull: true,
+        unique: true
     },
     Precio_Promedio: {
         type: DataTypes.DOUBLE,
