@@ -13,7 +13,7 @@ const roleMiddleware = require('../middlewares/check_rol');
 
 //Rutas (endpoints) para el SuperAdmin
 router.post('/superAdmin/crear/producto', authMiddleware, roleMiddleware('SuperAdmin'), validate(productSchema), addProduct);
-router.get('/auperAdmin/ver/productos', authMiddleware, roleMiddleware('SuperAdmin'), readProducts);
+router.get('/superAdmin/ver/productos', authMiddleware, roleMiddleware('SuperAdmin'), readProducts);
 
 //Rutas (endpoints) para el Admin
 router.post('/admin/crear/producto', authMiddleware, roleMiddleware('Admin'), validate(productSchema), addProduct);
