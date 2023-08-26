@@ -37,7 +37,7 @@ const productSchema = Joi.object({
         .integer()
         .required()
         .error((error) => {
-            return customError("La cantidad del producto es obligatoria.", error);
+            return customError("La cantidad del producto es obligatoria y numérica.", error);
         })
 });
 
