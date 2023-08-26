@@ -13,7 +13,7 @@ const roleMiddleware = require('../middlewares/check_rol');
 
 //Rutas (endpoints) para el SuperAdmin
 router.post('/superAdmin/crear/categoria', authMiddleware, roleMiddleware('SuperAdmin'), validate(categorySchema), addCategory);
-router.get('/auperAdmin/ver/categorias', authMiddleware, roleMiddleware('SuperAdmin'), readCategories);
+router.get('/superAdmin/ver/categorias', authMiddleware, roleMiddleware('SuperAdmin'), readCategories);
 
 //Rutas (endpoints) para el Admin
 router.post('/admin/crear/categoria', authMiddleware, roleMiddleware('Admin'), validate(categorySchema), addCategory);
