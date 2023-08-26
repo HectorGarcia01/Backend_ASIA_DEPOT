@@ -20,7 +20,7 @@ const addCategory = async (req, res) => {
         if (error instanceof Sequelize.UniqueConstraintError) {
             res.status(400).send({ error: "¡La categoría ya existe!" });
         } else {
-            res.status(500).send({ errors: "Error interno del servidor." });
+            res.status(500).send({ error: "Error interno del servidor." });
         }
     }
 };
@@ -43,7 +43,7 @@ const readCategories = async (req, res) => {
 
         res.status(200).send({ categories });
     } catch (error) {
-        res.status(500).send({ errr: "Error interno del servidor.", error });
+        res.status(500).send({ error: "Error interno del servidor." });
     }
 };
 
