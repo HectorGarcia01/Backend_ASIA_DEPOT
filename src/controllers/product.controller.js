@@ -68,6 +68,29 @@ const addProduct = async (req, res) => {
     }
 };
 
+/**
+ * Función para ver todos los productos
+ * Fecha creación: 24/08/2023
+ * Autor: Hector Armando García González
+ * Referencias:
+ *              Modelo Producto (product.js), 
+ */
+
+const readProducts = async (req, res) => {
+    try {
+        const products = await ProductModel.findAll({});
+
+        if (products.length === 0) {
+            return res.status(404).send({ error: "No hay productos registrados." });
+        }
+
+        res.status(200).send({ products });
+    } catch (error) {
+        res.status(500).send({ error: "Error interno del servidor." });
+    }
+};
+
 module.exports = {
-    addProduct
+    addProduct,
+    readProducts
 };
