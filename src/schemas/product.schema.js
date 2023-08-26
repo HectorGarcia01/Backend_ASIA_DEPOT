@@ -26,6 +26,12 @@ const productSchema = Joi.object({
         }),
     Descripcion_Producto: Joi.string()
         .trim(),
+    ID_Categoria_FK: Joi.number()
+        .integer()
+        .required()
+        .error((error) => {
+            return customError("El ID de categoría es obligatorio y numérico.", error);
+        }), 
     //Para el modelo Inventario
     Cantidad_Stock: Joi.number()
         .integer()
