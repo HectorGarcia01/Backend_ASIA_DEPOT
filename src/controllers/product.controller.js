@@ -90,7 +90,31 @@ const readProducts = async (req, res) => {
     }
 };
 
+/**
+ * Función para ver un producto por ID
+ * Fecha creación: 24/08/2023
+ * Autor: Hector Armando García González
+ * Referencias:
+ *              Modelo Producto (product.js),
+ */
+
+const readProductId = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const product = await ProductModel.findByPk(id);
+
+        if (!product) {
+            return res.status(404).send({ error: "Producto no encontrado." });
+        }
+
+        res.status(200).send({ product });
+    } catch (error) {
+        res.status(500).send({ error: "Error interno del servidor." });
+    }
+};
+
 module.exports = {
     addProduct,
-    readProducts
+    readProducts,
+    readProductId
 };
