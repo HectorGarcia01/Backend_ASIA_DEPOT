@@ -113,8 +113,52 @@ const readProductId = async (req, res) => {
     }
 };
 
+/**
+ * Función para actualizar datos del producto
+ * Fecha creación: 24/08/2023
+ * Autor: Hector Armando García González
+ * Referencias:
+ *              Modelo Producto (product.js)
+ */
+
+const updateProduct = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const updates = Object.keys(req.body);
+
+        const allowedUpdates = ['Nombre_Producto', 'Marca_Producto', 'Precio_Promedio', 'Descripcion_Producto', 'ID_Categoria_FK', 'Cantidad_Stock'];
+        const isValidOperation = updates.every((update) => allowedUpdates.includes(update));
+
+        if (!isValidOperation) {
+            return res.status(400).send({ error: '¡Actualización inválida!' });
+        }
+
+        if (req.body.ID_Categoria_FK) {
+            const category = await CategoryModel.findByPk(req.body.ID_Categoria_FK);
+
+            if (!category) {
+                return res.status(404).send({ error: "Categoría no encontrada." });
+            }
+        }
+
+        const product = await ProductModel.findByPk(id);
+
+        if (!product) {
+            return res.status(404).send({ error: "Producto no encontrado." });
+        }
+
+        updates.forEach((update) => product[update] = req.body[update]);
+
+        await product.save();
+        res.status(200).send({ msg: "Datos actualizados con éxito." });
+    } catch (error) {
+        res.status(500).send({ error: "Error interno del servidor." });
+    }
+};
+
 module.exports = {
     addProduct,
     readProducts,
-    readProductId
+    readProductId,
+    updateProduct
 };
