@@ -1,7 +1,8 @@
 const express = require('express');
 const router = new express.Router();
 const {
-    addProductReview
+    addProductReview,
+    readProductReviews
 } = require('../controllers/product_review.controller');
 const productoReviewSchema = require('../schemas/product_review.schema');
 const validateMiddleware = require('../middlewares/validate');
@@ -15,6 +16,7 @@ router.post(
     validateMiddleware(productoReviewSchema), 
     addProductReview
 );
+router.get('/usuario/ver/valoraciones/producto/:id', authMiddleware, roleMiddleware('User'), readProductReviews);
 
 //Exportación de todas las rutas de reseña de producto
 module.exports = router;
