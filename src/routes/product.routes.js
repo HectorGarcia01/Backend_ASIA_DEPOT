@@ -25,7 +25,7 @@ router.delete('/superAdmin/eliminar/producto/:id', authMiddleware, roleMiddlewar
 router.post('/admin/crear/producto', authMiddleware, roleMiddleware('Admin'), validate(productSchema), addProduct);
 router.get('/admin/ver/productos', authMiddleware, roleMiddleware('Admin'), readProducts);
 router.get('/admin/ver/producto/:id', authMiddleware, roleMiddleware('Admin'), readProductId);
-router.get('/admin/actualizar/producto/:id', authMiddleware, roleMiddleware('Admin'), updateProductId);
+router.patch('/admin/actualizar/producto/:id', authMiddleware, roleMiddleware('Admin'), updateProductId);
 router.delete('/admin/eliminar/producto/:id', authMiddleware, roleMiddleware('Admin'), deleteProductId);
 
 //Rutas (endpoints) para el User

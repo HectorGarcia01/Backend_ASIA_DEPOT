@@ -36,7 +36,6 @@ router.post(
 router.get('/admin/ver/proveedores', authMiddleware, roleMiddleware('Admin'), readSuppliers);
 router.get('/admin/ver/proveedor/:id', authMiddleware, roleMiddleware('Admin'), readSupplierId);
 router.patch('/admin/actualizar/proveedor/:id', authMiddleware, roleMiddleware('Admin'), updateSupplierId);
-router.delete('/admin/eliminar/proveedor/:id', authMiddleware, roleMiddleware('Admin'), deleteSupplierId);
 
 //Exportación de todas las rutas de empleado
 module.exports = router;
