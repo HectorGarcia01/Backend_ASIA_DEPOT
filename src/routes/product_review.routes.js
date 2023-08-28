@@ -16,7 +16,8 @@ router.post(
     validateMiddleware(productoReviewSchema), 
     addProductReview
 );
-router.get('/usuario/ver/valoraciones/producto/:id', authMiddleware, roleMiddleware('User'), readProductReviews);
+router.get('/usuario/ver/todas/valoraciones/producto/:id', readProductReviews);
+router.get('/usuario/ver/tus/valoraciones/producto/:id', authMiddleware, roleMiddleware('User'), readProductReviews);
 
 //Exportación de todas las rutas de reseña de producto
 module.exports = router;
