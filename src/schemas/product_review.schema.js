@@ -14,6 +14,8 @@ const productReviewValidateSchema = Joi.object({
         .trim(),
     Puntuacion_Producto: Joi.number()
         .integer()
+        .min(0)
+        .max(5)
         .error((error) => {
             return customError("La puntuación es obligatoria y numérica.", error);
         }),
