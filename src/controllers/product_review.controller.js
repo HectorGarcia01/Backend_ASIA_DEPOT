@@ -1,4 +1,5 @@
 const Sequelize = require('sequelize');
+const ProductModel = require('../models/product');
 const ProductReviewModel = require('../models/product_review');
 
 /**
@@ -6,7 +7,8 @@ const ProductReviewModel = require('../models/product_review');
  * Fecha creación: 28/08/2023
  * Autor: Hector Armando García González
  * Referencias: 
- *              Modelo Reseña de Producto (product_review.js), 
+ *              Modelo Producto (product.js),
+ *              Modelo Reseña de Producto (product_review.js)
  */
 
 const addProductReview = async (req, res) => {
@@ -17,6 +19,12 @@ const addProductReview = async (req, res) => {
             Puntuacion_Producto,
             ID_Producto_FK
         } = req.body;
+
+        const product = await ProductModel.findByPk(ID_Producto_FK);
+
+        if (!product) {
+            return res.status(404).send({ error: "Producto no encontrado." });
+        }
 
         const newProductReview = await ProductReviewModel.create({  
             Comentario_Producto,
