@@ -17,12 +17,6 @@ const productReviewValidateSchema = Joi.object({
         .error((error) => {
             return customError("La puntuación es obligatoria y numérica.", error);
         }),
-    ID_Cliente_FK: Joi.number()
-        .integer()
-        .required()
-        .error((error) => {
-            return customError("El ID del cliente es obligatorio y numérico.", error);
-        }),
     ID_Producto_FK: Joi.number()
         .integer()
         .required()
