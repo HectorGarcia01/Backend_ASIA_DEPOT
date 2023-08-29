@@ -4,7 +4,8 @@ const {
     addCategory,
     readCategories,
     readCategoryId,
-    updateCategoryId
+    updateCategoryId,
+    deleteCategoryId
 } = require('../controllers/category.controller');
 const {
     categorySchema
@@ -18,6 +19,7 @@ router.post('/superAdmin/crear/categoria', authMiddleware, roleMiddleware('Super
 router.get('/superAdmin/ver/categorias', authMiddleware, roleMiddleware('SuperAdmin'), readCategories);
 router.get('/superAdmin/ver/categoria/:id', authMiddleware, roleMiddleware('SuperAdmin'), readCategoryId);
 router.patch('/superAdmin/actualizar/categoria/:id', authMiddleware, roleMiddleware('SuperAdmin'), updateCategoryId);
+router.delete('/superAdmin/eliminar/categoria/:id', authMiddleware, roleMiddleware('SuperAdmin'), deleteCategoryId);
 
 //Rutas (endpoints) para el Admin
 router.post('/admin/crear/categoria', authMiddleware, roleMiddleware('Admin'), validate(categorySchema), addCategory);
