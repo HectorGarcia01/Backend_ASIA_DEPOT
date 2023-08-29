@@ -11,7 +11,7 @@ const db = require('../database/db_connection');
 
 const Valoracion_Producto = db.define('Valoracion_Producto', {
     Comentario_Producto: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(200),
         allowNull: true
     },
     Puntuacion_Producto: {

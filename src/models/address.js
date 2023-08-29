@@ -12,19 +12,19 @@ const db = require('../database/db_connection');
 
 const Direccion = db.define('Direccion', {
     Departamento: {
-        type: DataTypes.STRING(20),
+        type: DataTypes.STRING(30),
         allowNull: true
     },
     Municipio: {
-        type: DataTypes.STRING(20),
+        type: DataTypes.STRING(30),
         allowNull: true
     },
     Calle: {
-        type: DataTypes.STRING(20),
+        type: DataTypes.STRING(30),
         allowNull: true
     },
     Direccion_Referencia: {
-        type: DataTypes.STRING(50),
+        type: DataTypes.STRING(200),
         allowNull: true
     },
     ID_Cliente_FK: {

@@ -10,12 +10,12 @@ const { keep } = require('../schemas/product_review.schema');
 
 const Categoria = db.define('Categoria', {
     Nombre_Categoria: {
-        type: DataTypes.STRING(30),
+        type: DataTypes.STRING(50),
         allowNull: false,
         unique: true
     },
     Descripcion_Categoria: {
-        type: DataTypes.STRING(50),
+        type: DataTypes.STRING(200),
         allowNull: true
     },
     ID_Estado_FK: {

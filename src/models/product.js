@@ -12,7 +12,7 @@ const db = require('../database/db_connection');
 
 const Producto = db.define('Producto', {
     Nombre_Producto: {
-        type: DataTypes.STRING(30),
+        type: DataTypes.STRING(50),
         allowNull: false
     },
     Marca_Producto: { //hacerla en una nueva entidad
@@ -25,7 +25,7 @@ const Producto = db.define('Producto', {
         allowNull: false
     },
     Descripcion_Producto: {
-        type: DataTypes.STRING(50),
+        type: DataTypes.STRING(200),
         allowNull: true
     },
     Imagen_Producto: {
