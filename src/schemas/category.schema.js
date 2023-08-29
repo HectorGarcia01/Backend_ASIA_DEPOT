@@ -15,7 +15,9 @@ const categorySchema = Joi.object({
         .trim()
         .error((error) => {
             return customError("El nombre de categoría es obligatorio.", error);
-        })
+        }),
+    Descripcion_Categoria: Joi.string()
+        .trim()
 });
 
 //Exportación del esquema de validación

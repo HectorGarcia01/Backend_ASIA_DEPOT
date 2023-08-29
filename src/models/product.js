@@ -12,7 +12,7 @@ const db = require('../database/db_connection');
 
 const Producto = db.define('Producto', {
     Nombre_Producto: {
-        type: DataTypes.STRING(30),
+        type: DataTypes.STRING(50),
         allowNull: false
     },
     Marca_Producto: { //hacerla en una nueva entidad
@@ -25,7 +25,7 @@ const Producto = db.define('Producto', {
         allowNull: false
     },
     Descripcion_Producto: {
-        type: DataTypes.STRING(50),
+        type: DataTypes.STRING(200),
         allowNull: true
     },
     Imagen_Producto: {
@@ -49,6 +49,21 @@ const Producto = db.define('Producto', {
         }
     }
 });
+
+/**
+ * Método personalizado para filtrar información
+ * Fecha creación: 28/08/2023
+ * Autor: Hector Armando García González
+ */
+
+Producto.prototype.toJSON = function () {
+    const product = { ...this.get() };
+
+    delete product.createdAt;
+    delete product.updatedAt;
+
+    return product;
+};
 
 //Exportación del modelo Producto
 module.exports = Producto;

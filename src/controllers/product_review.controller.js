@@ -71,7 +71,7 @@ const readProductReviews = async (req, res) => {
  * Fecha creación: 28/08/2023
  * Autor: Hector Armando García González
  * Referencias:
- *              Modelo Valoración de Producto (product_review.js), 
+ *              Modelo Valoración de Producto (product_review.js)
  */
 
 const readCustomerReviews = async (req, res) => {
@@ -96,9 +96,51 @@ const readCustomerReviews = async (req, res) => {
     }
 };
 
+/**
+ * Función para actualizar datos de la reseña que ha hecho un cliente
+ * Fecha creación: 28/08/2023
+ * Autor: Hector Armando García González
+ * Referencias:
+ *              Modelo Valoración de Producto (product_review.js)
+ */
+
+const updateCustomerReviewId = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { user } = req;
+        const updates = Object.keys(req.body);
+
+        const allowedUpdates = ['Comentario_Producto', 'Puntuacion_Producto'];
+        const isValidOperation = updates.every((update) => allowedUpdates.includes(update));
+
+        if (!isValidOperation) {
+            return res.status(400).send({ error: '¡Actualización inválida!' });
+        }
+
+        const customerReview = await ProductReviewModel.findOne({
+            where: {
+                id,
+                ID_Cliente_FK: user.id
+            }
+        });
+
+        if (!customerReview) {
+            return res.status(404).send({ error: "Reseña no encontrada." });
+        }
+
+        updates.forEach((update) => customerReview[update] = req.body[update]);
+
+        await customerReview.save();
+        res.status(200).send({ msg: "Datos actualizados con éxito." });
+    } catch (error) {
+        res.status(500).send({ error: "Error interno del servidor." });
+    }
+};
+
 //Exportación de controladores para la reseña del producto
 module.exports = {
     addProductReview,
     readProductReviews,
-    readCustomerReviews
+    readCustomerReviews,
+    updateCustomerReviewId
 };

@@ -11,7 +11,7 @@ const db = require('../database/db_connection');
 
 const Valoracion_Producto = db.define('Valoracion_Producto', {
     Comentario_Producto: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(200),
         allowNull: true
     },
     Puntuacion_Producto: {
@@ -35,6 +35,21 @@ const Valoracion_Producto = db.define('Valoracion_Producto', {
         }
     }
 });
+
+/**
+ * Método personalizado para filtrar información
+ * Fecha creación: 28/08/2023
+ * Autor: Hector Armando García González
+ */
+
+Valoracion_Producto.prototype.toJSON = function () {
+    const productReview = { ...this.get() };
+
+    delete productReview.createdAt;
+    delete productReview.updatedAt;
+
+    return productReview;
+};
 
 //Exportación del modelo Valoracion_Producto
 module.exports = Valoracion_Producto;
