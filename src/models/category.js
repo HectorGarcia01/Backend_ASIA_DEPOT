@@ -28,5 +28,20 @@ const Categoria = db.define('Categoria', {
     }
 });
 
+/**
+ * Método personalizado para filtrar información
+ * Fecha creación: 28/08/2023
+ * Autor: Hector Armando García González
+ */
+
+Categoria.prototype.toJSON = function () {
+    const category = { ...this.get() };
+
+    delete category.createdAt;
+    delete category.updatedAt;
+
+    return category;
+};
+
 //Exportación del modelo Categoria
 module.exports = Categoria;
