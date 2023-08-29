@@ -2,7 +2,8 @@ const express = require('express');
 const router = new express.Router();
 const {
     addCategory,
-    readCategories
+    readCategories,
+    readCategoryId
 } = require('../controllers/category.controller');
 const {
     categorySchema
@@ -14,13 +15,16 @@ const roleMiddleware = require('../middlewares/check_rol');
 //Rutas (endpoints) para el SuperAdmin
 router.post('/superAdmin/crear/categoria', authMiddleware, roleMiddleware('SuperAdmin'), validate(categorySchema), addCategory);
 router.get('/superAdmin/ver/categorias', authMiddleware, roleMiddleware('SuperAdmin'), readCategories);
+router.get('/superAdmin/ver/categoria/:id', authMiddleware, roleMiddleware('SuperAdmin'), readCategoryId);
 
 //Rutas (endpoints) para el Admin
 router.post('/admin/crear/categoria', authMiddleware, roleMiddleware('Admin'), validate(categorySchema), addCategory);
 router.get('/admin/ver/categorias', authMiddleware, roleMiddleware('Admin'), readCategories);
+router.get('/admin/ver/categoria/:id', authMiddleware, roleMiddleware('Admin'), readCategoryId);
 
 //Rutas (endpoints) para el User
 router.get('/usuario/ver/categorias', readCategories);
+router.get('/usuario/ver/categoria/:id', readCategoryId);
 
 //Exportación de todas las rutas de categoría
 module.exports = router;
