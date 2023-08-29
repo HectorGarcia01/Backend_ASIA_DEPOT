@@ -36,5 +36,20 @@ const Valoracion_Producto = db.define('Valoracion_Producto', {
     }
 });
 
+/**
+ * Método personalizado para filtrar información
+ * Fecha creación: 28/08/2023
+ * Autor: Hector Armando García González
+ */
+
+Valoracion_Producto.prototype.toJSON = function () {
+    const productReview = { ...this.get() };
+
+    delete productReview.createdAt;
+    delete productReview.updatedAt;
+
+    return productReview;
+};
+
 //Exportación del modelo Valoracion_Producto
 module.exports = Valoracion_Producto;
