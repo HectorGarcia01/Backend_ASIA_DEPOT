@@ -50,5 +50,20 @@ const Producto = db.define('Producto', {
     }
 });
 
+/**
+ * Método personalizado para filtrar información
+ * Fecha creación: 28/08/2023
+ * Autor: Hector Armando García González
+ */
+
+Producto.prototype.toJSON = function () {
+    const product = { ...this.get() };
+
+    delete product.createdAt;
+    delete product.updatedAt;
+
+    return product;
+};
+
 //Exportación del modelo Producto
 module.exports = Producto;
