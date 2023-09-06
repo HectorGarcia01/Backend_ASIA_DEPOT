@@ -24,13 +24,23 @@ const addCustomer = async (req, res) => {
             Apellido_Cliente,
             Telefono_Cliente,
             NIT_Cliente,
+            Direccion_General,
             Correo_Cliente,
             Password_Cliente,
-            Departamento,
-            Municipio,
-            Calle,
-            Direccion_Referencia
+            ID_Direccion_FK
         } = req.body;
+
+        if (ID_Direccion_FK) {
+            const addressCustomer = await AddressModel.findOne({
+                where: {
+                    id: ID_Direccion_FK
+                }
+            });
+
+            if (!addressCustomer) {
+                return res.status(404).send({ error: "Dirección no encontrada." });
+            }
+        }
 
         const stateCustomer = await StateModel.findOne({
             where: {
@@ -57,22 +67,14 @@ const addCustomer = async (req, res) => {
             Apellido_Cliente,
             Telefono_Cliente,
             NIT_Cliente,
+            Direccion_General,
             Correo_Cliente,
             Password_Cliente,
+            ID_Direccion_FK,
             ID_Estado_FK: stateCustomer.id,
             ID_Rol_FK: roleCustomer.id
         });
 
-        if (Departamento || Municipio || Calle || Direccion_Referencia) {
-            await AddressModel.create({
-                Departamento,
-                Municipio,
-                Calle,
-                Direccion_Referencia,
-                ID_Cliente_FK: newCustomer.id
-            });
-        }
-        
         const token = await newCustomer.generateAuthToken(newCustomer.id, roleCustomer.Nombre_Rol);
         await TokenModel.create({ 
             Token_Usuario: token, 
@@ -103,7 +105,7 @@ const customerProfile = async (req, res) => {
 
         const addressCustomer = await AddressModel.findOne({
             where: {
-                ID_Cliente_FK: user.id
+                id: user.ID_Direccion_FK
             }
         });
 
@@ -124,18 +126,29 @@ const customerProfile = async (req, res) => {
 const updateCustomer = async (req, res) => {
     try {
         const { user } = req;
+        const { ID_Direccion_FK } = req.body;
         const updates = Object.keys(req.body);
 
-        const allowedUpdates = ['Nombre_Cliente', 'Apellido_Cliente', 'Telefono_Cliente', 'NIT_Cliente', 'Departamento', 'Municipio', 'Calle', 'Direccion_Referencia'];
+        const allowedUpdates = ['Nombre_Cliente', 'Apellido_Cliente', 'Telefono_Cliente', 'NIT_Cliente', 'ID_Direccion_FK'];
         const isValidOperation = updates.every((update) => allowedUpdates.includes(update));
 
         if (!isValidOperation) {
             return res.status(400).send({ error: '¡Actualización inválida!' });
         }
 
-        updates.forEach((update) => user[update] = req.body[update]);
+        if (ID_Direccion_FK) {
+            const addressCustomer = await AddressModel.findOne({
+                where: {
+                    id: ID_Direccion_FK
+                }
+            });
 
-        //Aún queda pendiente lo de actualizar la dirección ***********************************
+            if (!addressCustomer) {
+                return res.status(404).send({ error: "Dirección no encontrada." });
+            }
+        }
+        
+        updates.forEach((update) => user[update] = req.body[update]);
 
         await user.save();
         res.status(200).send({ msg: "Datos actualizados con éxito." });
