@@ -1,6 +1,5 @@
 const Sequelize = require('sequelize');
 const EmployeeModel = require('../models/employee');
-const AddressModel = require('../models/address');
 const RoleModel = require('../models/role');
 const StateModel = require('../models/state');
 const TokenModel = require('../models/token');
@@ -11,7 +10,6 @@ const TokenModel = require('../models/token');
  * Autor: Hector Armando García González
  * Referencias: 
  *              Modelo Empleado (employee.js), 
- *              Modelo Direccion (address.js), 
  *              Modelo Rol (role.js), 
  *              Modelo Estado (state.js)
  *              Modelo Token (token.js)
@@ -25,11 +23,7 @@ const addEmployee = async (req, res) => {
             Telefono_Empleado,
             NIT_Empleado,
             Correo_Empleado,
-            Password_Empleado,
-            Departamento,
-            Municipio,
-            Calle,
-            Direccion_Referencia
+            Password_Empleado
         } = req.body;
 
         const stateEmployee = await StateModel.findOne({
@@ -63,16 +57,6 @@ const addEmployee = async (req, res) => {
             ID_Rol_FK: roleEmployee.id
         });
 
-        if (Departamento || Municipio || Calle || Direccion_Referencia) {
-            await AddressModel.create({
-                Departamento,
-                Municipio,
-                Calle,
-                Direccion_Referencia,
-                ID_Empleado_FK: newEmployee.id
-            });
-        }
-
         const token = await newEmployee.generateAuthToken(newEmployee.id, roleEmployee.Nombre_Rol);
         await TokenModel.create({
             Token_Usuario: token,
@@ -93,8 +77,6 @@ const addEmployee = async (req, res) => {
  * Función para ver el perfil del empleado
  * Fecha creación: 05/08/2023
  * Autor: Hector Armando García González
- * Referencias:
- *              Modelo Direccion (address.js)
  */
 
 const employeeProfile = async (req, res) => {
@@ -118,7 +100,7 @@ const employeeProfile = async (req, res) => {
  * Fecha creación: 16/08/2023
  * Autor: Hector Armando García González
  * Referencias:
- *              Modelo Direccion (address.js)
+ *              Modelo Empleado (employee.js)
  */
 
 const updateEmployee = async (req, res) => {
@@ -126,7 +108,7 @@ const updateEmployee = async (req, res) => {
         const { user } = req;
         const updates = Object.keys(req.body);
 
-        const allowedUpdates = ['Nombre_Empleado', 'Apellido_Empleado', 'Telefono_Empleado', 'NIT_Empleado', 'Departamento', 'Municipio', 'Calle', 'Direccion_Referencia'];
+        const allowedUpdates = ['Nombre_Empleado', 'Apellido_Empleado', 'Telefono_Empleado', 'NIT_Empleado'];
         const isValidOperation = updates.every((update) => allowedUpdates.includes(update));
 
         if (!isValidOperation) {
@@ -134,8 +116,6 @@ const updateEmployee = async (req, res) => {
         }
 
         updates.forEach((update) => user[update] = req.body[update]);
-
-        //Aún queda pendiente lo de actualizar la dirección ***********************************
 
         await user.save();
         res.status(200).send({ msg: "Datos actualizados con éxito." });
