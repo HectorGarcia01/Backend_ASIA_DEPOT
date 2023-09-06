@@ -58,7 +58,7 @@ const customerValidateSchema = Joi.object({
         .error((error) => {
             return customError("Las contraseñas no coinciden.", error);
         }),
-    ID_Direccion_FK: Joi.number()
+    ID_Municipio_FK: Joi.number()
         .integer()
         .min(1)
         .error((error) => {
