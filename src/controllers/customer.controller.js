@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 const CustomerModel = require('../models/customer');
-const AddressModel = require('../models/address');
+const AddressModel = require('../models/municipality');
 const RoleModel = require('../models/role');
 const StateModel = require('../models/state');
 const TokenModel = require('../models/token');
@@ -27,13 +27,13 @@ const addCustomer = async (req, res) => {
             Direccion_General,
             Correo_Cliente,
             Password_Cliente,
-            ID_Direccion_FK
+            ID_Municipio_FK
         } = req.body;
 
-        if (ID_Direccion_FK) {
+        if (ID_Municipio_FK) {
             const addressCustomer = await AddressModel.findOne({
                 where: {
-                    id: ID_Direccion_FK
+                    id: ID_Municipio_FK
                 }
             });
 
@@ -70,7 +70,7 @@ const addCustomer = async (req, res) => {
             Direccion_General,
             Correo_Cliente,
             Password_Cliente,
-            ID_Direccion_FK,
+            ID_Municipio_FK,
             ID_Estado_FK: stateCustomer.id,
             ID_Rol_FK: roleCustomer.id
         });
@@ -105,7 +105,7 @@ const customerProfile = async (req, res) => {
 
         const addressCustomer = await AddressModel.findOne({
             where: {
-                id: user.ID_Direccion_FK
+                id: user.ID_Municipio_FK
             }
         });
 
@@ -126,20 +126,20 @@ const customerProfile = async (req, res) => {
 const updateCustomer = async (req, res) => {
     try {
         const { user } = req;
-        const { ID_Direccion_FK } = req.body;
+        const { ID_Municipio_FK } = req.body;
         const updates = Object.keys(req.body);
 
-        const allowedUpdates = ['Nombre_Cliente', 'Apellido_Cliente', 'Telefono_Cliente', 'NIT_Cliente', 'ID_Direccion_FK'];
+        const allowedUpdates = ['Nombre_Cliente', 'Apellido_Cliente', 'Telefono_Cliente', 'NIT_Cliente', 'ID_Municipio_FK'];
         const isValidOperation = updates.every((update) => allowedUpdates.includes(update));
 
         if (!isValidOperation) {
             return res.status(400).send({ error: '¡Actualización inválida!' });
         }
 
-        if (ID_Direccion_FK) {
+        if (ID_Municipio_FK) {
             const addressCustomer = await AddressModel.findOne({
                 where: {
-                    id: ID_Direccion_FK
+                    id: ID_Municipio_FK
                 }
             });
 
@@ -147,7 +147,7 @@ const updateCustomer = async (req, res) => {
                 return res.status(404).send({ error: "Dirección no encontrada." });
             }
         }
-        
+
         updates.forEach((update) => user[update] = req.body[update]);
 
         await user.save();
