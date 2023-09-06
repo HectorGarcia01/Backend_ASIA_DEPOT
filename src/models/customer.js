@@ -33,7 +33,7 @@ const Cliente = db.define('Cliente', {
     },
     Direccion_General: {
         type: DataTypes.STRING(100),
-        allowNull: false
+        allowNull: true
     },
     Correo_Cliente: {
         type: DataTypes.STRING(30),
@@ -51,7 +51,7 @@ const Cliente = db.define('Cliente', {
     },
     ID_Direccion_FK: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
         references: {
             model: 'Direccions',
             key: 'id'
