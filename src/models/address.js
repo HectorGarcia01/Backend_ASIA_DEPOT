@@ -18,30 +18,6 @@ const Direccion = db.define('Direccion', {
     Municipio: {
         type: DataTypes.STRING(30),
         allowNull: true
-    },
-    Calle: {
-        type: DataTypes.STRING(30),
-        allowNull: true
-    },
-    Direccion_Referencia: {
-        type: DataTypes.STRING(200),
-        allowNull: true
-    },
-    ID_Cliente_FK: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-        references: {
-            model: 'Clientes',
-            key: 'id'
-        }
-    },
-    ID_Empleado_FK: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-        references: {
-            model: 'Empleados',
-            key: 'id'
-        }
     }
 });
 
@@ -54,8 +30,6 @@ const Direccion = db.define('Direccion', {
 Direccion.prototype.toJSON = function () {
     const address = { ...this.get() };
 
-    delete address.ID_Cliente_FK;
-    delete address.ID_Empleado_FK;
     delete address.createdAt;
     delete address.updatedAt;
 
