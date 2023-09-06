@@ -10,7 +10,8 @@ const db = require('../database/db_connection');
 const Departamento = db.define('Departamento', {
     Nombre_Departamento: {
         type: DataTypes.STRING(30),
-        allowNull: false
+        allowNull: false,
+        unique: true
     }
 });
 
