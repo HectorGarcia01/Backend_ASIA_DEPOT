@@ -49,11 +49,11 @@ const Cliente = db.define('Cliente', {
         type: DataTypes.BLOB,
         allowNull: true
     },
-    ID_Direccion_FK: {
+    ID_Municipio_FK: {
         type: DataTypes.INTEGER,
         allowNull: true,
         references: {
-            model: 'Direccions',
+            model: 'Municipios',
             key: 'id'
         }
     },
