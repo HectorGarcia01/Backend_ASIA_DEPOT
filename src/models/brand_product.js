@@ -10,7 +10,8 @@ const db = require('../database/db_connection');
 const Marca_Producto = db.define('Marca_Producto', {
     Nombre_Marca: {
         type: DataTypes.STRING(30),
-        allowNull: false
+        allowNull: false,
+        unique: true
     }
 });
 
