@@ -15,11 +15,6 @@ const Producto = db.define('Producto', {
         type: DataTypes.STRING(50),
         allowNull: false
     },
-    Marca_Producto: { //hacerla en una nueva entidad
-        type: DataTypes.STRING(30),
-        allowNull: true,
-        unique: true
-    },
     Precio_Promedio: {
         type: DataTypes.DOUBLE,
         allowNull: false
@@ -45,6 +40,14 @@ const Producto = db.define('Producto', {
         allowNull: false,
         references: {
             model: 'Categoria',
+            key: 'id'
+        }
+    },
+    ID_Marca_FK: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+            model: 'Marca_Productos',
             key: 'id'
         }
     }
