@@ -81,15 +81,7 @@ const addEmployee = async (req, res) => {
 
 const employeeProfile = async (req, res) => {
     try {
-        const { user } = req;
-
-        const addressEmployee = await AddressModel.findOne({
-            where: {
-                ID_Empleado_FK: user.id
-            }
-        });
-
-        res.status(200).send({ employee: user, addressEmployee });
+        res.status(200).send({ employee: req.user });
     } catch (error) {
         res.status(500).send({ error: "Error interno del servidor." });
     }
