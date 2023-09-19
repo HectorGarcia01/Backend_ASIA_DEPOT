@@ -1,8 +1,6 @@
 const Sequelize = require('sequelize');
 const CategoryModel = require('../models/category');
 const StateModel = require('../models/state');
-const { keys } = require('../schemas/product_review.schema');
-const { object } = require('joi');
 
 /**
  * Función para registrar una nueva categoría

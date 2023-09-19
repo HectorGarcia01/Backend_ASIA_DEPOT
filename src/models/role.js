@@ -7,7 +7,7 @@ const db = require('../database/db_connection');
  * Autor: Hector Armando García González
  */
 
-const Rol = db.define('Rol', {
+const Rol = db.define('PRGADH_Rol', {
     Nombre_Rol: {
         type: DataTypes.STRING(10),
         allowNull: false,

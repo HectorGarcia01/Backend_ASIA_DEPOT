@@ -10,15 +10,10 @@ const db = require('../database/db_connection');
  *              Modelo Categoria (category.js)
  */
 
-const Producto = db.define('Producto', {
+const Producto = db.define('PRGADH_Producto', {
     Nombre_Producto: {
         type: DataTypes.STRING(50),
         allowNull: false
-    },
-    Marca_Producto: { //hacerla en una nueva entidad
-        type: DataTypes.STRING(30),
-        allowNull: true,
-        unique: true
     },
     Precio_Promedio: {
         type: DataTypes.DOUBLE,
@@ -36,7 +31,7 @@ const Producto = db.define('Producto', {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: 'Estados',
+            model: 'PRGADH_Estados',
             key: 'id'
         }
     },
@@ -44,7 +39,15 @@ const Producto = db.define('Producto', {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: 'Categoria',
+            model: 'PRGADH_Categoria',
+            key: 'id'
+        }
+    },
+    ID_Marca_FK: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+            model: 'PRGADH_Marca_Productos',
             key: 'id'
         }
     }

@@ -34,6 +34,8 @@ const customerValidateSchema = Joi.object({
         .error((error) => {
             return customError("El NIT debe ser numérico.", error);
         }),
+    Direccion_General: Joi.string()
+        .trim(),
     Correo_Cliente: Joi.string()
         .email({ tlds: { allow: ['com'] } })
         .required()
@@ -56,14 +58,18 @@ const customerValidateSchema = Joi.object({
         .error((error) => {
             return customError("Las contraseñas no coinciden.", error);
         }),
-    Departamento: Joi.string()
-        .trim(),
-    Municipio: Joi.string()
-        .trim(),
-    Calle: Joi.string()
-        .trim(),
-    Direccion_Referencia: Joi.string()
-        .trim()
+    ID_Departamento_FK: Joi.number()
+        .integer()
+        .min(1)
+        .error((error) => {
+            return customError("El ID de departamento es numérico y no debe de ser negativo.", error);
+        }),
+    ID_Municipio_FK: Joi.number()
+        .integer()
+        .min(1)
+        .error((error) => {
+            return customError("El ID de municipio es numérico y no debe de ser negativo.", error);
+        })
 });
 
 //Exportación del esquema de validación para cliente

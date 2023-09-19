@@ -10,7 +10,7 @@ const db = require('../database/db_connection');
  *              Modelo Producto (product.js)
  */
 
-const Inventario = db.define('Inventario', {
+const Inventario = db.define('PRGADH_Inventario', {
     Cantidad_Stock: {
         type: DataTypes.INTEGER,
         allowNull: false
@@ -19,7 +19,7 @@ const Inventario = db.define('Inventario', {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: 'Empleados',
+            model: 'PRGADH_Empleados',
             key: 'id'
         }
     },
@@ -27,7 +27,7 @@ const Inventario = db.define('Inventario', {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: 'Productos',
+            model: 'PRGADH_Productos',
             key: 'id'
         }
     }

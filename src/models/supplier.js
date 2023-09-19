@@ -9,7 +9,7 @@ const db = require('../database/db_connection');
  *              Modelo Estado (state.js)
  */
 
-const Proveedor = db.define('Proveedor', {
+const Proveedor = db.define('PRGADH_Proveedor', {
     Nombre_Proveedor: {
         type: DataTypes.STRING(30),
         allowNull: false,
@@ -33,7 +33,7 @@ const Proveedor = db.define('Proveedor', {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: 'Estados',
+            model: 'PRGADH_Estados',
             key: 'id'
         }
     }

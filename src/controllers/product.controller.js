@@ -2,6 +2,7 @@ const Sequelize = require('sequelize');
 const ProductModel = require('../models/product');
 const StateModel = require('../models/state');
 const CategoryModel = require('../models/category');
+const BrandProductModel = require('../models/brand_product');
 const InventoryModel = require('../models/inventory');
 
 /**
@@ -12,6 +13,7 @@ const InventoryModel = require('../models/inventory');
  *              Modelo Producto (product.js), 
  *              Modelo Estado (state.js),
  *              Modelo Categoria (category.js),
+ *              Modelo Marca_Producto (brand_product.js),
  *              Modelo Inventario (inventory.js)
  */
 
@@ -20,10 +22,10 @@ const addProduct = async (req, res) => {
         const { user } = req;
         const { 
             Nombre_Producto,
-            Marca_Producto,
             Precio_Promedio,
             Descripcion_Producto,
             ID_Categoria_FK,
+            ID_Marca_FK,
             Cantidad_Stock //Modelo Inventario
         } = req.body;
 
@@ -31,6 +33,12 @@ const addProduct = async (req, res) => {
 
         if (!category) {
             return res.status(404).send({ error: "Categoría no encontrada." });
+        }
+
+        const brandProduct = await BrandProductModel.findByPk(ID_Marca_FK);
+
+        if (!brandProduct) {
+            return res.status(404).send({ error: "Marca del producto no encontrada." });
         }
 
         const stateProduct = await StateModel.findOne({
@@ -49,7 +57,8 @@ const addProduct = async (req, res) => {
             Precio_Promedio,
             Descripcion_Producto,
             ID_Estado_FK: stateProduct.id,
-            ID_Categoria_FK
+            ID_Categoria_FK,
+            ID_Marca_FK
         });
 
         await InventoryModel.create({
@@ -124,20 +133,29 @@ const readProductId = async (req, res) => {
 const updateProductId = async (req, res) => {
     try {
         const { id } = req.params;
+        const { ID_Categoria_FK, ID_Marca_FK } = req.body;
         const updates = Object.keys(req.body);
 
-        const allowedUpdates = ['Nombre_Producto', 'Marca_Producto', 'Precio_Promedio', 'Descripcion_Producto', 'ID_Categoria_FK', 'Cantidad_Stock'];
+        const allowedUpdates = ['Nombre_Producto', 'Precio_Promedio', 'Descripcion_Producto', 'ID_Categoria_FK', 'ID_Marca_FK', 'Cantidad_Stock'];
         const isValidOperation = updates.every((update) => allowedUpdates.includes(update));
 
         if (!isValidOperation) {
             return res.status(400).send({ error: '¡Actualización inválida!' });
         }
 
-        if (req.body.ID_Categoria_FK) {
-            const category = await CategoryModel.findByPk(req.body.ID_Categoria_FK);
+        if (ID_Categoria_FK) {
+            const category = await CategoryModel.findByPk(ID_Categoria_FK);
 
             if (!category) {
                 return res.status(404).send({ error: "Categoría no encontrada." });
+            }
+        }
+
+        if (ID_Marca_FK) {
+            const brandProduct = await BrandProductModel.findByPk(ID_Marca_FK);
+
+            if (!brandProduct) {
+                return res.status(404).send({ error: "Marca del producto no encontrada." });
             }
         }
 
@@ -148,6 +166,8 @@ const updateProductId = async (req, res) => {
         }
 
         updates.forEach((update) => product[update] = req.body[update]);
+
+        //Falta validar si se modificó lo de cantidad stock para cambiarlo****************************************
 
         await product.save();
         res.status(200).send({ msg: "Datos actualizados con éxito." });

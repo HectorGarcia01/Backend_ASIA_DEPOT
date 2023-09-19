@@ -55,15 +55,7 @@ const employeeValidateSchema = Joi.object({
         .required()
         .error((error) => {
             return customError("Las contraseñas no coinciden.", error);
-        }),
-    Departamento: Joi.string()
-        .trim(),
-    Municipio: Joi.string()
-        .trim(),
-    Calle: Joi.string()
-        .trim(),
-    Direccion_Referencia: Joi.string()
-        .trim()
+        })
 });
 
 //Exportación del esquema de validación para empleado

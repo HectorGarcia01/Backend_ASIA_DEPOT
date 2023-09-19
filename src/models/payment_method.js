@@ -7,7 +7,7 @@ const db = require('../database/db_connection');
  * Autor: Hector Armando García González
  */
 
-const Tipo_Envio = db.define('Tipo_Envio', {
+const Tipo_Envio = db.define('PRGADH_Tipo_Envio', {
     Nombre_Envio: {
         type: DataTypes.STRING(40),
         allowNull: false

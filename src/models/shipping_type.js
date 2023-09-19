@@ -7,7 +7,7 @@ const db = require('../database/db_connection');
  * Autor: Hector Armando García González
  */
 
-const Metodo_Pago = db.define('Metodo_Pago', {
+const Metodo_Pago = db.define('PRGADH_Metodo_Pago', {
     Tipo_Pago: {
         type: DataTypes.STRING(40),
         allowNull: false

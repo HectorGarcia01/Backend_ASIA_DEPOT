@@ -8,7 +8,7 @@ const { keep } = require('../schemas/product_review.schema');
  * Autor: Hector Armando García González
  */
 
-const Categoria = db.define('Categoria', {
+const Categoria = db.define('PRGADH_Categoria', {
     Nombre_Categoria: {
         type: DataTypes.STRING(50),
         allowNull: false,
@@ -22,7 +22,7 @@ const Categoria = db.define('Categoria', {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: 'Estados',
+            model: 'PRGADH_Estados',
             key: 'id'
         }
     }

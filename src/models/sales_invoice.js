@@ -12,7 +12,7 @@ const db = require('../database/db_connection');
  *              Modelo Tipo_Envio (shipping_type.js)
  */
 
-const Factura_Venta = db.define('Factura_Venta', {
+const Factura_Venta = db.define('PRGADH_Factura_Venta', {
     NIT_Cliente: {
         type: DataTypes.INTEGER,
         allowNull: true
@@ -29,7 +29,7 @@ const Factura_Venta = db.define('Factura_Venta', {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: 'Empleados',
+            model: 'PRGADH_Empleados',
             key: 'id'
         }
     },
@@ -37,7 +37,7 @@ const Factura_Venta = db.define('Factura_Venta', {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: 'Proveedors',
+            model: 'PRGADH_Proveedors',
             key: 'id'
         }
     },
@@ -45,7 +45,7 @@ const Factura_Venta = db.define('Factura_Venta', {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: 'Metodo_Pagos',
+            model: 'PRGADH_Metodo_Pagos',
             key: 'id'
         }
     },
@@ -53,7 +53,7 @@ const Factura_Venta = db.define('Factura_Venta', {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: 'Tipo_Envios',
+            model: 'PRGADH_Tipo_Envios',
             key: 'id'
         }
     }

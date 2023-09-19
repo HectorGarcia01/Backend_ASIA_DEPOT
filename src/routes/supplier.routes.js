@@ -37,5 +37,5 @@ router.get('/admin/ver/proveedores', authMiddleware, roleMiddleware('Admin'), re
 router.get('/admin/ver/proveedor/:id', authMiddleware, roleMiddleware('Admin'), readSupplierId);
 router.patch('/admin/actualizar/proveedor/:id', authMiddleware, roleMiddleware('Admin'), updateSupplierId);
 
-//Exportación de todas las rutas de empleado
+//Exportación de todas las rutas de proveedor
 module.exports = router;
