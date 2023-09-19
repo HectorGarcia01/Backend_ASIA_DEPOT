@@ -34,16 +34,19 @@ const insertPredefinedData = async () => {
             console.log("Datos predefinidos de roles insertados con éxito.");
         }
 
-        for (const department of addresses.departamentos) {
-            const newDepartment = await DepartmentModel.create({ Nombre_Departamento: department.nombre });
-            for (const Nombre_Municipio of department.municipios) {
-                await MunicipalityModel.create({ Nombre_Municipio, ID_Departamento_FK: newDepartment.id });
-            }
-        }
+        const existingDepartments = await DepartmentModel.findAll();
 
-        console.log("Datos predefinidos de direcciones insertados con éxito.");
+        if (existingDepartments.length === 0) {
+            for (const department of addresses.departamentos) {
+                const newDepartment = await DepartmentModel.create({ Nombre_Departamento: department.nombre });
+                for (const Nombre_Municipio of department.municipios) {
+                    await MunicipalityModel.create({ Nombre_Municipio, ID_Departamento_FK: newDepartment.id });
+                }
+            }
+            console.log("Datos predefinidos de direcciones insertados con éxito.");
+        }
     } catch (error) {
-        console.log("Error al insertar datos predefinidos.");
+        console.log("Error al insertar datos predefinidos.", error); 
     }
 };
 
