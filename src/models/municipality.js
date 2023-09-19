@@ -5,6 +5,8 @@ const db = require('../database/db_connection');
  * Creación del modelo Municipio
  * Fecha creación: 06/09/2023
  * Autor: Hector Armando García González
+ * Referencias:
+ *              Modelo Departamento (department.js)
  */
 
 const Municipio = db.define('Municipio', {
