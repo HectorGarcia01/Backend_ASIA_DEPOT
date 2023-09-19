@@ -130,7 +130,7 @@ const customerProfile = async (req, res) => {
 const updateCustomer = async (req, res) => {
     try {
         const { user } = req;
-        const { ID_Municipio_FK } = req.body;
+        const { ID_Departamento_FK, ID_Municipio_FK } = req.body;
         const updates = Object.keys(req.body);
 
         const allowedUpdates = [
@@ -158,7 +158,8 @@ const updateCustomer = async (req, res) => {
 
             const municipalityCustomer = await MunicipalityModel.findOne({
                 where: {
-                    id: ID_Municipio_FK
+                    id: ID_Municipio_FK,
+                    ID_Departamento_FK
                 }
             });
 
