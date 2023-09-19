@@ -133,7 +133,16 @@ const updateCustomer = async (req, res) => {
         const { ID_Municipio_FK } = req.body;
         const updates = Object.keys(req.body);
 
-        const allowedUpdates = ['Nombre_Cliente', 'Apellido_Cliente', 'Telefono_Cliente', 'NIT_Cliente', 'ID_Departamento_FK', 'ID_Municipio_FK'];
+        const allowedUpdates = [
+            'Nombre_Cliente', 
+            'Apellido_Cliente', 
+            'Telefono_Cliente', 
+            'NIT_Cliente', 
+            'Direccion_General', 
+            'ID_Departamento_FK', 
+            'ID_Municipio_FK'
+        ];
+        
         const isValidOperation = updates.every((update) => allowedUpdates.includes(update));
 
         if (!isValidOperation) {
