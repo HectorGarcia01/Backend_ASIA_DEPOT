@@ -10,8 +10,7 @@ const db = require('../database/db_connection');
 const Municipio = db.define('Municipio', {
     Nombre_Municipio: {
         type: DataTypes.STRING(30),
-        allowNull: false,
-        unique: true
+        allowNull: false
     },
     ID_Departamento_FK: {
         type: DataTypes.INTEGER,
