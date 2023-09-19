@@ -9,7 +9,7 @@ const db = require('../database/db_connection');
  *              Modelo Departamento (department.js)
  */
 
-const Municipio = db.define('Municipio', {
+const Municipio = db.define('PRGADH_Municipio', {
     Nombre_Municipio: {
         type: DataTypes.STRING(30),
         allowNull: false
@@ -18,7 +18,7 @@ const Municipio = db.define('Municipio', {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: 'Departamentos',
+            model: 'PRGADH_Departamentos',
             key: 'id'
         }
     },

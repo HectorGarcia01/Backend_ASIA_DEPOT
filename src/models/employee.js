@@ -13,7 +13,7 @@ const { KEY_TOKEN } = require('../config/config');
  *              Modelo Rol (role.js).
  */
 
-const Empleado = db.define('Empleado', {
+const Empleado = db.define('PRGADH_Empleado', {
     Nombre_Empleado: {
         type: DataTypes.STRING(30),
         allowNull: false
@@ -48,7 +48,7 @@ const Empleado = db.define('Empleado', {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: 'Estados',
+            model: 'PRGADH_Estados',
             key: 'id'
         }
     },
@@ -56,7 +56,7 @@ const Empleado = db.define('Empleado', {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: 'Rols',
+            model: 'PRGADH_Rols',
             key: 'id'
         }
     }

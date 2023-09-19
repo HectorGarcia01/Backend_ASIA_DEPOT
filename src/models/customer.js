@@ -14,7 +14,7 @@ const { KEY_TOKEN } = require('../config/config');
  *              Modelo Rol (role.js).
  */
 
-const Cliente = db.define('Cliente', {
+const Cliente = db.define('PRGADH_Cliente', {
     Nombre_Cliente: {
         type: DataTypes.STRING(30),
         allowNull: false
@@ -53,7 +53,7 @@ const Cliente = db.define('Cliente', {
         type: DataTypes.INTEGER,
         allowNull: true,
         references: {
-            model: 'Municipios',
+            model: 'PRGADH_Municipios',
             key: 'id'
         }
     },
@@ -61,7 +61,7 @@ const Cliente = db.define('Cliente', {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: 'Estados',
+            model: 'PRGADH_Estados',
             key: 'id'
         }
     },
@@ -69,7 +69,7 @@ const Cliente = db.define('Cliente', {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: 'Rols',
+            model: 'PRGADH_Rols',
             key: 'id'
         }
     }

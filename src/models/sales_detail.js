@@ -10,7 +10,7 @@ const db = require('../database/db_connection');
  *              Modelo Producto (product.js) 
  */
 
-const Detalle_Venta = db.define('Detalle_Venta', {
+const Detalle_Venta = db.define('PRGADH_Detalle_Venta', {
     Cantidad_Producto: {
         type: DataTypes.INTEGER,
         allowNull: false
@@ -27,7 +27,7 @@ const Detalle_Venta = db.define('Detalle_Venta', {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: 'Factura_Venta',
+            model: 'PRGADH_Factura_Venta',
             key: 'id'
         }
     },
@@ -35,7 +35,7 @@ const Detalle_Venta = db.define('Detalle_Venta', {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: 'Productos',
+            model: 'PRGADH_Productos',
             key: 'id'
         }
     }

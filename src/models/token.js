@@ -8,7 +8,7 @@ const db = require('../database/db_connection');
  * Referencias: Modelo Cliente (customer.js) y Modelo Empleado (employee.js)
  */
 
-const Token = db.define('Token', {
+const Token = db.define('PRGADH_Token', {
     Token_Usuario: {
         type: DataTypes.STRING,
         allowNull: false
@@ -17,7 +17,7 @@ const Token = db.define('Token', {
         type: DataTypes.INTEGER,
         allowNull: true,
         references: {
-            model: 'Clientes',
+            model: 'PRGADH_Clientes',
             key: 'id'
         }
     },
@@ -25,7 +25,7 @@ const Token = db.define('Token', {
         type: DataTypes.INTEGER,
         allowNull: true,
         references: {
-            model: 'Empleados',
+            model: 'PRGADH_Empleados',
             key: 'id'
         }
     }

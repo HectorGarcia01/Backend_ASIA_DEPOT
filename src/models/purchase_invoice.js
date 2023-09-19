@@ -10,7 +10,7 @@ const db = require('../database/db_connection');
  *              Modelo Proveedor (supplier.js)
  */
 
-const Factura_Compra = db.define('Factura_Compra', {
+const Factura_Compra = db.define('PRGADH_Factura_Compra', {
     Total_Factura: {
         type: DataTypes.DOUBLE,
         allowNull: false
@@ -19,7 +19,7 @@ const Factura_Compra = db.define('Factura_Compra', {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: 'Empleados',
+            model: 'PRGADH_Empleados',
             key: 'id'
         }
     },
@@ -27,7 +27,7 @@ const Factura_Compra = db.define('Factura_Compra', {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: 'Proveedors',
+            model: 'PRGADH_Proveedors',
             key: 'id'
         }
     }

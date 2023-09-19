@@ -7,7 +7,7 @@ const db = require('../database/db_connection');
  * Autor: Hector Armando García González
  */
 
-const Estado = db.define('Estado', {
+const Estado = db.define('PRGADH_Estado', {
     Tipo_Estado: {
         type: DataTypes.STRING(10),
         allowNull: false,

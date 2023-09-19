@@ -9,7 +9,7 @@ const db = require('../database/db_connection');
  *              Modelo Producto (product.js)
  */
 
-const Valoracion_Producto = db.define('Valoracion_Producto', {
+const Valoracion_Producto = db.define('PRGADH_Valoracion_Producto', {
     Comentario_Producto: {
         type: DataTypes.STRING(200),
         allowNull: true
@@ -22,7 +22,7 @@ const Valoracion_Producto = db.define('Valoracion_Producto', {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: 'Clientes',
+            model: 'PRGADH_Clientes',
             key: 'id'
         }
     },
@@ -30,7 +30,7 @@ const Valoracion_Producto = db.define('Valoracion_Producto', {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: 'Productos',
+            model: 'PRGADH_Productos',
             key: 'id'
         }
     }

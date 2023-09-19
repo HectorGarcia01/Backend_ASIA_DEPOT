@@ -7,7 +7,7 @@ const db = require('../database/db_connection');
  * Autor: Hector Armando García González
  */
 
-const Marca_Producto = db.define('Marca_Producto', {
+const Marca_Producto = db.define('PRGADH_Marca_Producto', {
     Nombre_Marca: {
         type: DataTypes.STRING(30),
         allowNull: false,
