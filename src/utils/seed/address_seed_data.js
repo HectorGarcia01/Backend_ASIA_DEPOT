@@ -1,5 +1,4 @@
 //Exportación de direcciones
-// Exportación de direcciones
 module.exports = {
     departamentos: [
         {
@@ -19,8 +18,7 @@ module.exports = {
                 'Chisec',
                 'Santa Cruz Verapaz',
                 'Cahabón',
-                'Tamahú',
-                'Tucurú'
+                'Tamahú'
             ]
         },
         {
@@ -119,8 +117,6 @@ module.exports = {
                 'Palencia',
                 'San José del Golfo',
                 'San José Acatempa',
-                'Sanarate',
-                // Continúa con los municipios de Guatemala ...
             ]
         },
         {
@@ -137,7 +133,6 @@ module.exports = {
                 'San Ildelfonso Ixtahuacán',
                 'Santa Bárbara',
                 'La Libertad',
-                'La Democracia',
                 'San Miguel Acatán',
                 'San Rafael La Independencia',
                 'Santa Cruz Barillas',
@@ -148,7 +143,6 @@ module.exports = {
                 'San Sebastián Coatan',
                 'San Juan Ixcoy',
                 'Nebaj',
-                'San Pedro Carchá',
                 'San Antonio Huista',
                 'San Miguel Ixtahuacán',
                 'San Juan Cotzal',
@@ -157,7 +151,6 @@ module.exports = {
                 'Tactic',
                 'Tamahú',
                 'Senahú',
-                'San Pedro Carchá',
                 'Santa María Cahabón',
                 'Lanquín',
                 'Chahal',
@@ -393,26 +386,8 @@ module.exports = {
                 'San Pablo La Laguna',
                 'San Marcos La Laguna',
                 'Santa Catarina Palopó',
-                'San Antonio Palopó',
                 'San Juan La Laguna',
-                'San Pedro La Laguna',
-                'Santa Clara La Laguna',
-                'Santa María Visitación',
-                'Santa Catarina Ixtahuacán',
-                'Santa Clara La Laguna',
-                'Concepción',
-                'San Andrés Semetabaj',
-                'Panajachel',
-                'San Antonio Palopó',
-                'San Lucas Tolimán',
-                'Santa Cruz La Laguna',
-                'San Pablo La Laguna',
-                'San Marcos La Laguna',
-                'Santa Catarina Palopó',
-                'San Antonio Palopó',
-                'San Juan La Laguna',
-                'San Pedro La Laguna',
-                'Santa Clara La Laguna'
+                'San Pedro La Laguna'
             ]
         },
         {
@@ -443,14 +418,6 @@ module.exports = {
             nombre: 'Totonicapán',
             municipios: [
                 'Totonicapán',
-                'San Cristóbal Totonicapán',
-                'San Francisco El Alto',
-                'Momostenango',
-                'Santa María Chiquimula',
-                'Santa Lucía La Reforma',
-                'San Andrés Xecul',
-                'San Bartolo',
-                'San Pedro Totonicapán',
                 'San Cristóbal Totonicapán',
                 'San Francisco El Alto',
                 'Momostenango',
