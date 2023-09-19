@@ -58,12 +58,18 @@ const customerValidateSchema = Joi.object({
         .error((error) => {
             return customError("Las contraseñas no coinciden.", error);
         }),
+    ID_Departamento_FK: Joi.number()
+        .integer()
+        .min(1)
+        .error((error) => {
+            return customError("El ID de departamento es numérico y no debe de ser negativo.", error);
+        }),
     ID_Municipio_FK: Joi.number()
         .integer()
         .min(1)
         .error((error) => {
-            return customError("El ID de dirección es numérico y no debe de ser negativo.", error);
-        }),
+            return customError("El ID de municipio es numérico y no debe de ser negativo.", error);
+        })
 });
 
 //Exportación del esquema de validación para cliente
