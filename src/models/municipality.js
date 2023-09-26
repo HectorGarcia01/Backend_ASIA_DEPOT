@@ -55,6 +55,7 @@ Municipio.belongsTo(Departamento, {
 Municipio.prototype.toJSON = function () {
     const municipality = { ...this.get() };
 
+    delete municipality.ID_Departamento_FK;
     delete municipality.createdAt;
     delete municipality.updatedAt;
 
