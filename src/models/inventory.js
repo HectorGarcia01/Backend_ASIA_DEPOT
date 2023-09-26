@@ -11,7 +11,12 @@ const db = require('../database/db_connection');
  */
 
 const Inventario = db.define('PRGADH_Inventario', {
-    Cantidad_Stock: {
+    Tipo_Movimiento: {
+        type: DataTypes.STRING(6),
+        allowNull: false,
+        values: ['Compra', 'Venta', 'Ajuste']
+    },
+    Cantidad_Movimiento: {
         type: DataTypes.INTEGER,
         allowNull: false
     },
