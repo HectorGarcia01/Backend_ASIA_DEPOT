@@ -23,8 +23,16 @@ const Producto = db.define('PRGADH_Producto', {
         type: DataTypes.STRING(200),
         allowNull: true
     },
+    Cantidad_Stock: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
     Imagen_Producto: {
         type: DataTypes.BLOB,
+        allowNull: true
+    },
+    Codigo_Barras: {
+        type: DataTypes.STRING(200),
         allowNull: true
     },
     ID_Estado_FK: {
