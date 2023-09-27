@@ -87,7 +87,7 @@ const Cliente = db.define('PRGADH_Cliente', {
  *              Modelo Estado (state.js)  -> uno
  */
 
-Cliente.hasOne(Estado, {
+Estado.hasOne(Cliente, {
     foreignKey: 'ID_Estado_FK'
 });
 

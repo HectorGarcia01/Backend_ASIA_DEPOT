@@ -154,7 +154,7 @@ Factura_Venta.belongsTo(Tipo_Envio, {
  *              Modelo Estado (state.js)  -> uno
  */
 
-Factura_Venta.hasOne(Estado, {
+Estado.hasOne(Factura_Venta, {
     foreignKey: 'ID_Estado_FK'
 });
 

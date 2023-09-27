@@ -54,7 +54,7 @@ const Proveedor = db.define('PRGADH_Proveedor', {
  *              Modelo Estado (state.js)  -> uno
  */
 
-Proveedor.hasOne(Estado, {
+Estado.hasOne(Proveedor, {
     foreignKey: 'ID_Estado_FK'
 });
 

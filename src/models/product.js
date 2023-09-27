@@ -73,7 +73,7 @@ const Producto = db.define('PRGADH_Producto', {
  *              Modelo Estado (state.js)  -> uno
  */
 
-Producto.hasOne(Estado, {
+Estado.hasOne(Producto, {
     foreignKey: 'ID_Estado_FK'
 });
 

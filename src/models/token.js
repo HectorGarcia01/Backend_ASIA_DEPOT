@@ -54,7 +54,7 @@ const Token = db.define('PRGADH_Token', {
  *              Modelo Estado (state.js)  -> uno
  */
 
-Token.hasOne(Estado, {
+Estado.hasOne(Token, {
     foreignKey: 'ID_Estado_FK'
 });
 
