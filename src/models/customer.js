@@ -82,7 +82,7 @@ const Cliente = db.define('PRGADH_Cliente', {
  * Fecha creación: 26/09/2023
  * Autor: Hector Armando García González
  * Referencia:
- *              Modelo Cliente (department.js) -> muchos
+ *              Modelo Cliente (customer.js) -> muchos
  *              Modelo Municipio (municipality.js)  -> uno
  */
 
