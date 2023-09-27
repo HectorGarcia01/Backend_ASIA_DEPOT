@@ -2,6 +2,8 @@ const { DataTypes } = require('sequelize');
 const db = require('../database/db_connection');
 const Empleado = require('../models/employee');
 const Cliente = require('../models/customer');
+const Metodo_Pago = require('../models/payment_method');
+const Tipo_Envio = require('../models/shipping_type');
 const Estado = require('../models/state');
 
 /**
@@ -68,19 +70,6 @@ const Factura_Venta = db.define('PRGADH_Factura_Venta', {
 });
 
 /**
- * Configurando la relación de uno a uno
- * Fecha creación: 26/09/2023
- * Autor: Hector Armando García González
- * Referencia:
- *              Modelo Factura_Venta (sales_invoice.js) -> uno
- *              Modelo Estado (state.js)  -> uno
- */
-
-Factura_Venta.hasOne(Estado, {
-    foreignKey: 'ID_Estado_FK'
-});
-
-/**
  * Configurando la relación de uno a muchos
  * Fecha creación: 26/09/2023
  * Autor: Hector Armando García González
@@ -116,6 +105,38 @@ Cliente.hasMany(Factura_Venta, {
 Factura_Venta.belongsTo(Cliente, {
     foreignKey: 'ID_Cliente_FK',
     as: 'cliente'
+});
+
+/**
+ * Configurando la relación de uno a muchos
+ * Fecha creación: 26/09/2023
+ * Autor: Hector Armando García González
+ * Referencia:
+ *              Modelo Metodo_Pago (payment_method.js) -> uno
+ *              Modelo Factura_Venta (sales_invoice.js)  -> muchos
+ */
+
+Metodo_Pago.hasMany(Factura_Venta, {
+    foreignKey: 'ID_Cliente_FK',
+    as: 'facturas_venta'
+});
+
+Factura_Venta.belongsTo(Metodo_Pago, {
+    foreignKey: 'ID_Cliente_FK',
+    as: 'metodo_pago'
+});
+
+/**
+ * Configurando la relación de uno a uno
+ * Fecha creación: 26/09/2023
+ * Autor: Hector Armando García González
+ * Referencia:
+ *              Modelo Factura_Venta (sales_invoice.js) -> uno
+ *              Modelo Estado (state.js)  -> uno
+ */
+
+Factura_Venta.hasOne(Estado, {
+    foreignKey: 'ID_Estado_FK'
 });
 
 //Exportación del modelo Factura_Venta
