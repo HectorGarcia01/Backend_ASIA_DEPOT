@@ -38,7 +38,7 @@ const Categoria = db.define('PRGADH_Categoria', {
  */
 
 Categoria.hasOne(Estado, { 
-    foreignKey: 'id' 
+    foreignKey: 'ID_Estado_FK' 
 });
 
 /**
