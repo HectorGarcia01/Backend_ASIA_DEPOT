@@ -1,5 +1,7 @@
 const { DataTypes } = require('sequelize');
 const db = require('../database/db_connection');
+const Categoria = require('../models/category');
+const Marca = require('../models/brand_product');
 
 /**
  * Creación del modelo Producto
@@ -59,6 +61,44 @@ const Producto = db.define('PRGADH_Producto', {
             key: 'id'
         }
     }
+});
+
+/**
+ * Configurando la relación de uno a muchos
+ * Fecha creación: 26/09/2023
+ * Autor: Hector Armando García González
+ * Referencia:
+ *              Modelo Categoría (category.js) -> uno
+ *              Modelo Producto (product.js)  -> muchos
+ */
+
+Categoria.hasMany(Producto, {
+    foreignKey: 'ID_Categoria_FK',
+    as: 'productos'
+});
+
+Producto.belongsTo(Categoria, {
+    foreignKey: 'ID_Categoria_FK',
+    as: 'categoria'
+});
+
+/**
+ * Configurando la relación de uno a muchos
+ * Fecha creación: 26/09/2023
+ * Autor: Hector Armando García González
+ * Referencia:
+ *              Modelo Marca_Producto (brand_product.js) -> uno
+ *              Modelo Producto (product.js)  -> muchos
+ */
+
+Marca.hasMany(Producto, {
+    foreignKey: 'ID_Marca_FK',
+    as: 'productos'
+});
+
+Producto.belongsTo(Marca, {
+    foreignKey: 'ID_Marca_FK',
+    as: 'marca'
 });
 
 /**
