@@ -1,4 +1,5 @@
 const Sequelize = require('sequelize');
+const findState = require('../utils/find_state');
 const ProductModel = require('../models/product');
 const StateModel = require('../models/state');
 const CategoryModel = require('../models/category');
@@ -24,9 +25,10 @@ const addProduct = async (req, res) => {
             Nombre_Producto,
             Precio_Promedio,
             Descripcion_Producto,
+            Cantidad_Stock, 
+            Codigo_Barras,
             ID_Categoria_FK,
             ID_Marca_FK,
-            Cantidad_Stock //Modelo Inventario
         } = req.body;
 
         const category = await CategoryModel.findByPk(ID_Categoria_FK);
@@ -41,28 +43,22 @@ const addProduct = async (req, res) => {
             return res.status(404).send({ error: "Marca del producto no encontrada." });
         }
 
-        const stateProduct = await StateModel.findOne({
-            where: {
-                Tipo_Estado: 'Activo'
-            }
-        });
-
-        if (!stateProduct) {
-            return res.status(404).send({ error: "Estado no encontrado." });
-        }
+        const stateProduct = await findState('Activo');
 
         const newProduct = await ProductModel.create({ 
             Nombre_Producto,
-            Marca_Producto,
             Precio_Promedio,
             Descripcion_Producto,
+            Cantidad_Stock,
+            Codigo_Barras,
             ID_Estado_FK: stateProduct.id,
             ID_Categoria_FK,
             ID_Marca_FK
         });
 
         await InventoryModel.create({
-            Cantidad_Stock,
+            Tipo_Movimiento: 'Ajuste',
+            Cantidad_Movimiento: Cantidad_Stock,
             ID_Empleado_FK: user.id,
             ID_Producto_FK: newProduct.id
         });
@@ -71,6 +67,8 @@ const addProduct = async (req, res) => {
     } catch (error) {
         if (error instanceof Sequelize.UniqueConstraintError) {
             res.status(400).send({ error: "¡El producto ya existe!" });
+        } else if (error.status === 404) {
+            res.status(error.status).send({ error: error.message });
         } else {
             res.status(500).send({ error: "Error interno del servidor." });
         }
