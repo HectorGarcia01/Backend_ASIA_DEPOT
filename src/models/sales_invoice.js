@@ -1,6 +1,8 @@
 const { DataTypes } = require('sequelize');
 const db = require('../database/db_connection');
 
+const Estado = require('../models/state');
+
 /**
  * Creación del modelo Factura_Venta
  * Fecha creación: 12/08/2023
@@ -62,6 +64,19 @@ const Factura_Venta = db.define('PRGADH_Factura_Venta', {
             key: 'id'
         }
     }
+});
+
+/**
+ * Configurando la relación de uno a uno
+ * Fecha creación: 26/09/2023
+ * Autor: Hector Armando García González
+ * Referencia:
+ *              Modelo Factura_Venta (sales_invoice.js) -> uno
+ *              Modelo Estado (state.js)  -> uno
+ */
+
+Factura_Venta.hasOne(Estado, {
+    foreignKey: 'ID_Estado_FK'
 });
 
 //Exportación del modelo Factura_Venta
