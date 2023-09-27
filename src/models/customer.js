@@ -92,7 +92,7 @@ Cliente.hasOne(Estado, {
 });
 
 /**
- * Configurando la relación de muchos a uno
+ * Configurando la relación de uno a muchos
  * Fecha creación: 26/09/2023
  * Autor: Hector Armando García González
  * Referencia:
