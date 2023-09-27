@@ -109,8 +109,6 @@ const addCustomer = async (req, res) => {
  * Función para ver el perfil del cliente
  * Fecha creación: 05/08/2023
  * Autor: Hector Armando García González
- * Referencias:
- *              Modelo Municipio (municipality.js)
  */
 
 const customerProfile = async (req, res) => {
