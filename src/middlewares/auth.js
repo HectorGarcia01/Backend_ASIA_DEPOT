@@ -1,9 +1,12 @@
 const jwt = require('jsonwebtoken');
 const { KEY_TOKEN } = require('../config/config');
 const CustomerModel = require('../models/customer');
+const DepartmentModel = require('../models/department');
+const MunicipalityModel = require('../models/municipality');
 const EmployeeModel = require('../models/employee');
 const TokenModel = require('../models/token');
 const RoleModel = require('../models/role');
+const StateModel = require('../models/state');
 
 /**
  * Middleware de autenticación
@@ -11,8 +14,11 @@ const RoleModel = require('../models/role');
  * Autor: Hector Armando García González
  * Referencias: 
  *              Modelo Cliente (customer.js),
+ *              Modelo Departamento (department.js),
+ *              Modelo Municipio (municipality.js),
  *              Modelo Empleado (employee.js),
- *              Modelo Token (token.js)
+ *              Modelo Token (token.js),
+ *              Modelo Rol (role.js)
  */
 
 const authentication = async (req, res, next) => {
@@ -34,14 +40,31 @@ const authentication = async (req, res, next) => {
             where: {
                 id: decodedToken.id,
                 ID_Rol_FK: id
-            }
+            },
+            include: [{
+                model: MunicipalityModel,
+                as: 'municipio',
+                include: [{
+                    model: DepartmentModel,
+                    as: 'departamento'
+                }]
+            }, {
+                model: StateModel,
+                as: 'estado',
+                attributes: ['Tipo_Estado']
+            }]
         });
 
         const user = customer || await EmployeeModel.findOne({
             where: {
                 id: decodedToken.id,
                 ID_Rol_FK: id
-            }
+            },
+            include: [{
+                model: StateModel,
+                as: 'estado',
+                attributes: ['Tipo_Estado']
+            }]
         });
 
         const validateToken = await TokenModel.findOne({
