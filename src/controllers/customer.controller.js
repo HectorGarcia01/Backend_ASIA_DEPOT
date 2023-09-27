@@ -91,7 +91,7 @@ const addCustomer = async (req, res) => {
         const token = await newCustomer.generateAuthToken(newCustomer.id, roleCustomer.Nombre_Rol);
         await TokenModel.create({ 
             Token_Usuario: token, 
-            ID_Estado_FK: stateToken,
+            ID_Estado_FK: stateToken.id,
             ID_Cliente_FK: newCustomer.id 
         });
 
@@ -117,13 +117,7 @@ const customerProfile = async (req, res) => {
     try {
         const { user } = req;
 
-        const addressCustomer = await MunicipalityModel.findOne({
-            where: {
-                id: user.ID_Municipio_FK
-            }
-        });
-
-        res.status(200).send({ customer: user, addressCustomer });
+        res.status(200).send({ customer: user });
     } catch (error) {
         res.status(500).send({ error: "Error interno del servidor." });
     }
