@@ -96,18 +96,18 @@ Cliente.hasOne(Estado, {
  * Fecha creación: 26/09/2023
  * Autor: Hector Armando García González
  * Referencia:
- *              Modelo Cliente (customer.js) -> muchos
  *              Modelo Municipio (municipality.js)  -> uno
+ *              Modelo Cliente (customer.js) -> muchos
  */
-
-Cliente.belongsTo(Municipio, {
-    foreignKey: 'ID_Municipio_FK',
-    as: 'municipio'
-});
 
 Municipio.hasMany(Cliente, {
     foreignKey: 'ID_Municipio_FK',
     as: 'clientes'
+});
+
+Cliente.belongsTo(Municipio, {
+    foreignKey: 'ID_Municipio_FK',
+    as: 'municipio'
 });
 
 /**
