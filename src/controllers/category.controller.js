@@ -1,5 +1,6 @@
 const Sequelize = require('sequelize');
 const findState = require('../utils/find_state');
+const StateModel = require('../models/state');
 const CategoryModel = require('../models/category');
 
 /**
@@ -27,6 +28,8 @@ const addCategory = async (req, res) => {
     } catch (error) {
         if (error instanceof Sequelize.UniqueConstraintError) {
             res.status(400).send({ error: "¡La categoría ya existe!" });
+        } else if (error.status === 404) {
+            res.status(error.status).send({ error: error.message });
         } else {
             res.status(500).send({ error: "Error interno del servidor." });
         }
@@ -43,7 +46,13 @@ const addCategory = async (req, res) => {
 
 const readCategories = async (req, res) => {
     try {
-        const categories = await CategoryModel.findAll({});
+        const categories = await CategoryModel.findAll({
+            include: [{
+                model: StateModel,
+                as: 'estado',
+                attributes: ['id', 'Tipo_Estado']
+            }]
+        });
 
         if (categories.length === 0) {
             return res.status(404).send({ error: "No hay categorías registradas." });
@@ -66,7 +75,13 @@ const readCategories = async (req, res) => {
 const readCategoryId = async (req, res) => {
     try {
         const { id } = req.params;
-        const category = await CategoryModel.findByPk(id);
+        const category = await CategoryModel.findByPk(id, {
+            include: [{
+                model: StateModel,
+                as: 'estado',
+                attributes: ['id', 'Tipo_Estado']
+            }]
+        });
 
         if (!category) {
             return res.status(404).send({ error: "Categoría no encontrada." });
@@ -137,7 +152,11 @@ const deleteCategoryId = async (req, res) => {
         await category.save();
         res.status(200).send({ msg: "Categoría eliminada con éxito." });
     } catch (error) {
-        res.status(500).send({ error: "Error interno del servidor." });
+        if (error.status === 404) {
+            res.status(error.status).send({ error: error.message });
+        } else {
+            res.status(500).send({ error: "Error interno del servidor." });
+        }
     }
 };
 
