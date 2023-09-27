@@ -123,13 +123,24 @@ Cliente.prototype.generateAuthToken = (id, rol) => {
  * Método personalizado para validar credenciales
  * Fecha creación: 04/08/2023
  * Autor: Hector Armando García González
+ * Referencias:
+ *              Modelo Municipio (municipality.js),
+ *              Modelo Departamento (department.js)
  */
 
 Cliente.prototype.findByCredentials = async (Correo_Cliente, Password_Cliente) => {
     const customer = await Cliente.findOne({
         where: {
             Correo_Cliente
-        }
+        },
+        include: [{
+            model: Municipio,
+            as: 'municipio',
+            include: [{
+                model: Departamento,
+                as: 'departamento'
+            }]
+        }]
     });
 
     if (!customer) {
@@ -156,9 +167,10 @@ Cliente.prototype.toJSON = function () {
 
     delete customer.Avatar_Cliente;
     delete customer.Password_Cliente;
+    delete customer.ID_Rol_FK;
+    delete customer.ID_Municipio_FK;
     delete customer.createdAt;
     delete customer.updatedAt;
-    delete customer.ID_Rol_FK;
 
     return customer;
 };
