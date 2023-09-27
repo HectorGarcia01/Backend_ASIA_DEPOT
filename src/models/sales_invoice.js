@@ -9,7 +9,8 @@ const db = require('../database/db_connection');
  *              Modelo Empleado (employee.js),
  *              Modelo Cliente (customer.js),
  *              Modelo Metodo_Pago (payment_method.js),
- *              Modelo Tipo_Envio (shipping_type.js)
+ *              Modelo Tipo_Envio (shipping_type.js),
+ *              Modelo Estado (state.js)
  */
 
 const Factura_Venta = db.define('PRGADH_Factura_Venta', {
@@ -19,10 +20,6 @@ const Factura_Venta = db.define('PRGADH_Factura_Venta', {
     },
     Total_Factura: {
         type: DataTypes.DOUBLE,
-        allowNull: false
-    },
-    Estado_Factura: { //Por le momento, luego hará referencia a la llave foránea
-        type: DataTypes.STRING,
         allowNull: false
     },
     ID_Empleado_FK: {
@@ -54,6 +51,14 @@ const Factura_Venta = db.define('PRGADH_Factura_Venta', {
         allowNull: false,
         references: {
             model: 'PRGADH_Tipo_Envios',
+            key: 'id'
+        }
+    },
+    ID_Estado_FK: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+            model: 'PRGADH_Estados',
             key: 'id'
         }
     }
