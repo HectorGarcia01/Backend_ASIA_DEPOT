@@ -55,6 +55,7 @@ Categoria.belongsTo(Estado, {
 Categoria.prototype.toJSON = function () {
     const category = { ...this.get() };
 
+    delete category.ID_Estado_FK;
     delete category.createdAt;
     delete category.updatedAt;
 
