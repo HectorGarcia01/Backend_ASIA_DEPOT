@@ -1,5 +1,6 @@
 const { DataTypes } = require('sequelize');
 const db = require('../database/db_connection');
+const Estado = require('../models/state');
 const Cliente = require('../models/customer');
 const Empleado = require('../models/employee');
 
@@ -7,13 +8,23 @@ const Empleado = require('../models/employee');
  * Creación del modelo Token
  * Fecha creación: 03/08/2023
  * Autor: Hector Armando García González
- * Referencias: Modelo Cliente (customer.js) y Modelo Empleado (employee.js)
+ * Referencias: 
+ *              Modelo Cliente (customer.js).
+ *              Modelo Empleado (employee.js)
  */
 
 const Token = db.define('PRGADH_Token', {
     Token_Usuario: {
         type: DataTypes.STRING,
         allowNull: false
+    },
+    ID_Estado_FK: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+            model: 'PRGADH_Estados',
+            key: 'id'
+        }
     },
     ID_Cliente_FK: {
         type: DataTypes.INTEGER,
@@ -31,6 +42,19 @@ const Token = db.define('PRGADH_Token', {
             key: 'id'
         }
     }
+});
+
+/**
+ * Configurando la relación de uno a uno
+ * Fecha creación: 26/09/2023
+ * Autor: Hector Armando García González
+ * Referencia:
+ *              Modelo Token (token.js) -> uno
+ *              Modelo Estado (state.js)  -> uno
+ */
+
+Token.hasOne(Estado, {
+    foreignKey: 'ID_Estado_FK'
 });
 
 /**
