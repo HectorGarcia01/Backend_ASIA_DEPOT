@@ -1,4 +1,5 @@
 const Sequelize = require('sequelize');
+const { handleSuccess, handleResponse } = require('../utils/response_handling');
 const CustomerModel = require('../models/customer');
 const DepartmentModel = require('../models/department');
 const MunicipalityModel = require('../models/municipality');
@@ -14,8 +15,9 @@ const TokenModel = require('../models/token');
  *              Modelo Cliente (customer.js), 
  *              Modelo Municipio (municipality.js), 
  *              Modelo Rol (role.js), 
- *              Modelo Estado (state.js)
- *              Modelo Token (token.js)
+ *              Modelo Estado (state.js),
+ *              Modelo Token (token.js),
+ *              Manejo de respuestas y estados (response_handling.js -> handleSuccess y handleResponse)
  */
 
 const addCustomer = async (req, res) => {
@@ -95,12 +97,12 @@ const addCustomer = async (req, res) => {
             ID_Cliente_FK: newCustomer.id 
         });
 
-        res.status(201).send({ msg: "Se ha registrado con éxito." });
+        handleSuccess(res, 201, "Se ha registrado con éxito.");
     } catch (error) {
         if (error instanceof Sequelize.UniqueConstraintError) {
-            res.status(400).send({ error: "¡El usuario ya existe!" });
+            handleResponse(res, 400, "¡El usuario ya existe!");
         } else {
-            res.status(500).send({ error: "Error interno del servidor." });
+            handleResponse(res);
         }
     }
 };
