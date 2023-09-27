@@ -1,6 +1,6 @@
 const { DataTypes } = require('sequelize');
 const db = require('../database/db_connection');
-const { keep } = require('../schemas/product_review.schema');
+const Estado = require('../models/state');
 
 /**
  * Creación del modelo Categoria
@@ -26,6 +26,19 @@ const Categoria = db.define('PRGADH_Categoria', {
             key: 'id'
         }
     }
+});
+
+/**
+ * Configurando la relación de uno a uno
+ * Fecha creación: 26/09/2023
+ * Autor: Hector Armando García González
+ * Referencia:
+ *              Modelo Categoría (category.js) -> uno
+ *              Modelo Estado (state.js)  -> uno
+ */
+
+Categoria.hasOne(Estado, { 
+    foreignKey: 'id' 
 });
 
 /**
