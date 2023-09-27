@@ -12,7 +12,13 @@ const Estado = db.define('PRGADH_Estado', {
         type: DataTypes.STRING(10),
         allowNull: false,
         unique: true,
-        values: ['Pendiente', 'Activo', 'Inactivo']
+        values: [
+            'Pendiente',    //Para cliente, empleado y factura de ventas
+            'Activo',       //Para cliente, empleado, productos y tokens
+            'Inactivo',     //Para cliente, empleado y productos y tokens
+            'En proceso',   //Para la factura de ventas
+            'Completado'    //Para la factura de ventas
+        ]
     }
 });
 
