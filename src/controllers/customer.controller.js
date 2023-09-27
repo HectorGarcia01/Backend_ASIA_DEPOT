@@ -131,7 +131,11 @@ const updateCustomer = async (req, res) => {
         await user.save();
         res.status(200).send({ msg: "Datos actualizados con éxito." });
     } catch (error) {
-        res.status(500).send({ error: "Error interno del servidor. " });
+        if (error.status === 404) {
+            res.status(error.status).send({ error: error.message });
+        } else {
+            res.status(500).send({ error: "Error interno del servidor." });
+        }
     }
 };
 
