@@ -1,6 +1,7 @@
 const { DataTypes } = require('sequelize');
 const db = require('../database/db_connection');
-
+const Empleado = require('../models/employee');
+const Cliente = require('../models/customer');
 const Estado = require('../models/state');
 
 /**
@@ -77,6 +78,44 @@ const Factura_Venta = db.define('PRGADH_Factura_Venta', {
 
 Factura_Venta.hasOne(Estado, {
     foreignKey: 'ID_Estado_FK'
+});
+
+/**
+ * Configurando la relación de uno a muchos
+ * Fecha creación: 26/09/2023
+ * Autor: Hector Armando García González
+ * Referencia:
+ *              Modelo Empleado (employee.js) -> uno
+ *              Modelo Factura_Venta (sales_invoice.js)  -> muchos
+ */
+
+Empleado.hasMany(Factura_Venta, {
+    foreignKey: 'ID_Empleado_FK',
+    as: 'facturas_venta'
+});
+
+Factura_Venta.belongsTo(Empleado, {
+    foreignKey: 'ID_Empleado_FK',
+    as: 'empleado'
+});
+
+/**
+ * Configurando la relación de uno a muchos
+ * Fecha creación: 26/09/2023
+ * Autor: Hector Armando García González
+ * Referencia:
+ *              Modelo Cliente (customer.js) -> uno
+ *              Modelo Factura_Venta (sales_invoice.js)  -> muchos
+ */
+
+Cliente.hasMany(Factura_Venta, {
+    foreignKey: 'ID_Cliente_FK',
+    as: 'facturas_venta'
+});
+
+Factura_Venta.belongsTo(Cliente, {
+    foreignKey: 'ID_Cliente_FK',
+    as: 'cliente'
 });
 
 //Exportación del modelo Factura_Venta
