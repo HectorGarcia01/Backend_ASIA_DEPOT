@@ -97,7 +97,7 @@ const addCustomer = async (req, res) => {
             ID_Cliente_FK: newCustomer.id 
         });
 
-        handleSuccess(res, 201, "Se ha registrado con éxito.");
+        handleSuccess(res, 201, { msg: "Se ha registrado con éxito." });
     } catch (error) {
         if (error instanceof Sequelize.UniqueConstraintError) {
             handleResponse(res, 400, "¡El usuario ya existe!");
@@ -115,9 +115,9 @@ const addCustomer = async (req, res) => {
 
 const customerProfile = async (req, res) => {
     try {
-        res.status(200).send({ customer: req.user });
+        handleSuccess(res, 200, { customer: req.user });
     } catch (error) {
-        res.status(500).send({ error: "Error interno del servidor." });
+        handleResponse(res);
     }
 };
 
@@ -174,9 +174,9 @@ const updateCustomer = async (req, res) => {
         updates.forEach((update) => user[update] = req.body[update]);
 
         await user.save();
-        res.status(200).send({ msg: "Datos actualizados con éxito." });
+        handleSuccess(res, 200, { msg: "Datos actualizados con éxito." });
     } catch (error) {
-        res.status(500).send({ error: "Error interno del servidor." });
+        handleResponse(res);
     }
 };
 
