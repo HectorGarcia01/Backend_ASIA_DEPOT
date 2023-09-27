@@ -3,13 +3,15 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const db = require('../database/db_connection');
 const { KEY_TOKEN } = require('../config/config');
+const Municipio = require('../models/municipality');
+const Departamento = require('../models/department'); 
 
 /**
  * Creación del modelo Cliente
  * Fecha creación: 03/08/2023
  * Autor: Hector Armando García González
  * Referencias: 
- *              Modelo Direccion (address.js).
+ *              Modelo Municipio (municipality.js).
  *              Modelo Estado (state.js).
  *              Modelo Rol (role.js).
  */
@@ -73,6 +75,25 @@ const Cliente = db.define('PRGADH_Cliente', {
             key: 'id'
         }
     }
+});
+
+/**
+ * Configurando la relación de muchos a uno
+ * Fecha creación: 26/09/2023
+ * Autor: Hector Armando García González
+ * Referencia:
+ *              Modelo Cliente (department.js) -> muchos
+ *              Modelo Municipio (municipality.js)  -> uno
+ */
+
+Cliente.belongsTo(Municipio, {
+    foreignKey: 'ID_Municipio_FK',
+    as: 'municipio'
+});
+
+Municipio.hasMany(Cliente, {
+    foreignKey: 'ID_Municipio_FK',
+    as: 'clientes'
 });
 
 /**
