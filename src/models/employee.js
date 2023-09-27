@@ -3,6 +3,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const db = require('../database/db_connection');
 const { KEY_TOKEN } = require('../config/config');
+const Estado = require('../models/state');
 
 /**
  * Creación del modelo Empleado
@@ -60,6 +61,19 @@ const Empleado = db.define('PRGADH_Empleado', {
             key: 'id'
         }
     }
+});
+
+/**
+ * Configurando la relación de uno a uno
+ * Fecha creación: 26/09/2023
+ * Autor: Hector Armando García González
+ * Referencia:
+ *              Modelo Empleado (employee.js) -> uno
+ *              Modelo Estado (state.js)  -> uno
+ */
+
+Empleado.hasOne(Estado, {
+    foreignKey: 'ID_Estado_FK'
 });
 
 /**
