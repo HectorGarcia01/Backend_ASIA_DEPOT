@@ -1,9 +1,10 @@
 const Sequelize = require('sequelize');
 const validateMunicipality = require('../utils/customer/validate_municipality');
+const findState = require('../utils/find_state');
+const findRole = require('../utils/find_role');
 const CustomerModel = require('../models/customer');
 const DepartmentModel = require('../models/department');
 const MunicipalityModel = require('../models/municipality');
-const RoleModel = require('../models/role');
 const StateModel = require('../models/state');
 const TokenModel = require('../models/token');
 
@@ -13,11 +14,10 @@ const TokenModel = require('../models/token');
  * Autor: Hector Armando García González
  * Referencias: 
  *              Modelo Cliente (customer.js),
- *              Modelo Rol (role.js), 
- *              Modelo Estado (state.js),
  *              Modelo Token (token.js),
- *              Validar existencia de municipio (validate_municipality.js),
- * 
+ *              Función para validar existencia de municipio (validate_municipality.js),
+ *              Función para buscar estado (find_state.js),
+ *              Función para buscar rol (find_role.js)
  */
 
 const addCustomer = async (req, res) => {
@@ -35,28 +35,11 @@ const addCustomer = async (req, res) => {
         } = req.body;
 
         if (ID_Municipio_FK) {
-            await validateMunicipality(res, ID_Municipio_FK, ID_Departamento_FK);
+            await validateMunicipality(ID_Municipio_FK, ID_Departamento_FK);
         }
 
-        const stateCustomer = await StateModel.findOne({
-            where: {
-                Tipo_Estado: 'Pendiente'
-            }
-        });
-
-        if (!stateCustomer) {
-            return res.status(404).send({ error: "Estado no encontrado." });
-        }
-
-        const roleCustomer = await RoleModel.findOne({
-            where: {
-                Nombre_Rol: 'User'
-            }
-        });
-
-        if (!roleCustomer) {
-            return res.status(404).send({ error: "Rol no encontrado." });
-        }
+        const stateCustomer = await findState('Pendiente');
+        const roleCustomer = await findRole('User');
 
         const newCustomer = await CustomerModel.create({
             Nombre_Cliente,
@@ -71,17 +54,9 @@ const addCustomer = async (req, res) => {
             ID_Rol_FK: roleCustomer.id
         });
 
-        const stateToken = await StateModel.findOne({
-            where: {
-                Tipo_Estado: 'Activo'
-            }
-        });
-
-        if (!stateToken) {
-            return res.status(404).send({ error: "Estado no encontrado." });
-        }
-
+        const stateToken = await findState('Activo');
         const token = await newCustomer.generateAuthToken(newCustomer.id, roleCustomer.Nombre_Rol);
+        
         await TokenModel.create({ 
             Token_Usuario: token, 
             ID_Estado_FK: stateToken.id,
@@ -92,8 +67,10 @@ const addCustomer = async (req, res) => {
     } catch (error) {
         if (error instanceof Sequelize.UniqueConstraintError) {
             res.status(400).send({ error: "¡El usuario ya existe!"  });
+        } else if (error.status === 404) {
+            res.status(error.status).send({ error: error.message });
         } else {
-            res.status(500).send({ error: "Error interno del servidor. "});
+            res.status(500).send({ error: "Error interno del servidor." });
         }
     }
 };
