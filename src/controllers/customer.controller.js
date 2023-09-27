@@ -1,5 +1,5 @@
 const Sequelize = require('sequelize');
-const { handleSuccess, handleResponse } = require('../utils/response_handling');
+const validateMunicipality = require('../utils/customer/validate_municipality');
 const CustomerModel = require('../models/customer');
 const DepartmentModel = require('../models/department');
 const MunicipalityModel = require('../models/municipality');
@@ -12,12 +12,12 @@ const TokenModel = require('../models/token');
  * Fecha creación: 03/08/2023
  * Autor: Hector Armando García González
  * Referencias: 
- *              Modelo Cliente (customer.js), 
- *              Modelo Municipio (municipality.js), 
+ *              Modelo Cliente (customer.js),
  *              Modelo Rol (role.js), 
  *              Modelo Estado (state.js),
  *              Modelo Token (token.js),
- *              Manejo de respuestas y estados (response_handling.js -> handleSuccess y handleResponse)
+ *              Validar existencia de municipio (validate_municipality.js),
+ * 
  */
 
 const addCustomer = async (req, res) => {
@@ -35,16 +35,7 @@ const addCustomer = async (req, res) => {
         } = req.body;
 
         if (ID_Municipio_FK) {
-            const addressCustomer = await MunicipalityModel.findOne({
-                where: {
-                    id: ID_Municipio_FK,
-                    ID_Departamento_FK
-                }
-            });
-
-            if (!addressCustomer) {
-                return res.status(404).send({ error: "Municipio no encontrado." });
-            }
+            await validateMunicipality(res, ID_Municipio_FK, ID_Departamento_FK);
         }
 
         const stateCustomer = await StateModel.findOne({
@@ -97,12 +88,12 @@ const addCustomer = async (req, res) => {
             ID_Cliente_FK: newCustomer.id 
         });
 
-        handleSuccess(res, 201, { msg: "Se ha registrado con éxito." });
+        res.status(201).send({ msg: "Se ha registrado con éxito." });
     } catch (error) {
         if (error instanceof Sequelize.UniqueConstraintError) {
-            handleResponse(res, 400, "¡El usuario ya existe!");
+            res.status(400).send({ error: "¡El usuario ya existe!"  });
         } else {
-            handleResponse(res);
+            res.status(500).send({ error: "Error interno del servidor. "});
         }
     }
 };
@@ -115,9 +106,9 @@ const addCustomer = async (req, res) => {
 
 const customerProfile = async (req, res) => {
     try {
-        handleSuccess(res, 200, { customer: req.user });
+        res.status(200).send({ customer: req.user });
     } catch (error) {
-        handleResponse(res);
+        res.status(500).send({ error: "Error interno del servidor. " });
     }
 };
 
@@ -174,9 +165,9 @@ const updateCustomer = async (req, res) => {
         updates.forEach((update) => user[update] = req.body[update]);
 
         await user.save();
-        handleSuccess(res, 200, { msg: "Datos actualizados con éxito." });
+        res.status(200).send({ msg: "Datos actualizados con éxito." });
     } catch (error) {
-        handleResponse(res);
+        res.status(500).send({ error: "Error interno del servidor. " });
     }
 };
 
