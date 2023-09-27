@@ -115,9 +115,7 @@ const addCustomer = async (req, res) => {
 
 const customerProfile = async (req, res) => {
     try {
-        const { user } = req;
-
-        res.status(200).send({ customer: user });
+        res.status(200).send({ customer: req.user });
     } catch (error) {
         res.status(500).send({ error: "Error interno del servidor." });
     }
