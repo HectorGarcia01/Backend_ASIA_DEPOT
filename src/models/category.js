@@ -41,6 +41,11 @@ Estado.hasOne(Categoria, {
     foreignKey: 'ID_Estado_FK' 
 });
 
+Categoria.belongsTo(Estado, {
+    foreignKey: 'ID_Estado_FK',
+    as: 'estado'
+});
+
 /**
  * Método personalizado para filtrar información
  * Fecha creación: 28/08/2023

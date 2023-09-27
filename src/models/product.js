@@ -77,6 +77,11 @@ Estado.hasOne(Producto, {
     foreignKey: 'ID_Estado_FK'
 });
 
+Producto.belongsTo(Estado, {
+    foreignKey: 'ID_Estado_FK',
+    as: 'estado'
+});
+
 /**
  * Configurando la relación de uno a muchos
  * Fecha creación: 26/09/2023

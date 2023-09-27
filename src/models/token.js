@@ -58,6 +58,11 @@ Estado.hasOne(Token, {
     foreignKey: 'ID_Estado_FK'
 });
 
+Token.belongsTo(Estado, {
+    foreignKey: 'ID_Estado_FK',
+    as: 'estado'
+});
+
 /**
  * Configurando la relación de uno a muchos
  * Fecha creación: 26/09/2023

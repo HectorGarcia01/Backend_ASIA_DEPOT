@@ -58,5 +58,10 @@ Estado.hasOne(Proveedor, {
     foreignKey: 'ID_Estado_FK'
 });
 
+Proveedor.belongsTo(Estado, {
+    foreignKey: 'ID_Estado_FK',
+    as: 'estado'
+});
+
 //Exportación del modelo Proveedor
 module.exports = Proveedor;

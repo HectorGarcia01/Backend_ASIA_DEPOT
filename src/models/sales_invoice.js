@@ -158,5 +158,10 @@ Estado.hasOne(Factura_Venta, {
     foreignKey: 'ID_Estado_FK'
 });
 
+Factura_Venta.belongsTo(Estado, {
+    foreignKey: 'ID_Estado_FK',
+    as: 'estado'
+});
+
 //Exportación del modelo Factura_Venta
 module.exports = Factura_Venta;

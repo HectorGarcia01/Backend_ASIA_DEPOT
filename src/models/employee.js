@@ -76,6 +76,11 @@ Estado.hasOne(Empleado, {
     foreignKey: 'ID_Estado_FK'
 });
 
+Empleado.belongsTo(Estado, {
+    foreignKey: 'ID_Estado_FK',
+    as: 'estado'
+});
+
 /**
  * Hook para el cifrado de contraseña
  * Fecha creación: 03/08/2023
