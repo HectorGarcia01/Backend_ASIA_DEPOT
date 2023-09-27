@@ -50,12 +50,12 @@ const Inventario = db.define('PRGADH_Inventario', {
  */
 
 Empleado.hasMany(Inventario, {
-    foreignKey: 'ID_Departamento_FK',
+    foreignKey: 'ID_Empleado_FK',
     as: 'inventarios'
 });
 
 Inventario.belongsTo(Empleado, {
-    foreignKey: 'ID_Departamento_FK',
+    foreignKey: 'ID_Empleado_FK',
     as: 'empleado'
 });
 
@@ -69,12 +69,12 @@ Inventario.belongsTo(Empleado, {
  */
 
 Producto.hasMany(Inventario, {
-    foreignKey: 'ID_Departamento_FK',
+    foreignKey: 'ID_Producto_FK',
     as: 'inventarios'
 });
 
 Inventario.belongsTo(Producto, {
-    foreignKey: 'ID_Departamento_FK',
+    foreignKey: 'ID_Producto_FK',
     as: 'producto'
 });
 
