@@ -5,6 +5,7 @@ const db = require('../database/db_connection');
 const { KEY_TOKEN } = require('../config/config');
 const Municipio = require('../models/municipality');
 const Departamento = require('../models/department'); 
+const Estado = require('../models/state');
 
 /**
  * Creación del modelo Cliente
@@ -75,6 +76,19 @@ const Cliente = db.define('PRGADH_Cliente', {
             key: 'id'
         }
     }
+});
+
+/**
+ * Configurando la relación de uno a uno
+ * Fecha creación: 26/09/2023
+ * Autor: Hector Armando García González
+ * Referencia:
+ *              Modelo Cliente (customer.js) -> uno
+ *              Modelo Estado (state.js)  -> uno
+ */
+
+Cliente.hasOne(Estado, {
+    foreignKey: 'ID_Estado_FK'
 });
 
 /**
