@@ -78,9 +78,20 @@ const addCustomer = async (req, res) => {
             ID_Rol_FK: roleCustomer.id
         });
 
+        const stateToken = await StateModel.findOne({
+            where: {
+                Tipo_Estado: 'Activo'
+            }
+        });
+
+        if (!stateToken) {
+            return res.status(404).send({ error: "Estado no encontrado." });
+        }
+
         const token = await newCustomer.generateAuthToken(newCustomer.id, roleCustomer.Nombre_Rol);
         await TokenModel.create({ 
             Token_Usuario: token, 
+            ID_Estado_FK: stateToken,
             ID_Cliente_FK: newCustomer.id 
         });
 
