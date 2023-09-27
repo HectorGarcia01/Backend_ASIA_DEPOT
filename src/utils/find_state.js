@@ -1,7 +1,7 @@
 const StateModel = require('../models/state');
 
 /**
- * Función para para buscar el tipo de estado
+ * Función para buscar el tipo de estado
  * Fecha creación: 27/09/2023
  * Autor: Hector Armando García González
  * Referencias:
