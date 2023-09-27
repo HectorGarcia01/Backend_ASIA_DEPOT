@@ -4,8 +4,8 @@
  * Autor: Hector Armando García González
  */
 
-const handleSuccess = (res, status = 200, msg = null) => {
-    res.status(status).send({ msg });
+const handleSuccess = (res, status = 200, data = null) => {
+    res.status(status).send(data);
 };
 
 /**
