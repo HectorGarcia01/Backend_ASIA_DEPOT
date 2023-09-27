@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
+const findState = require('../utils/find_state');
 const CategoryModel = require('../models/category');
-const StateModel = require('../models/state');
 
 /**
  * Función para registrar una nueva categoría
@@ -8,22 +8,14 @@ const StateModel = require('../models/state');
  * Autor: Hector Armando García González
  * Referencias: 
  *              Modelo Categoría (category.js), 
- *              Modelo Estado (state.js)
+ *              Función para buscar estado (find_state.js)
  */
 
 const addCategory = async (req, res) => {
     try {
         const { Nombre_Categoria, Descripcion_Categoria } = req.body;
 
-        const stateCategory = await StateModel.findOne({
-            where: {
-                Tipo_Estado: 'Activo'
-            }
-        });
-
-        if (!stateCategory) {
-            return res.status(404).send({ error: "Estado no encontrado." });
-        }
+        const stateCategory = await findState('Activo');
 
         const newCategory = await CategoryModel.create({ 
             Nombre_Categoria, 
@@ -127,7 +119,7 @@ const updateCategoryId = async (req, res) => {
  * Autor: Hector Armando García González
  * Referencias:
  *              Modelo Categoría (category.js),
- *              Modelo Estado (state.js)
+ *              Función para buscar estado (find_state.js)
  */
 
 const deleteCategoryId = async (req, res) => {
@@ -139,11 +131,7 @@ const deleteCategoryId = async (req, res) => {
             return res.status(404).send({ error: "Categoría no encontrada." });
         }
 
-        const stateCategory = await StateModel.findOne({
-            where: {
-                Tipo_Estado: "Inactivo"
-            }
-        });
+        const stateCategory = await findState('Inactivo');
 
         category.ID_Estado_FK = stateCategory.id;
         await category.save();
