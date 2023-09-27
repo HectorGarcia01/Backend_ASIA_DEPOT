@@ -2,7 +2,6 @@ const Sequelize = require('sequelize');
 const findState = require('../utils/find_state');
 const findRole = require('../utils/find_role');
 const EmployeeModel = require('../models/employee');
-const RoleModel = require('../models/role');
 const StateModel = require('../models/state');
 const TokenModel = require('../models/token');
 
@@ -12,7 +11,7 @@ const TokenModel = require('../models/token');
  * Autor: Hector Armando García González
  * Referencias: 
  *              Modelo Empleado (employee.js), 
- *              Modelo Rol (role.js), 
+ *              Modelo Token (token.js), 
  *              Función para buscar estado (find_state.js),
  *              Función para buscar rol (find_role.js)
  */
@@ -112,12 +111,18 @@ const updateEmployee = async (req, res) => {
  * Autor: Hector Armando García González
  * Referencias:
  *              Modelo Empleado (employee.js),
- *              Modelo Estado (state.js)
+ *              Función para buscar estado (find_state.js)
  */
 
 const readEmployees = async (req, res) => {
     try {
-        const employees = await EmployeeModel.findAll({});
+        const employees = await EmployeeModel.findAll({
+            include: [{
+                model: StateModel,
+                as: 'estado',
+                attributes: ['Tipo_Estado']
+            }]
+        });
 
         if (employees.length === 0) {
             return res.status(404).send({ error: "No existe ningún empleado registrado." });
@@ -140,7 +145,13 @@ const readEmployees = async (req, res) => {
 const readEmployeeId = async (req, res) => {
     try {
         const { id } = req.params;
-        const employee = await EmployeeModel.findByPk(id);
+        const employee = await EmployeeModel.findByPk(id, {
+            include: [{
+                model: StateModel,
+                as: 'estado',
+                attributes: ['Tipo_Estado']
+            }]
+        });
 
         if (!employee) {
             return res.status(404).send({ error: "Empleado no encontrado." });
@@ -158,7 +169,7 @@ const readEmployeeId = async (req, res) => {
  * Autor: Hector Armando García González
  * Referencias:
  *              Modelo Empleado (employee.js),
- *              Modelo Estado (state.js)
+ *              Función para buscar estado (find_state.js)
  */
 
 const deleteEmployeeId = async (req, res) => {
