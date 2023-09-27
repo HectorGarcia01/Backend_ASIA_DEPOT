@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 const db = require('../database/db_connection');
 const { KEY_TOKEN } = require('../config/config');
 const Municipio = require('../models/municipality');
-const Departamento = require('../models/department'); 
+const Departamento = require('../models/department');
 const Estado = require('../models/state');
 
 /**
@@ -144,7 +144,8 @@ Cliente.prototype.generateAuthToken = (id, rol) => {
  * Autor: Hector Armando García González
  * Referencias:
  *              Modelo Municipio (municipality.js),
- *              Modelo Departamento (department.js)
+ *              Modelo Departamento (department.js),
+ *              Modelo Estado (state.js)
  */
 
 Cliente.prototype.findByCredentials = async (Correo_Cliente, Password_Cliente) => {
@@ -159,6 +160,10 @@ Cliente.prototype.findByCredentials = async (Correo_Cliente, Password_Cliente) =
                 model: Departamento,
                 as: 'departamento'
             }]
+        }, {
+            model: Estado,
+            as: 'estado',
+            attributes: ['Tipo_Estado']
         }]
     });
 
