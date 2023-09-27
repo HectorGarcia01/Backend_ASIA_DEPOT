@@ -1,5 +1,6 @@
 const { DataTypes } = require('sequelize');
 const db = require('../database/db_connection');
+const Estado = require('../models/state');
 const Categoria = require('../models/category');
 const Marca = require('../models/brand_product');
 
@@ -61,6 +62,19 @@ const Producto = db.define('PRGADH_Producto', {
             key: 'id'
         }
     }
+});
+
+/**
+ * Configurando la relación de uno a uno
+ * Fecha creación: 26/09/2023
+ * Autor: Hector Armando García González
+ * Referencia:
+ *              Modelo Producto (employee.js) -> uno
+ *              Modelo Estado (state.js)  -> uno
+ */
+
+Producto.hasOne(Estado, {
+    foreignKey: 'ID_Estado_FK'
 });
 
 /**
