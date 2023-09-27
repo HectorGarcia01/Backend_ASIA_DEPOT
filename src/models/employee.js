@@ -141,9 +141,10 @@ Empleado.prototype.toJSON = function () {
     
     delete employee.Avatar_Empleado;
     delete employee.Password_Empleado;
+    delete employee.ID_Estado_FK;
+    delete employee.ID_Rol_FK;
     delete employee.createdAt;
     delete employee.updatedAt;
-    delete employee.ID_Rol_FK;
     
     return employee;
 };

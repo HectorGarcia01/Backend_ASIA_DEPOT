@@ -186,6 +186,7 @@ Cliente.prototype.toJSON = function () {
 
     delete customer.Avatar_Cliente;
     delete customer.Password_Cliente;
+    delete customer.ID_Estado_FK;
     delete customer.ID_Rol_FK;
     delete customer.ID_Municipio_FK;
     delete customer.createdAt;
