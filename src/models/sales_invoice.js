@@ -117,13 +117,32 @@ Factura_Venta.belongsTo(Cliente, {
  */
 
 Metodo_Pago.hasMany(Factura_Venta, {
-    foreignKey: 'ID_Cliente_FK',
+    foreignKey: 'ID_Metodo_Pago_FK',
     as: 'facturas_venta'
 });
 
 Factura_Venta.belongsTo(Metodo_Pago, {
-    foreignKey: 'ID_Cliente_FK',
+    foreignKey: 'ID_Metodo_Pago_FK',
     as: 'metodo_pago'
+});
+
+/**
+ * Configurando la relación de uno a muchos
+ * Fecha creación: 26/09/2023
+ * Autor: Hector Armando García González
+ * Referencia:
+ *              Modelo Tipo_Envio (shipping_type.js) -> uno
+ *              Modelo Factura_Venta (sales_invoice.js)  -> muchos
+ */
+
+Tipo_Envio.hasMany(Factura_Venta, {
+    foreignKey: 'ID_Tipo_Envio_FK',
+    as: 'facturas_venta'
+});
+
+Factura_Venta.belongsTo(Tipo_Envio, {
+    foreignKey: 'ID_Tipo_Envio_FK',
+    as: 'tipo_envio'
 });
 
 /**
