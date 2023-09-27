@@ -9,6 +9,7 @@ const Empleado = require('../models/employee');
  * Fecha creación: 03/08/2023
  * Autor: Hector Armando García González
  * Referencias: 
+ *              Modelo Estado (state.js)
  *              Modelo Cliente (customer.js).
  *              Modelo Empleado (employee.js)
  */
