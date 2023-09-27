@@ -1,4 +1,6 @@
 const Sequelize = require('sequelize');
+const findState = require('../utils/find_state');
+const findRole = require('../utils/find_role');
 const EmployeeModel = require('../models/employee');
 const RoleModel = require('../models/role');
 const StateModel = require('../models/state');
@@ -11,8 +13,8 @@ const TokenModel = require('../models/token');
  * Referencias: 
  *              Modelo Empleado (employee.js), 
  *              Modelo Rol (role.js), 
- *              Modelo Estado (state.js)
- *              Modelo Token (token.js)
+ *              Función para buscar estado (find_state.js),
+ *              Función para buscar rol (find_role.js)
  */
 
 const addEmployee = async (req, res) => {
@@ -26,25 +28,8 @@ const addEmployee = async (req, res) => {
             Password_Empleado
         } = req.body;
 
-        const stateEmployee = await StateModel.findOne({
-            where: {
-                Tipo_Estado: 'Pendiente'
-            }
-        });
-
-        if (!stateEmployee) {
-            return res.status(404).send({ error: "Estado no encontrado." });
-        }
-
-        const roleEmployee = await RoleModel.findOne({
-            where: {
-                Nombre_Rol: 'Admin'
-            }
-        });
-
-        if (!roleEmployee) {
-            return res.status(404).send({ error: "Rol no encontrado." });
-        }
+        const stateEmployee = await findState('Pendiente');
+        const roleEmployee = await findRole('Admin');
         
         const newEmployee = await EmployeeModel.create({
             Nombre_Empleado,
@@ -57,9 +42,12 @@ const addEmployee = async (req, res) => {
             ID_Rol_FK: roleEmployee.id
         });
 
+        const stateToken = await findState('Activo');
         const token = await newEmployee.generateAuthToken(newEmployee.id, roleEmployee.Nombre_Rol);
+        
         await TokenModel.create({
             Token_Usuario: token,
+            ID_Estado_FK: stateToken.id,
             ID_Empleado_FK: newEmployee.id
         });
         
@@ -67,6 +55,8 @@ const addEmployee = async (req, res) => {
     } catch (error) {
         if (error instanceof Sequelize.UniqueConstraintError) {
             res.status(400).send({ error: "¡El empleado ya existe!" });
+        } else if (error.status === 404) {
+            res.status(error.status).send({ error: error.message });
         } else {
             res.status(500).send({ error: "Error interno del servidor." });
         }
@@ -180,17 +170,17 @@ const deleteEmployeeId = async (req, res) => {
             return res.status(404).send({ error: "Empleado no encontrado." });
         }
 
-        const stateEmployee = await StateModel.findOne({
-            where: {
-                Tipo_Estado: "Inactivo"
-            }
-        });
+        const stateEmployee = await findState('Inactivo');
 
         employee.ID_Estado_FK = stateEmployee.id;
         await employee.save();
         res.status(200).send({ msg: "Empleado eliminado con éxito." });
     } catch (error) {
-        res.status(500).send({ error: "Error interno del servidor." });
+        if (error.status === 404) {
+            res.status(error.status).send({ error: error.message });
+        } else {
+            res.status(500).send({ error: "Error interno del servidor." });
+        }
     }
 };
 
