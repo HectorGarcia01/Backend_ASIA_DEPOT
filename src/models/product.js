@@ -10,7 +10,8 @@ const Marca = require('../models/brand_product');
  * Autor: Hector Armando García González
  * Referencias:
  *              Modelo Estado (state.js),
- *              Modelo Categoria (category.js)
+ *              Modelo Categoria (category.js),
+ *              Modelo Marca (brand_product)
  */
 
 const Producto = db.define('PRGADH_Producto', {
