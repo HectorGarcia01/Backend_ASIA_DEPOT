@@ -113,5 +113,80 @@ const customerValidateSchema = Joi.object({
         })
 });
 
+/**
+ * Esquema de validación de datos de actualización de Cliente
+ * Fecha creación: 04/08/2023
+ * Autor: Hector Armando García González
+ * Referencias: 
+ *              custom_error.js (para errores personalizados)
+ */
+
+const updateCustomerValidateSchema = Joi.object({
+    Nombre_Cliente: Joi.string()
+        .pattern(new RegExp('^[a-zA-Z]+$'))
+        .min(3)
+        .max(30)
+        .trim()
+        .error((error) => {
+            return customError("Algo salió mal...", {
+                Minimo: "El nombre debe de tener un mínimo de 3 carácteres.",
+                Maximo: "El nombre debe de tener un máximo de 30 carácteres.",
+                Valido: "El nombre no debe de contener carácteres especiales."
+            });
+        }),
+    Apellido_Cliente: Joi.string()
+        .pattern(new RegExp('^[a-zA-Z]+$'))
+        .min(3)
+        .max(30)
+        .trim()
+        .error((error) => {
+            return customError("Algo salió mal...", {
+                Minimo: "El apellido debe de tener un mínimo de 3 carácteres.",
+                Maximo: "El apellido debe de tener un máximo de 30 carácteres.",
+                Valido: "El apellido no debe de contener carácteres especiales."
+            });
+        }),
+    Telefono_Cliente: Joi.string()
+        .pattern(new RegExp('^[345][0-9]{7}'))
+        .trim()
+        .error((error) => {
+            return customError("Algo salió mal...", {
+                Longitud: "El teléfono debe de poseer 8 dígitos."
+            });
+        }),
+    NIT_Cliente: Joi.number()
+        .integer()
+        .error((error) => {
+            return customError("El NIT debe ser numérico.", error);
+        }),
+    Direccion_General: Joi.string()
+        .pattern(new RegExp('^[a-zA-Z0-9\\s.\\-]+$'))
+        .min(10)
+        .max(100)
+        .trim()
+        .error((error) => {
+            return customError("Algo salió mal...", {
+                Minimo: "La dirección general debe de tener un mínimo de 10 carácteres.",
+                Maximo: "La dirección general debe de tener un máximo de 100 carácteres.",
+                Valido: "La dirección general no debe de contener carácteres especiales."
+            });
+        }),
+    ID_Departamento_FK: Joi.number()
+        .integer()
+        .min(1)
+        .error((error) => {
+            return customError("El ID de departamento es numérico y no debe de ser negativo.", error);
+        }),
+    ID_Municipio_FK: Joi.number()
+        .integer()
+        .min(1)
+        .error((error) => {
+            return customError("El ID de municipio es numérico y no debe de ser negativo.", error);
+        })
+});
+
 //Exportación del esquema de validación para cliente
-module.exports = customerValidateSchema;
+module.exports = {
+    customerValidateSchema,
+    updateCustomerValidateSchema
+};
