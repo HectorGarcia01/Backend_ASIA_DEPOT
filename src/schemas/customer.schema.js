@@ -67,11 +67,13 @@ const customerValidateSchema = Joi.object({
         }),
     Correo_Cliente: Joi.string()
         .email({ tlds: { allow: ['com'] } })
+        .max(100)
         .required()
         .trim()
         .error((error) => {
             return customError("Algo salió mal...", {
                 Obligatorio: "El correo es obligatorio.",
+                Maximo: "La correo debe de tener un máximo de 30 carácteres.",
                 Valido: "El correo debe de tener la extensión .com"
             });
         }),
