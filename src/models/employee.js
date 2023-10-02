@@ -32,7 +32,7 @@ const Empleado = db.define('PRGADH_Empleado', {
         allowNull: true
     },
     Correo_Empleado: {
-        type: DataTypes.STRING(30),
+        type: DataTypes.STRING(40),
         allowNull: false,
         low: true,
         unique: true
