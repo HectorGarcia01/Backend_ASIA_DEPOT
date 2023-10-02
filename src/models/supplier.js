@@ -30,7 +30,7 @@ const Proveedor = db.define('PRGADH_Proveedor', {
         allowNull: false
     },
     Correo_Proveedor: {
-        type: DataTypes.STRING(30),
+        type: DataTypes.STRING(40),
         allowNull: false,
         low: true,
         unique: true
