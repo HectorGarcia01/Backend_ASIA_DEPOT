@@ -13,7 +13,7 @@ const Estado = require('../models/state');
 const Proveedor = db.define('PRGADH_Proveedor', {
     Nombre_Proveedor: {
         type: DataTypes.STRING(30),
-        allowNull: false,
+        allowNull: true,
         unique: true
     },
     Apellido_Proveedor: {
