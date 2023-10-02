@@ -11,7 +11,7 @@ const customError = require('../utils/custom_error');
 
 const customerValidateSchema = Joi.object({
     Nombre_Cliente: Joi.string()
-        .pattern(new RegExp('^[a-zA-Z]+$'))
+        .pattern(new RegExp('^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\\s]+$'))
         .min(3)
         .max(30)
         .required()
@@ -25,7 +25,7 @@ const customerValidateSchema = Joi.object({
             });
         }),
     Apellido_Cliente: Joi.string()
-        .pattern(new RegExp('^[a-zA-Z]+$'))
+        .pattern(new RegExp('^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\\s]+$'))
         .min(3)
         .max(30)
         .required()
@@ -54,7 +54,7 @@ const customerValidateSchema = Joi.object({
             return customError("El NIT debe ser numérico.");
         }),
     Direccion_General: Joi.string()
-        .pattern(new RegExp('^[a-zA-Z0-9\\s.\\-]+$'))
+        .pattern(new RegExp('^[^\\[\\]<>(){}_=\\\\|\\\'\';]+$'))        
         .min(10)
         .max(100)
         .trim()
@@ -123,7 +123,7 @@ const customerValidateSchema = Joi.object({
 
 const updateCustomerValidateSchema = Joi.object({
     Nombre_Cliente: Joi.string()
-        .pattern(new RegExp('^[a-zA-Z]+$'))
+        .pattern(new RegExp('^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\\s]+$'))
         .min(3)
         .max(30)
         .trim()
@@ -135,7 +135,7 @@ const updateCustomerValidateSchema = Joi.object({
             });
         }),
     Apellido_Cliente: Joi.string()
-        .pattern(new RegExp('^[a-zA-Z]+$'))
+        .pattern(new RegExp('^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\\s]+$'))
         .min(3)
         .max(30)
         .trim()
@@ -160,7 +160,7 @@ const updateCustomerValidateSchema = Joi.object({
             return customError("El NIT debe ser numérico.");
         }),
     Direccion_General: Joi.string()
-        .pattern(new RegExp('^[a-zA-Z0-9\\s.\\-]+$'))
+        .pattern(new RegExp('^[^\\[\\]<>(){}_=\\\\|\\\'\';]+$'))        
         .min(10)
         .max(100)
         .trim()
