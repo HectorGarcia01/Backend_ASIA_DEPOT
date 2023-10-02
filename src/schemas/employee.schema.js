@@ -61,7 +61,7 @@ const employeeValidateSchema = Joi.object({
         .error((error) => {
             return customError("Algo salió mal...", {
                 Obligatorio: "El correo es obligatorio.",
-                Maximo: "La correo debe de tener un máximo de 30 carácteres.",
+                Maximo: "El correo debe de tener un máximo de 30 carácteres.",
                 Valido: "El correo debe de tener la extensión .com"
             });
         }),
