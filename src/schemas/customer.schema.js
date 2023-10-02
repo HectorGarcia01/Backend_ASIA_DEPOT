@@ -11,23 +11,42 @@ const customError = require('../utils/custom_error');
 
 const customerValidateSchema = Joi.object({
     Nombre_Cliente: Joi.string()
+        .pattern(new RegExp('^[a-zA-Z]+$'))
+        .min(3)
+        .max(30)
         .required()
         .trim()
         .error((error) => {
-            return customError("El nombre es obligatorio.", error);
+            return customError("Algo salió mal...", {
+                Obligatorio: "El nombre es obligatorio.",
+                Minimo: "El nombre debe de tener un mínimo de 3 carácteres.",
+                Maximo: "El nombre debe de tener un máximo de 30 carácteres.",
+                Valido: "El nombre no debe de contener carácteres especiales."
+            });
         }),
     Apellido_Cliente: Joi.string()
+        .pattern(new RegExp('^[a-zA-Z]+$'))
+        .min(3)
+        .max(30)
         .required()
         .trim()
         .error((error) => {
-            return customError("El apellido es obligatorio.", error);
+            return customError("Algo salió mal...", {
+                Obligatorio: "El apellido es obligatorio.",
+                Minimo: "El apellido debe de tener un mínimo de 3 carácteres.",
+                Maximo: "El apellido debe de tener un máximo de 30 carácteres.",
+                Valido: "El apellido no debe de contener carácteres especiales."
+            });
         }),
     Telefono_Cliente: Joi.string()
         .pattern(new RegExp('^[345][0-9]{7}'))
         .required()
         .trim()
         .error((error) => {
-            return customError("El teléfono es obligatorio y debe de ser válido.", error);
+            return customError("Algo salió mal...", {
+                Obligatorio: "El teléfono es obligatorio.",
+                Longitud: "El teléfono debe de poseer 8 dígitos."
+            });
         }),
     NIT_Cliente: Joi.number()
         .integer()
@@ -35,13 +54,26 @@ const customerValidateSchema = Joi.object({
             return customError("El NIT debe ser numérico.", error);
         }),
     Direccion_General: Joi.string()
-        .trim(),
+        .pattern(new RegExp('^[a-zA-Z0-9\\s.\\-]+$'))
+        .min(10)
+        .max(100)
+        .trim()
+        .error((error) => {
+            return customError("Algo salió mal...", {
+                Minimo: "La dirección general debe de tener un mínimo de 10 carácteres.",
+                Maximo: "La dirección general debe de tener un máximo de 100 carácteres.",
+                Valido: "La dirección general no debe de contener carácteres especiales."
+            });
+        }),
     Correo_Cliente: Joi.string()
         .email({ tlds: { allow: ['com'] } })
         .required()
         .trim()
         .error((error) => {
-            return customError("El correo electrónico es obligatorio, debe de tener la extensión 'com' y debe ser válido.", error);
+            return customError("Algo salió mal...", {
+                Obligatorio: "El correo es obligatorio.",
+                Valido: "El correo debe de tener la extensión .com"
+            });
         }),
     Password_Cliente: Joi.string()
         .pattern(new RegExp('^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?!.*\\s).*$'))
@@ -50,13 +82,20 @@ const customerValidateSchema = Joi.object({
         .required()
         .trim()
         .error((error) => {
-            return customError("La contraseña es obligatoria y debe tener al menos 8 carácteres, al menos una letra mayúscula, una letra minúscula, un número y no puede contener espacios.", error);
+            return customError("Algo salió mal...", {
+                Obligatorio: "La contraseña es obligatoria.",
+                Minimo: "La contraseña debe de tener un mínimo de 8 carácteres.",
+                Valido: "La contraseña debe de contener al menos una letra mayúscula, una letra minúscula, un número y no puede contener espacios."
+            });
         }),
     Repetir_Password_Cliente: Joi.string()
         .valid(Joi.ref('Password_Cliente'))
         .required()
         .error((error) => {
-            return customError("Las contraseñas no coinciden.", error);
+            return customError("Algo salió mal...", {
+                Obligatorio: "Es obligatorio que repita la contraseña.",
+                Valido: "Las contraseñas deben de coincidir."
+            });
         }),
     ID_Departamento_FK: Joi.number()
         .integer()
