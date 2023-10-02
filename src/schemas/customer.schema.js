@@ -51,7 +51,7 @@ const customerValidateSchema = Joi.object({
     NIT_Cliente: Joi.number()
         .integer()
         .error((error) => {
-            return customError("El NIT debe ser numérico.", error);
+            return customError("El NIT debe ser numérico.");
         }),
     Direccion_General: Joi.string()
         .pattern(new RegExp('^[a-zA-Z0-9\\s.\\-]+$'))
@@ -103,13 +103,13 @@ const customerValidateSchema = Joi.object({
         .integer()
         .min(1)
         .error((error) => {
-            return customError("El ID de departamento es numérico y no debe de ser negativo.", error);
+            return customError("El ID de departamento es numérico y no debe de ser negativo.");
         }),
     ID_Municipio_FK: Joi.number()
         .integer()
         .min(1)
         .error((error) => {
-            return customError("El ID de municipio es numérico y no debe de ser negativo.", error);
+            return customError("El ID de municipio es numérico y no debe de ser negativo.");
         })
 });
 
@@ -157,7 +157,7 @@ const updateCustomerValidateSchema = Joi.object({
     NIT_Cliente: Joi.number()
         .integer()
         .error((error) => {
-            return customError("El NIT debe ser numérico.", error);
+            return customError("El NIT debe ser numérico.");
         }),
     Direccion_General: Joi.string()
         .pattern(new RegExp('^[a-zA-Z0-9\\s.\\-]+$'))
@@ -175,13 +175,13 @@ const updateCustomerValidateSchema = Joi.object({
         .integer()
         .min(1)
         .error((error) => {
-            return customError("El ID de departamento es numérico y no debe de ser negativo.", error);
+            return customError("El ID de departamento es numérico y no debe de ser negativo.");
         }),
     ID_Municipio_FK: Joi.number()
         .integer()
         .min(1)
         .error((error) => {
-            return customError("El ID de municipio es numérico y no debe de ser negativo.", error);
+            return customError("El ID de municipio es numérico y no debe de ser negativo.");
         })
 });
 
