@@ -16,6 +16,7 @@ const addSupplier = async (req, res) => {
         const {
             Nombre_Proveedor,
             Apellido_Proveedor,
+            Nombre_Empresa,
             Telefono_Proveedor,
             Correo_Proveedor
         } = req.body;
@@ -33,6 +34,7 @@ const addSupplier = async (req, res) => {
         await SupplierModel.create({
             Nombre_Proveedor,
             Apellido_Proveedor,
+            Nombre_Empresa,
             Telefono_Proveedor,
             Correo_Proveedor,
             ID_Estado_FK: stateSupplier.id
@@ -107,7 +109,13 @@ const updateSupplierId = async (req, res) => {
         const { id } = req.params;
         const updates = Object.keys(req.body);
 
-        const allowedUpdates = ['Nombre_Proveedor', 'Apellido_Proveedor', 'Telefono_Proveedor', 'Correo_Proveedor'];
+        const allowedUpdates = [
+            'Nombre_Proveedor', 
+            'Apellido_Proveedor', 
+            'Nombre_Empresa', 
+            'Telefono_Proveedor', 
+            'Correo_Proveedor'
+        ];
         const isValidOperation = updates.every((update) => allowedUpdates.includes(update));
 
         if (!isValidOperation) {
