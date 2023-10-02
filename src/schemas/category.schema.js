@@ -11,7 +11,7 @@ const customError = require('../utils/custom_error');
 
 const categorySchema = Joi.object({
     Nombre_Categoria: Joi.string()
-        .pattern(new RegExp('^[a-zA-Z]+$'))
+        .pattern(new RegExp('^[^\\[\\]<>(){}_=\\\\|\\\'\';]+$'))        
         .min(3)
         .max(50)
         .required()
@@ -25,7 +25,7 @@ const categorySchema = Joi.object({
             });
         }),
     Descripcion_Categoria: Joi.string()
-        .pattern(new RegExp('^[a-zA-Z0-9\\s]+$'))
+        .pattern(new RegExp('^[^\\[\\]<>(){}_=\\\\|\\\'\';]+$'))        
         .min(10)
         .max(200)
         .trim()
@@ -48,7 +48,7 @@ const categorySchema = Joi.object({
 
 const updateCategorySchema = Joi.object({
     Nombre_Categoria: Joi.string()
-        .pattern(new RegExp('^[a-zA-Z]+$'))
+        .pattern(new RegExp('^[^\\[\\]<>(){}_=\\\\|\\\'\';]+$'))        
         .min(3)
         .max(50)
         .trim()
@@ -60,7 +60,7 @@ const updateCategorySchema = Joi.object({
             });
         }),
     Descripcion_Categoria: Joi.string()
-        .pattern(new RegExp('^[a-zA-Z0-9\\s]+$'))
+        .pattern(new RegExp('^[^\\[\\]<>(){}_=\\\\|\\\'\';]+$'))        
         .min(10)
         .max(200)
         .trim()
