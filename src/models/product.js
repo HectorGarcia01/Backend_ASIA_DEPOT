@@ -40,7 +40,7 @@ const Producto = db.define('PRGADH_Producto', {
         allowNull: true
     },
     Codigo_Barras: {
-        type: DataTypes.STRING(200),
+        type: DataTypes.BLOB,
         allowNull: true
     },
     ID_Estado_FK: {
