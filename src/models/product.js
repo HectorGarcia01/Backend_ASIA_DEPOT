@@ -19,9 +19,13 @@ const Producto = db.define('PRGADH_Producto', {
         type: DataTypes.STRING(50),
         allowNull: false
     },
-    Precio_Promedio: {
+    Precio_Venta: {
         type: DataTypes.DOUBLE,
         allowNull: false
+    },
+    Precio_Compra: {
+        type: DataTypes.DOUBLE,
+        allowNull: true
     },
     Descripcion_Producto: {
         type: DataTypes.STRING(200),
@@ -57,7 +61,7 @@ const Producto = db.define('PRGADH_Producto', {
     },
     ID_Marca_FK: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
         references: {
             model: 'PRGADH_Marca_Productos',
             key: 'id'
