@@ -67,7 +67,7 @@ const customerValidateSchema = Joi.object({
         }),
     Correo_Cliente: Joi.string()
         .email({ tlds: { allow: ['com'] } })
-        .max(100)
+        .max(30)
         .required()
         .trim()
         .error((error) => {
