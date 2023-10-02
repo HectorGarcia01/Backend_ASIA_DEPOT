@@ -22,7 +22,7 @@ const Proveedor = db.define('PRGADH_Proveedor', {
     },
     Nombre_Empresa: {
         type: DataTypes.STRING(50),
-        allowNull: false,
+        allowNull: true,
         unique: true
     },
     Telefono_Proveedor: {
