@@ -136,4 +136,7 @@ const updateSupplierValidateSchema = Joi.object({
 });
 
 //Exportación del esquema de validación para proveedor
-module.exports = supplierValidateSchema;
+module.exports = {
+    supplierValidateSchema,
+    updateSupplierValidateSchema
+};
