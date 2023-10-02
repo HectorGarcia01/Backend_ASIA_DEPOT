@@ -12,7 +12,7 @@ module.exports = (schema) => {
             await schema.validateAsync(req.body);
             next();
         } catch (error) {
-            res.status(400).send({ error: error.message });
+            res.status(400).send({ error: error.message, details: error.detail });
         }
     }
 };
