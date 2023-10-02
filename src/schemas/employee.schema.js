@@ -55,13 +55,13 @@ const employeeValidateSchema = Joi.object({
         }),
     Correo_Empleado: Joi.string()
         .email({ tlds: { allow: ['com'] } })
-        .max(30)
+        .max(40)
         .required()
         .trim()
         .error((error) => {
             return customError("Algo salió mal...", {
                 Obligatorio: "El correo es obligatorio.",
-                Maximo: "El correo debe de tener un máximo de 30 carácteres.",
+                Maximo: "El correo debe de tener un máximo de 40 carácteres.",
                 Valido: "El correo debe de tener la extensión .com"
             });
         }),
