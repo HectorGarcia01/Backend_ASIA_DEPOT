@@ -148,10 +148,11 @@ Cliente.prototype.generateAuthToken = (id, rol) => {
  *              Modelo Estado (state.js)
  */
 
-Cliente.prototype.findByCredentials = async (Correo_Cliente, Password_Cliente) => {
+Cliente.prototype.findByCredentials = async (Correo_Cliente, Password_Cliente, ID_Estado_FK) => {
     const customer = await Cliente.findOne({
         where: {
-            Correo_Cliente
+            Correo_Cliente,
+            ID_Estado_FK
         },
         include: [{
             model: Municipio,
