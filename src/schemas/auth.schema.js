@@ -27,7 +27,7 @@ const loginValidateScheme = Joi.object({
             return customError("Algo salió mal...", {
                 Obligatorio: "La contraseña es obligatoria."
             });
-        }),
+        })
 });
 
 //Exportación del esquema de validación para el correo del login
