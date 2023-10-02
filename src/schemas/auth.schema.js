@@ -15,13 +15,18 @@ const loginValidateScheme = Joi.object({
         .required()
         .trim()
         .error((error) => {
-            return customError("El correo es obligatorio y debe de ser válido.", error);
+            return customError("Algo salió mal...", {
+                Obligatorio: "El correo es obligatorio.",
+                Valido: "El correo debe de tener la extensión .com"
+            });
         }),
     password: Joi.string()
         .required()
         .trim()
         .error((error) => {
-            return customError("La contraseña es obligatoria.", error);
+            return customError("Algo salió mal...", {
+                Obligatorio: "La contraseña es obligatoria."
+            });
         }),
 });
 
