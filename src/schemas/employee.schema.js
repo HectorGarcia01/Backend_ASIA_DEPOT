@@ -11,7 +11,7 @@ const customError = require('../utils/custom_error');
 
 const employeeValidateSchema = Joi.object({
     Nombre_Empleado: Joi.string()
-        .pattern(new RegExp('^[a-zA-Z]+$'))
+        .pattern(new RegExp('^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\\s]+$'))
         .min(3)
         .max(30)
         .required()
@@ -25,7 +25,7 @@ const employeeValidateSchema = Joi.object({
             });
         }),
     Apellido_Empleado: Joi.string()
-        .pattern(new RegExp('^[a-zA-Z]+$'))
+        .pattern(new RegExp('^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\\s]+$'))
         .min(3)
         .max(30)
         .required()
@@ -99,7 +99,7 @@ const employeeValidateSchema = Joi.object({
 
 const updateEmployeeValidateSchema = Joi.object({
     Nombre_Empleado: Joi.string()
-        .pattern(new RegExp('^[a-zA-Z]+$'))
+        .pattern(new RegExp('^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\\s]+$'))
         .min(3)
         .max(30)
         .trim()
@@ -111,7 +111,7 @@ const updateEmployeeValidateSchema = Joi.object({
             });
         }),
     Apellido_Empleado: Joi.string()
-        .pattern(new RegExp('^[a-zA-Z]+$'))
+        .pattern(new RegExp('^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\\s]+$'))
         .min(3)
         .max(30)
         .trim()
