@@ -39,7 +39,7 @@ const customerValidateSchema = Joi.object({
             });
         }),
     Telefono_Cliente: Joi.string()
-        .pattern(new RegExp('^[345][0-9]{7}'))
+        .pattern(new RegExp('^[345][0-9]{7}$'))
         .required()
         .trim()
         .error((error) => {
@@ -147,7 +147,7 @@ const updateCustomerValidateSchema = Joi.object({
             });
         }),
     Telefono_Cliente: Joi.string()
-        .pattern(new RegExp('^[345][0-9]{7}'))
+        .pattern(new RegExp('^[345][0-9]{7}$'))
         .trim()
         .error((error) => {
             return customError("Algo salió mal...", {
