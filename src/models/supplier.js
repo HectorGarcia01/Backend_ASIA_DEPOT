@@ -63,5 +63,20 @@ Proveedor.belongsTo(Estado, {
     as: 'estado'
 });
 
+/**
+ * Método personalizado para filtrar información
+ * Fecha creación: 29/09/2023
+ * Autor: Hector Armando García González
+ */
+
+Proveedor.prototype.toJSON = function () {
+    const supplier = { ...this.get() };
+
+    delete supplier.createdAt;
+    delete supplier.updatedAt;
+
+    return supplier;
+};
+
 //Exportación del modelo Proveedor
 module.exports = Proveedor;
