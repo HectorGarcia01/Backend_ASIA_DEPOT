@@ -110,10 +110,11 @@ Empleado.prototype.generateAuthToken = (id, rol) => {
  * Autor: Hector Armando García González
  */
 
-Empleado.prototype.findByCredentials = async (Correo_Empleado, Password_Empleado) => {
+Empleado.prototype.findByCredentials = async (Correo_Empleado, Password_Empleado, ID_Estado_FK) => {
     const employee = await Empleado.findOne({
         where: {
-            Correo_Empleado
+            Correo_Empleado,
+            ID_Estado_FK
         }
     });
 
