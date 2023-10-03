@@ -24,11 +24,11 @@ const TokenModel = require('../models/token');
 
 const authentication = async (req, res, next) => {
     try {
-        if (!req.header('Authorization')) {
+        const userToken = req.header('Authorization')?.replace('Bearer ', '');
+        if (!userToken) {
             throw new Error("Por favor autenticarse.");
         }
 
-        const userToken = req.header('Authorization').replace('Bearer ', '');
         const decodedToken = jwt.verify(userToken, KEY_TOKEN);
 
         const activeState = await findState('Activo');
@@ -44,13 +44,14 @@ const authentication = async (req, res, next) => {
         }
 
         const roleUser = await findRole(decodedToken.rol);
+        const whereCondition = {
+            id: decodedToken.id,
+            ID_Rol_FK: roleUser.id,
+            ID_Estado_FK: activeState.id
+        };
 
         const customer = await CustomerModel.findOne({
-            where: {
-                id: decodedToken.id,
-                ID_Rol_FK: roleUser.id,
-                ID_Estado_FK: activeState.id
-            },
+            where: whereCondition,
             include: [{
                 model: MunicipalityModel,
                 as: 'municipio',
@@ -62,11 +63,7 @@ const authentication = async (req, res, next) => {
         });
 
         const user = customer || await EmployeeModel.findOne({
-            where: {
-                id: decodedToken.id,
-                ID_Rol_FK: roleUser.id,
-                ID_Estado_FK: activeState.id
-            }
+            where: whereCondition
         });
 
         if (!user) {
