@@ -88,7 +88,11 @@ const logout = async (req, res) => {
         await userToken.save();
         res.status(200).send({ msg: "Sesión cerrada correctamente." });
     } catch (error) {
-        res.status(500).send({ error: "Error interno del servidor." });
+        if (error.status === 404) {
+            res.status(error.status).send({ error: error.message });
+        } else {
+            res.status(500).send({ error: "Error interno del servidor." });
+        }
     }
 };
 
@@ -127,7 +131,11 @@ const logoutAll = async (req, res) => {
 
         res.status(200).send({ msg: "Sesiones cerradas correctamente." });
     } catch (error) {
-        res.status(500).send({ error: "Error interno del servidor." });
+        if (error.status === 404) {
+            res.status(error.status).send({ error: error.message });
+        } else {
+            res.status(500).send({ error: "Error interno del servidor." });
+        }
     }
 };
 
