@@ -1,8 +1,8 @@
 const Sequelize = require('sequelize');
 const findState = require('../utils/find_state');
+const { findCategory } = require('../utils/find_product');
 const StateModel = require('../models/state');
 const CategoryModel = require('../models/category');
-const { findCategory } = require('../utils/find_product');
 
 /**
  * Función para registrar una nueva categoría
