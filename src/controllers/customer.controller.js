@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
 const { 
     findDepartment, 
-    findMunicipality 
+    findMunicipality
 } = require('../utils/find_address');
 const findState = require('../utils/find_state');
 const findRole = require('../utils/find_role');
