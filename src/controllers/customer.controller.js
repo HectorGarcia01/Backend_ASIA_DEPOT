@@ -1,5 +1,8 @@
 const Sequelize = require('sequelize');
-const { validateDepartment, validateMunicipality } = require('../utils/customer/validate_address');
+const { 
+    findDepartment, 
+    findMunicipality 
+} = require('../utils/find_address');
 const findState = require('../utils/find_state');
 const findRole = require('../utils/find_role');
 const createToken = require('../utils/create_token');
@@ -11,7 +14,7 @@ const CustomerModel = require('../models/customer');
  * Autor: Hector Armando García González
  * Referencias: 
  *              Modelo Cliente (customer.js),
- *              Función para validar existencia de municipio (validate_municipality.js),
+ *              Función para validar existencia de municipio (find_address.js),
  *              Función para buscar estado (find_state.js),
  *              Función para buscar rol (find_role.js),
  *              Función para crear un token (create_token.js)
@@ -32,7 +35,7 @@ const addCustomer = async (req, res) => {
         } = req.body;
 
         if (ID_Municipio_FK) {
-            await validateMunicipality(ID_Municipio_FK, ID_Departamento_FK);
+            await findMunicipality(ID_Municipio_FK, ID_Departamento_FK);
         }
 
         const stateCustomer = await findState('Pendiente');
@@ -86,8 +89,8 @@ const customerProfile = async (req, res) => {
  * Fecha creación: 16/08/2023
  * Autor: Hector Armando García González
  * Referencias: 
- *              Función para validar existencia de departamento (validate_municipality.js),
- *              Función para validar existencia de municipio (validate_municipality.js)
+ *              Función para validar existencia de departamento (find_address.js),
+ *              Función para validar existencia de municipio (find_address.js)
  */
 
 const updateCustomer = async (req, res) => {
@@ -113,11 +116,11 @@ const updateCustomer = async (req, res) => {
         }
 
         if (ID_Departamento_FK) {
-            await validateDepartment(ID_Departamento_FK);
+            await findDepartment(ID_Departamento_FK);
         }
 
         if (ID_Municipio_FK) {
-            await validateMunicipality(ID_Municipio_FK, ID_Departamento_FK);
+            await findMunicipality(ID_Municipio_FK, ID_Departamento_FK);
         }
 
         updates.forEach((update) => user[update] = req.body[update]);
