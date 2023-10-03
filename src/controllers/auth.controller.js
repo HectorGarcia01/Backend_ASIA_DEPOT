@@ -57,7 +57,8 @@ const login = async (req, res) => {
  * Fecha creación: 05/08/2023
  * Autor: Hector Armando García González
  * Referencias: 
- *              Modelo Token (token.js)
+ *              Modelo Token (token.js),
+ *              Función para buscar estado (find_state.js)
  */
 
 const logout = async (req, res) => {
@@ -96,29 +97,31 @@ const logout = async (req, res) => {
  * Fecha creación: 05/08/2023
  * Autor: Hector Armando García González
  * Referencias: 
- *              Modelo Token (token.js)
+ *              Modelo Token (token.js),
+ *              Función para buscar estado (find_state.js)
  */
 
 const logoutAll = async (req, res) => {
     try {
         const { user, role } = req;
-        let removedToken;
+        const whereCondition = {};
 
         if (role === 'User') {
-            removedToken = await TokenModel.destroy({
-                where: {
-                    ID_Cliente_FK: user.id
-                }
-            });
+            whereCondition.ID_Cliente_FK = user.id;
         } else {
-            removedToken = await TokenModel.destroy({
-                where: {
-                    ID_Empleado_FK: user.id
-                }
-            });
+            whereCondition.ID_Empleado_FK = user.id;
         }
 
-        if (removedToken === 0) {
+        const inactiveState = await findState('Inactivo');
+        const activeState = await findState('Activo');
+        whereCondition.ID_Estado_FK = activeState.id;
+
+        const updatedTokens = await TokenModel.update(
+            { ID_Estado_FK: inactiveState.id }, 
+            { where: whereCondition }
+        );
+
+        if (updatedTokens[0] === 0) {
             return res.status(404).send({ error: "Error al cerrar todas las sesiones." });
         }
 
