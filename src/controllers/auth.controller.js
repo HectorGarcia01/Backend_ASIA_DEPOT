@@ -1,3 +1,4 @@
+const findState = require('../utils/find_state');
 const CustomerModel = require('../models/customer');
 const EmployeeModel = require('../models/employee');
 const RoleModel = require('../models/role');
@@ -9,6 +10,7 @@ const TokenModel = require('../models/token');
  * Fecha creación: 05/08/2023
  * Autor: Hector Armando García González
  * Referencias: 
+ *              Función para buscar estado (find_state.js),
  *              Modelo Cliente (customer.js), 
  *              Modelo Empleado (employee.js), 
  *              Modelo Rol (role.js),
@@ -18,12 +20,14 @@ const TokenModel = require('../models/token');
 const login = async (req, res) => {
     try {
         const { correo, password } = req.body;
+
+        const activeState = await findState('Activo');
         
         const customerBuild = CustomerModel.build();
         const employeeBuild = EmployeeModel.build();
 
-        const customer = await customerBuild.findByCredentials(correo, password);
-        const user = customer || await employeeBuild.findByCredentials(correo, password);
+        const customer = await customerBuild.findByCredentials(correo, password, activeState.id);
+        const user = customer || await employeeBuild.findByCredentials(correo, password, activeState.id);
 
         if (!user) {
             return res.status(401).send({ error: "Credenciales inválidas." });
@@ -35,28 +39,18 @@ const login = async (req, res) => {
             }
         });
 
-        const stateToken = await StateModel.findOne({
-            where: {
-                Tipo_Estado: 'Activo'
-            }
-        });
-
-        if (!stateToken) {
-            return res.status(404).send({ error: "Estado no encontrado." });
-        }
-
         const userToken = await user.generateAuthToken(user.id, Nombre_Rol);
 
         if (Nombre_Rol === 'User') {
             await TokenModel.create({
                 Token_Usuario: userToken,
-                ID_Estado_FK: stateToken.id,
+                ID_Estado_FK: activeState.id,
                 ID_Cliente_FK: user.id
             });
         } else {
             await TokenModel.create({
                 Token_Usuario: userToken,
-                ID_Estado_FK: stateToken.id,
+                ID_Estado_FK: activeState.id,
                 ID_Empleado_FK: user.id
             });
         }        
