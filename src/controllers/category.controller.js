@@ -2,6 +2,7 @@ const Sequelize = require('sequelize');
 const findState = require('../utils/find_state');
 const StateModel = require('../models/state');
 const CategoryModel = require('../models/category');
+const { findCategory } = require('../utils/find_product');
 
 /**
  * Función para registrar una nueva categoría
@@ -98,7 +99,7 @@ const readCategoryId = async (req, res) => {
  * Fecha creación: 28/08/2023
  * Autor: Hector Armando García González
  * Referencias:
- *              Modelo Categoría (category.js)
+ *              Función para buscar categoría (find_product.js)
  */
 
 const updateCategoryId = async (req, res) => {
@@ -113,18 +114,17 @@ const updateCategoryId = async (req, res) => {
             return res.status(400).send({ error: '¡Actualización inválida!' });
         }
 
-        const category = await CategoryModel.findByPk(id);
-
-        if (!category) {
-            return res.status(404).send({ error: "Categoría no encontrada." });
-        }
-
+        const category = await findCategory(id);
         updates.forEach((update) => category[update] = req.body[update]);
         
         await category.save();
         res.status(200).send({ msg: "Datos actualizados con éxito." });
     } catch (error) {
-        res.status(500).send({ error: "Error interno del servidor." });
+        if (error.status === 404) {
+            res.status(error.status).send({ error: error.message });
+        } else {
+            res.status(500).send({ error: "Error interno del servidor." });
+        }
     }
 };
 
@@ -133,19 +133,14 @@ const updateCategoryId = async (req, res) => {
  * Fecha creación: 24/08/2023
  * Autor: Hector Armando García González
  * Referencias:
- *              Modelo Categoría (category.js),
+ *              Función para buscar categoría (find_product.js)
  *              Función para buscar estado (find_state.js)
  */
 
 const deleteCategoryId = async (req, res) => {
     try {
         const { id } = req.params;
-        const category = await CategoryModel.findByPk(id);
-
-        if (!category) {
-            return res.status(404).send({ error: "Categoría no encontrada." });
-        }
-
+        const category = await findCategory(id);
         const stateCategory = await findState('Inactivo');
 
         category.ID_Estado_FK = stateCategory.id;
