@@ -1,8 +1,8 @@
 const findState = require('../utils/find_state');
+const createToken = require('../utils/create_token');
 const CustomerModel = require('../models/customer');
 const EmployeeModel = require('../models/employee');
 const RoleModel = require('../models/role');
-const StateModel = require('../models/state');
 const TokenModel = require('../models/token');
 
 /**
@@ -11,10 +11,10 @@ const TokenModel = require('../models/token');
  * Autor: Hector Armando García González
  * Referencias: 
  *              Función para buscar estado (find_state.js),
+ *              Función para crear un token (create_token.js),
  *              Modelo Cliente (customer.js), 
  *              Modelo Empleado (employee.js), 
  *              Modelo Rol (role.js),
- *              Modelo Token (token.js)
  */
 
 const login = async (req, res) => {
@@ -40,24 +40,15 @@ const login = async (req, res) => {
         });
 
         const userToken = await user.generateAuthToken(user.id, Nombre_Rol);
-
-        if (Nombre_Rol === 'User') {
-            await TokenModel.create({
-                Token_Usuario: userToken,
-                ID_Estado_FK: activeState.id,
-                ID_Cliente_FK: user.id
-            });
-        } else {
-            await TokenModel.create({
-                Token_Usuario: userToken,
-                ID_Estado_FK: activeState.id,
-                ID_Empleado_FK: user.id
-            });
-        }        
+        createToken(Nombre_Rol, userToken, activeState.id, user.id);
 
         res.status(200).send({ user, userRole: Nombre_Rol, userToken });
     } catch (error) {
-        res.status(401).send({ error: error.message });
+        if (error.status === 404) {
+            res.status(error.status).send({ error: error.message });
+        } else {
+            res.status(401).send({ error: error.message });
+        }
     }
 };
 
@@ -72,6 +63,7 @@ const login = async (req, res) => {
 const logout = async (req, res) => {
     try {
         const userToken = req.token;
+        //Implementar lo de borrar logicamente igual con la función de abajo xd
 
         const removedToken = await TokenModel.destroy({
             where: {
