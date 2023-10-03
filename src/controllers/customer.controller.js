@@ -2,9 +2,8 @@ const Sequelize = require('sequelize');
 const { validateDepartment, validateMunicipality } = require('../utils/customer/validate_address');
 const findState = require('../utils/find_state');
 const findRole = require('../utils/find_role');
+const createToken = require('../utils/create_token');
 const CustomerModel = require('../models/customer');
-const StateModel = require('../models/state');
-const TokenModel = require('../models/token');
 
 /**
  * Función para crear un nuevo cliente
@@ -12,10 +11,10 @@ const TokenModel = require('../models/token');
  * Autor: Hector Armando García González
  * Referencias: 
  *              Modelo Cliente (customer.js),
- *              Modelo Token (token.js),
  *              Función para validar existencia de municipio (validate_municipality.js),
  *              Función para buscar estado (find_state.js),
- *              Función para buscar rol (find_role.js)
+ *              Función para buscar rol (find_role.js),
+ *              Función para crear un token (create_token.js)
  */
 
 const addCustomer = async (req, res) => {
@@ -54,12 +53,7 @@ const addCustomer = async (req, res) => {
 
         const stateToken = await findState('Activo');
         const token = await newCustomer.generateAuthToken(newCustomer.id, roleCustomer.Nombre_Rol);
-        
-        await TokenModel.create({ 
-            Token_Usuario: token, 
-            ID_Estado_FK: stateToken.id,
-            ID_Cliente_FK: newCustomer.id 
-        });
+        await createToken(roleCustomer.Nombre_Rol, token, stateToken.id, newCustomer.id);
 
         res.status(201).send({ msg: "Se ha registrado con éxito." });
     } catch (error) {
