@@ -1,5 +1,6 @@
 const CategoryModel = require('../models/category');
 const BrandProductModel = require('../models/brand_product');
+const ProductModel = require('../models/product');
 
 /**
  * Función para buscar una categoría por su id
@@ -41,8 +42,29 @@ const findProductBrand = async (id) => {
     return productBrand;
 };
 
+/**
+ * Función para buscar un producto por su id
+ * Fecha creación: 02/10/2023
+ * Autor: Hector Armando García González
+ * Referencias:
+ *              Modelo Producto (product.js)
+ */
+
+const findProduct = async (id) => {
+    const product = await ProductModel.findByPk(id);
+
+    if (!product) {
+        const error = new Error("Producto no encontrado.");
+        error.status = 404;
+        throw error;
+    }
+
+    return product;
+};
+
 //Exportación de la función para buscar una categoría, marca y producto
 module.exports = {
     findCategory,
-    findProductBrand
+    findProductBrand,
+    findProduct
 };
