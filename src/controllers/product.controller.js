@@ -1,66 +1,52 @@
 const Sequelize = require('sequelize');
 const findState = require('../utils/find_state');
+const {
+    findCategory,
+    findProductBrand
+} = require('../utils/find_product');
 const ProductModel = require('../models/product');
 const StateModel = require('../models/state');
 const CategoryModel = require('../models/category');
 const BrandProductModel = require('../models/brand_product');
-const InventoryModel = require('../models/inventory');
 
 /**
  * Función para registrar un nuevo producto
  * Fecha creación: 24/08/2023
  * Autor: Hector Armando García González
  * Referencias: 
+ *              Función para buscar estado (find_state.js),
+ *              Función para buscar categoría (find_product.js),
+ *              Función para buscar marca de producto (find_product.js),
  *              Modelo Producto (product.js), 
  *              Modelo Estado (state.js),
- *              Modelo Categoria (category.js),
- *              Modelo Marca_Producto (brand_product.js),
- *              Modelo Inventario (inventory.js)
  */
 
 const addProduct = async (req, res) => {
     try {
-        const { user } = req;
         const { 
             Nombre_Producto,
-            Precio_Promedio,
+            Precio_Venta,
+            Precio_Compra,
             Descripcion_Producto,
             Cantidad_Stock, 
-            Codigo_Barras,
             ID_Categoria_FK,
             ID_Marca_FK,
         } = req.body;
 
-        const category = await CategoryModel.findByPk(ID_Categoria_FK);
-
-        if (!category) {
-            return res.status(404).send({ error: "Categoría no encontrada." });
-        }
-
-        const brandProduct = await BrandProductModel.findByPk(ID_Marca_FK);
-
-        if (!brandProduct) {
-            return res.status(404).send({ error: "Marca del producto no encontrada." });
-        }
+        await findCategory(ID_Categoria_FK);
+        await findProductBrand(ID_Marca_FK);
 
         const stateProduct = await findState('Activo');
 
         const newProduct = await ProductModel.create({ 
             Nombre_Producto,
-            Precio_Promedio,
+            Precio_Venta,
+            Precio_Compra,
             Descripcion_Producto,
             Cantidad_Stock,
-            Codigo_Barras,
             ID_Estado_FK: stateProduct.id,
             ID_Categoria_FK,
             ID_Marca_FK
-        });
-
-        await InventoryModel.create({
-            Tipo_Movimiento: 'Ajuste',
-            Cantidad_Movimiento: Cantidad_Stock,
-            ID_Empleado_FK: user.id,
-            ID_Producto_FK: newProduct.id
         });
 
         res.status(201).send({ msg: "Se ha registrado un nuevo producto.", newProduct })
@@ -134,7 +120,15 @@ const updateProductId = async (req, res) => {
         const { ID_Categoria_FK, ID_Marca_FK } = req.body;
         const updates = Object.keys(req.body);
 
-        const allowedUpdates = ['Nombre_Producto', 'Precio_Promedio', 'Descripcion_Producto', 'ID_Categoria_FK', 'ID_Marca_FK', 'Cantidad_Stock'];
+        const allowedUpdates = [
+            'Nombre_Producto', 
+            'Precio_Venta',
+            'Precio_Compra',
+            'Descripcion_Producto', 
+            'Cantidad_Stock',
+            'ID_Categoria_FK', 
+            'ID_Marca_FK', 
+        ];
         const isValidOperation = updates.every((update) => allowedUpdates.includes(update));
 
         if (!isValidOperation) {
@@ -164,8 +158,6 @@ const updateProductId = async (req, res) => {
         }
 
         updates.forEach((update) => product[update] = req.body[update]);
-
-        //Falta validar si se modificó lo de cantidad stock para cambiarlo****************************************
 
         await product.save();
         res.status(200).send({ msg: "Datos actualizados con éxito." });
