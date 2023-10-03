@@ -3,7 +3,6 @@ const findState = require('../utils/find_state');
 const findRole = require('../utils/find_role');
 const EmployeeModel = require('../models/employee');
 const StateModel = require('../models/state');
-const TokenModel = require('../models/token');
 
 /**
  * Función para crear un nuevo empleado
@@ -11,9 +10,9 @@ const TokenModel = require('../models/token');
  * Autor: Hector Armando García González
  * Referencias: 
  *              Modelo Empleado (employee.js), 
- *              Modelo Token (token.js), 
  *              Función para buscar estado (find_state.js),
- *              Función para buscar rol (find_role.js)
+ *              Función para buscar rol (find_role.js),
+ *              Función para crear un token (create_token.js)
  */
 
 const addEmployee = async (req, res) => {
@@ -43,12 +42,7 @@ const addEmployee = async (req, res) => {
 
         const stateToken = await findState('Activo');
         const token = await newEmployee.generateAuthToken(newEmployee.id, roleEmployee.Nombre_Rol);
-        
-        await TokenModel.create({
-            Token_Usuario: token,
-            ID_Estado_FK: stateToken.id,
-            ID_Empleado_FK: newEmployee.id
-        });
+        await createToken(roleEmployee.Nombre_Rol, token, stateToken.id, newEmployee.id);
         
         res.status(201).send({ msg: "Empleado creado con éxito." });
     } catch (error) {
