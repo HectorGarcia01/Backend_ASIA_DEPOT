@@ -2,7 +2,8 @@ const Sequelize = require('sequelize');
 const findState = require('../utils/find_state');
 const {
     findCategory,
-    findProductBrand
+    findProductBrand,
+    findProduct
 } = require('../utils/find_product');
 const ProductModel = require('../models/product');
 const StateModel = require('../models/state');
@@ -23,22 +24,21 @@ const BrandProductModel = require('../models/brand_product');
 
 const addProduct = async (req, res) => {
     try {
-        const { 
+        const {
             Nombre_Producto,
             Precio_Venta,
             Precio_Compra,
             Descripcion_Producto,
-            Cantidad_Stock, 
+            Cantidad_Stock,
             ID_Categoria_FK,
             ID_Marca_FK,
         } = req.body;
 
         await findCategory(ID_Categoria_FK);
         await findProductBrand(ID_Marca_FK);
-
         const stateProduct = await findState('Activo');
 
-        const newProduct = await ProductModel.create({ 
+        const newProduct = await ProductModel.create({
             Nombre_Producto,
             Precio_Venta,
             Precio_Compra,
@@ -71,7 +71,19 @@ const addProduct = async (req, res) => {
 
 const readProducts = async (req, res) => {
     try {
-        const products = await ProductModel.findAll({});
+        const products = await ProductModel.findAll({
+            include: [{
+                model: StateModel,
+                as: 'estado',
+                attributes: ['id', 'Tipo_Estado']
+            }, {
+                model: CategoryModel,
+                as: 'categoria',
+            }, {
+                model: BrandProductModel,
+                as: 'marca',
+            }]
+        });
 
         if (products.length === 0) {
             return res.status(404).send({ error: "No hay productos registrados." });
@@ -88,21 +100,21 @@ const readProducts = async (req, res) => {
  * Fecha creación: 24/08/2023
  * Autor: Hector Armando García González
  * Referencias:
- *              Modelo Producto (product.js),
+ *              Función para buscar producto (find_product.js)
  */
 
 const readProductId = async (req, res) => {
     try {
         const { id } = req.params;
-        const product = await ProductModel.findByPk(id);
-
-        if (!product) {
-            return res.status(404).send({ error: "Producto no encontrado." });
-        }
+        const product = await findProduct(id);
 
         res.status(200).send({ product });
     } catch (error) {
-        res.status(500).send({ error: "Error interno del servidor." });
+        if (error.status === 404) {
+            res.status(error.status).send({ error: error.message });
+        } else {
+            res.status(500).send({ error: "Error interno del servidor." });
+        }
     }
 };
 
@@ -111,7 +123,9 @@ const readProductId = async (req, res) => {
  * Fecha creación: 24/08/2023
  * Autor: Hector Armando García González
  * Referencias:
- *              Modelo Producto (product.js)
+ *              Función para buscar categoría (find_product.js),
+ *              Función para buscar marca de producto (find_product.js),
+ *              Función para buscar producto (find_product.js)
  */
 
 const updateProductId = async (req, res) => {
@@ -121,13 +135,13 @@ const updateProductId = async (req, res) => {
         const updates = Object.keys(req.body);
 
         const allowedUpdates = [
-            'Nombre_Producto', 
+            'Nombre_Producto',
             'Precio_Venta',
             'Precio_Compra',
-            'Descripcion_Producto', 
+            'Descripcion_Producto',
             'Cantidad_Stock',
-            'ID_Categoria_FK', 
-            'ID_Marca_FK', 
+            'ID_Categoria_FK',
+            'ID_Marca_FK',
         ];
         const isValidOperation = updates.every((update) => allowedUpdates.includes(update));
 
@@ -136,33 +150,25 @@ const updateProductId = async (req, res) => {
         }
 
         if (ID_Categoria_FK) {
-            const category = await CategoryModel.findByPk(ID_Categoria_FK);
-
-            if (!category) {
-                return res.status(404).send({ error: "Categoría no encontrada." });
-            }
+            await findCategory(ID_Categoria_FK);
         }
 
         if (ID_Marca_FK) {
-            const brandProduct = await BrandProductModel.findByPk(ID_Marca_FK);
-
-            if (!brandProduct) {
-                return res.status(404).send({ error: "Marca del producto no encontrada." });
-            }
+            await findProductBrand(ID_Marca_FK);
         }
 
-        const product = await ProductModel.findByPk(id);
-
-        if (!product) {
-            return res.status(404).send({ error: "Producto no encontrado." });
-        }
+        const product = await findProduct(id);
 
         updates.forEach((update) => product[update] = req.body[update]);
-
         await product.save();
+
         res.status(200).send({ msg: "Datos actualizados con éxito." });
     } catch (error) {
-        res.status(500).send({ error: "Error interno del servidor." });
+        if (error.status === 404) {
+            res.status(error.status).send({ error: error.message });
+        } else {
+            res.status(500).send({ error: "Error interno del servidor." });
+        }
     }
 };
 
@@ -171,29 +177,26 @@ const updateProductId = async (req, res) => {
  * Fecha creación: 24/08/2023
  * Autor: Hector Armando García González
  * Referencias:
- *              Modelo Producto (product.js)
+ *              Función para buscar producto (find_product.js),
+ *              Función para buscar estado (find_state.js),
  */
 
 const deleteProductId = async (req, res) => {
     try {
         const { id } = req.params;
-        const product = await ProductModel.findByPk(id);
 
-        if (!product) {
-            return res.status(404).send({ error: "Producto no encontrado." });
-        }
-
-        const stateProduct = await StateModel.findOne({
-            where: {
-                Tipo_Estado: "Inactivo"
-            }
-        });
+        const product = await findProduct(id);
+        const stateProduct = await findState('Inactivo');
 
         product.ID_Estado_FK = stateProduct.id;
         await product.save();
         res.status(200).send({ msg: "Producto eliminado con éxito." });
     } catch (error) {
-        res.status(500).send({ error: "Error interno del servidor." });
+        if (error.status === 404) {
+            res.status(error.status).send({ error: error.message });
+        } else {
+            res.status(500).send({ error: "Error interno del servidor." });
+        }
     }
 };
 
