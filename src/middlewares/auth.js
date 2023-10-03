@@ -1,24 +1,25 @@
 const jwt = require('jsonwebtoken');
 const { KEY_TOKEN } = require('../config/config');
+const findState = require('../utils/find_state');
+const findRole = require('../utils/find_role');
 const CustomerModel = require('../models/customer');
 const DepartmentModel = require('../models/department');
 const MunicipalityModel = require('../models/municipality');
 const EmployeeModel = require('../models/employee');
 const TokenModel = require('../models/token');
-const RoleModel = require('../models/role');
-const StateModel = require('../models/state');
 
 /**
  * Middleware de autenticación
  * Fecha creación: 05/08/2023
  * Autor: Hector Armando García González
  * Referencias: 
+ *              Función para buscar estado (find_state.js),
+ *              Modelo Token (token.js),
+ *              Función para buscar rol (find_role.js),
  *              Modelo Cliente (customer.js),
  *              Modelo Departamento (department.js),
  *              Modelo Municipio (municipality.js),
- *              Modelo Empleado (employee.js),
- *              Modelo Token (token.js),
- *              Modelo Rol (role.js)
+ *              Modelo Empleado (employee.js)
  */
 
 const authentication = async (req, res, next) => {
@@ -30,16 +31,25 @@ const authentication = async (req, res, next) => {
         const userToken = req.header('Authorization').replace('Bearer ', '');
         const decodedToken = jwt.verify(userToken, KEY_TOKEN);
 
-        const { id } = await RoleModel.findOne({
+        const activeState = await findState('Activo');
+        const validateToken = await TokenModel.findOne({
             where: {
-                Nombre_Rol: decodedToken.rol
+                Token_Usuario: userToken,
+                ID_Estado_FK: activeState.id
             }
         });
+
+        if (!validateToken) {
+            throw new Error("Error de autenticación.");
+        }
+
+        const roleUser = await findRole(decodedToken.rol);
 
         const customer = await CustomerModel.findOne({
             where: {
                 id: decodedToken.id,
-                ID_Rol_FK: id
+                ID_Rol_FK: roleUser.id,
+                ID_Estado_FK: activeState.id
             },
             include: [{
                 model: MunicipalityModel,
@@ -48,33 +58,19 @@ const authentication = async (req, res, next) => {
                     model: DepartmentModel,
                     as: 'departamento'
                 }]
-            }, {
-                model: StateModel,
-                as: 'estado',
-                attributes: ['Tipo_Estado']
             }]
         });
 
         const user = customer || await EmployeeModel.findOne({
             where: {
                 id: decodedToken.id,
-                ID_Rol_FK: id
-            },
-            include: [{
-                model: StateModel,
-                as: 'estado',
-                attributes: ['Tipo_Estado']
-            }]
-        });
-
-        const validateToken = await TokenModel.findOne({
-            where: {
-                Token_Usuario: userToken
+                ID_Rol_FK: roleUser.id,
+                ID_Estado_FK: activeState.id
             }
         });
 
-        if (!user || !validateToken) {
-            throw new Error("El token es inválido.");
+        if (!user) {
+            throw new Error("Error de autenticación.");
         }
 
         req.user = user;
