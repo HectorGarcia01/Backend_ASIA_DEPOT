@@ -9,18 +9,16 @@ const MunicipalityModel = require('../models/municipality');
  *              Modelo Departamento (department.js)
  */
 
-const findDepartment = async(ID_Departamento_FK) => {
-    const departmentCustomer = await DepartmentModel.findOne({
-        where: {
-            id: ID_Departamento_FK
-        }
-    });
+const findDepartment = async (ID_Departamento_FK) => {
+    const department = await DepartmentModel.findByPk(ID_Departamento_FK);
 
-    if (!departmentCustomer) {
+    if (!department) {
         const error = new Error("Departamento no encontrado.");
         error.status = 404;
         throw error;
     }
+
+    return department;
 };
 
 /**
@@ -32,18 +30,20 @@ const findDepartment = async(ID_Departamento_FK) => {
  */
 
 const findMunicipality = async (ID_Municipio_FK, ID_Departamento_FK) => {
-    const municipalityCustomer = await MunicipalityModel.findOne({
+    const municipality = await MunicipalityModel.findOne({
         where: {
             id: ID_Municipio_FK,
             ID_Departamento_FK
         }
     });
 
-    if (!municipalityCustomer) {
+    if (!municipality) {
         const error = new Error("Municipio no encontrado.");
         error.status = 404;
         throw error;
     }
+
+    return municipality;
 };
 
 //Exportación de la función para validar la existencia de municipio y departamento
