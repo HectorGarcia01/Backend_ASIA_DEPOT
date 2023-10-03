@@ -62,19 +62,29 @@ const login = async (req, res) => {
 
 const logout = async (req, res) => {
     try {
-        const userToken = req.token;
-        //Implementar lo de borrar logicamente igual con la función de abajo xd
+        const { user, role, token } = req;
+        const whereCondition = {
+            Token_Usuario: token
+        };
 
-        const removedToken = await TokenModel.destroy({
-            where: {
-                Token_Usuario: userToken
-            }
+        if (role === 'User') {
+            whereCondition.ID_Cliente_FK = user.id;
+        } else {
+            whereCondition.ID_Empleado_FK = user.id;
+        }
+
+        const userToken = await TokenModel.findOne({
+            where: whereCondition
         });
 
-        if (removedToken === 0) {
+        if (!userToken) {
             return res.status(404).send({ error: "Error al cerrar sesión." });
         }
 
+        const inactiveState = await findState('Inactivo');
+        userToken.ID_Estado_FK = inactiveState.id;
+
+        await userToken.save();
         res.status(200).send({ msg: "Sesión cerrada correctamente." });
     } catch (error) {
         res.status(500).send({ error: "Error interno del servidor." });
