@@ -35,6 +35,7 @@ const addDepartment = async (req, res) => {
  * Fecha creación: 26/09/2023
  * Autor: Hector Armando García González
  * Referencias: 
+ *              Función para buscar un departamento (find_address.js),
  *              Modelo Municipio (municipality.js), 
  */
 
@@ -51,8 +52,8 @@ const addMunicipality = async (req, res) => {
 
         res.status(201).send({ msg: "Se ha registrado un nuevo municipio.", newMunicipality })
     } catch (error) {
-        if (error instanceof Sequelize.UniqueConstraintError) {
-            res.status(400).send({ error: "¡El muni ya existe!" });
+        if (error.status === 404) {
+            res.status(error.status).send({ error: error.message });
         } else {
             res.status(500).send({ error: "Error interno del servidor." });
         }
@@ -84,6 +85,40 @@ const readAddresses = async (req, res) => {
         res.status(200).send({ address });
     } catch (error) {
         res.status(500).send({ error: "Error interno del servidor." });
+    }
+};
+
+/**
+ * Función para actualizar datos de departamento por id
+ * Fecha creación: 26/09/2023
+ * Autor: Hector Armando García González
+ * Referencias:
+ *              Función para buscar departamento (find_address.js)
+ */
+
+const updateDepartmentId = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const updates = Object.keys(req.body);
+
+        const allowedUpdates = ['Nombre_Departamento'];
+        const isValidOperation = updates.every((update) => allowedUpdates.includes(update));
+
+        if (!isValidOperation) {
+            return res.status(400).send({ error: '¡Actualización inválida!' });
+        }
+
+        const department = await findDepartment(id);
+        updates.forEach((update) => department[update] = req.body[update]);
+
+        await department.save();
+        res.status(200).send({ msg: "Datos actualizados con éxito." });
+    } catch (error) {
+        if (error.status === 404) {
+            res.status(error.status).send({ error: error.message });
+        } else {
+            res.status(500).send({ error: "Error interno del servidor." });
+        }
     }
 };
 
