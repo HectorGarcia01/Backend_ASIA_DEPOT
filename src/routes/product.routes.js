@@ -11,7 +11,7 @@ const {
     productSchema,
     updateProductSchema
 } = require('../schemas/product.schema');
-const validate = require('../middlewares/validate');
+const validateMiddleware = require('../middlewares/validate');
 const authMiddleware = require('../middlewares/auth');
 const roleMiddleware = require('../middlewares/check_rol');
 
@@ -20,7 +20,7 @@ router.post(
     '/superAdmin/crear/producto', 
     authMiddleware, 
     roleMiddleware('SuperAdmin'), 
-    validate(productSchema), 
+    validateMiddleware(productSchema), 
     addProduct
 );
 router.get('/superAdmin/ver/productos', authMiddleware, roleMiddleware('SuperAdmin'), readProducts);
@@ -29,7 +29,7 @@ router.patch(
     '/superAdmin/actualizar/producto/:id', 
     authMiddleware, 
     roleMiddleware('SuperAdmin'), 
-    validate(updateProductSchema),
+    validateMiddleware(updateProductSchema),
     updateProductId
 );
 router.delete('/superAdmin/eliminar/producto/:id', authMiddleware, roleMiddleware('SuperAdmin'), deleteProductId);
@@ -39,7 +39,7 @@ router.post(
     '/admin/crear/producto', 
     authMiddleware, 
     roleMiddleware('Admin'), 
-    validate(productSchema), 
+    validateMiddleware(productSchema), 
     addProduct
 );
 router.get('/admin/ver/productos', authMiddleware, roleMiddleware('Admin'), readProducts);
@@ -48,7 +48,7 @@ router.patch(
     '/admin/actualizar/producto/:id', 
     authMiddleware, 
     roleMiddleware('Admin'), 
-    validate(updateProductSchema),
+    validateMiddleware(updateProductSchema),
     updateProductId
 );
 router.delete('/admin/eliminar/producto/:id', authMiddleware, roleMiddleware('Admin'), deleteProductId);
