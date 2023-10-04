@@ -127,8 +127,8 @@ const updateDepartmentId = async (req, res) => {
  * Fecha creación: 26/09/2023
  * Autor: Hector Armando García González
  * Referencias:
- *              Función para buscar departamento (find_address.js)
- *              Función para buscar municipio (find_address.js)
+ *              Función para buscar departamento (find_address.js),
+ *              Modelo Municipio (municipality.js)
  */
 
 const updateMunicipalityId = async (req, res) => {
@@ -144,8 +144,16 @@ const updateMunicipalityId = async (req, res) => {
             return res.status(400).send({ error: '¡Actualización inválida!' });
         }
 
-        await findDepartment(ID_Departamento_FK);
-        const municipality = await findMunicipality(id);
+        if (ID_Departamento_FK) {
+            await findDepartment(ID_Departamento_FK);
+        }
+
+        const municipality = await MunicipalityModel.findByPk(id);
+
+        if (!municipality) {
+            return res.status(404).send({ error: "Municipio no encontrado." });
+        }
+
         updates.forEach((update) => municipality[update] = req.body[update]);
 
         await municipality.save();
@@ -171,15 +179,27 @@ const deleteDepartmentId = async (req, res) => {
     try {
         const { id } = req.params;
 
-        const deleteDepartment = await DepartmentModel.destroy({ where: { id } });
+        const department = await findDepartment(id);
 
-        if (deleteDepartment === 0) {
-            return res.status(404).send({ error: "Departamento no encontrado." });
+        const deleteMunicipality = await MunicipalityModel.destroy({ where: { ID_Departamento_FK: id } });
+
+        if (deleteMunicipality === 0) {
+            return res.status(404).send({ error: "Municipios no encontrados." });
         }
 
-        res.status(200).send({ msg: "Departamento eliminado con éxito." });
+        const deleteDepartment = await department.destroy();
+
+        if (deleteDepartment === 0) {
+            return res.status(404).send({ error: "Error al eliminar el departamento" });
+        }
+
+        res.status(200).send({ msg: "Departamento y sus municipios eliminados con éxito." });
     } catch (error) {
-        res.status(500).send({ error: "Error interno del servidor." });
+        if (error.status === 404) {
+            res.status(error.status).send({ error: error.message });
+        } else {
+            res.status(500).send({ error });
+        }
     }
 };
 
