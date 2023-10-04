@@ -159,10 +159,64 @@ const updateMunicipalityId = async (req, res) => {
     }
 };
 
+/**
+ * Función para eliminar departamento por id
+ * Fecha creación: 26/09/2023
+ * Autor: Hector Armando García González
+ * Referencias:
+ *              Modelo Departamento (department.js)
+ */
+
+const deleteDepartmentId = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const deleteDepartment = await DepartmentModel.destroy({ where: { id } });
+
+        if (deleteDepartment === 0) {
+            return res.status(404).send({ error: "Departamento no encontrado." });
+        }
+
+        res.status(200).send({ msg: "Departamento eliminado con éxito." });
+    } catch (error) {
+        res.status(500).send({ error: "Error interno del servidor." });
+    }
+};
+
+/**
+ * Función para eliminar municipio por id
+ * Fecha creación: 26/09/2023
+ * Autor: Hector Armando García González
+ * Referencias:
+ *              Modelo Municipio (municipality.js)
+ */
+
+const deleteMunicipalityId = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const deleteMunicipality = await MunicipalityModel.destroy({ where: { id } });
+
+        if (deleteMunicipality === 0) {
+            return res.status(404).send({ error: "Municipio no encontrado." });
+        }
+
+        res.status(200).send({ msg: "Municipio eliminado con éxito." });
+    } catch (error) {
+        if (error.status === 404) {
+            res.status(error.status).send({ error: error.message });
+        } else {
+            res.status(500).send({ error: "Error interno del servidor." });
+        }
+    }
+};
+
 module.exports = {
     addDepartment,
     addMunicipality,
     readAddresses,
     updateDepartmentId,
-    updateMunicipalityId
+    updateMunicipalityId,
+    deleteDepartmentId,
+    deleteMunicipalityId
 };
