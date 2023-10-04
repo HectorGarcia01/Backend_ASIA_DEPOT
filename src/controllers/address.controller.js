@@ -122,8 +122,47 @@ const updateDepartmentId = async (req, res) => {
     }
 };
 
+/**
+ * Función para actualizar datos de municipio por id
+ * Fecha creación: 26/09/2023
+ * Autor: Hector Armando García González
+ * Referencias:
+ *              Función para buscar departamento (find_address.js)
+ *              Función para buscar municipio (find_address.js)
+ */
+
+const updateMunicipalityId = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { ID_Departamento_FK } = req.body;
+        const updates = Object.keys(req.body);
+
+        const allowedUpdates = ['Nombre_Municipio', 'ID_Departamento_FK'];
+        const isValidOperation = updates.every((update) => allowedUpdates.includes(update));
+
+        if (!isValidOperation) {
+            return res.status(400).send({ error: '¡Actualización inválida!' });
+        }
+
+        await findDepartment(ID_Departamento_FK);
+        const municipality = await findMunicipality(id);
+        updates.forEach((update) => municipality[update] = req.body[update]);
+
+        await municipality.save();
+        res.status(200).send({ msg: "Datos actualizados con éxito." });
+    } catch (error) {
+        if (error.status === 404) {
+            res.status(error.status).send({ error: error.message });
+        } else {
+            res.status(500).send({ error: "Error interno del servidor." });
+        }
+    }
+};
+
 module.exports = {
     addDepartment,
     addMunicipality,
-    readAddresses
+    readAddresses,
+    updateDepartmentId,
+    updateMunicipalityId
 };
