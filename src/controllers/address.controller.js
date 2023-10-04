@@ -203,11 +203,7 @@ const deleteMunicipalityId = async (req, res) => {
 
         res.status(200).send({ msg: "Municipio eliminado con éxito." });
     } catch (error) {
-        if (error.status === 404) {
-            res.status(error.status).send({ error: error.message });
-        } else {
-            res.status(500).send({ error: "Error interno del servidor." });
-        }
+        res.status(500).send({ error: "Error interno del servidor." });
     }
 };
 
