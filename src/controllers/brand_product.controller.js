@@ -2,6 +2,7 @@ const Sequelize = require('sequelize');
 const findState = require('../utils/find_state');
 const { findProductBrand } = require('../utils/find_product');
 const ProductBrandModel = require('../models/brand_product');
+const StateModel = require('../models/state');
 
 /**
  * Función para registrar una nueva marca de producto
@@ -41,11 +42,18 @@ const addProductBrand = async (req, res) => {
  * Autor: Hector Armando García González
  * Referencias:
  *              Modelo Marca de Producto (brand_product.js), 
+ *              Modelo Estado (state.js)
  */
 
 const readProductBrands = async (req, res) => {
     try {
-        const productBrands = await ProductBrandModel.findAll({});
+        const productBrands = await ProductBrandModel.findAll({
+            include: [{
+                model: StateModel,
+                as: 'estado',
+                attributes: ['id', 'Tipo_Estado']
+            }]
+        });
 
         if (productBrands.length === 0) {
             return res.status(404).send({ error: "No hay marcas de productos registradas." });
