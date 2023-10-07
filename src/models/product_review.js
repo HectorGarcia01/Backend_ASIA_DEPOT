@@ -1,5 +1,7 @@
 const { DataTypes } = require('sequelize');
 const db = require('../database/db_connection');
+const Cliente = require('../models/customer');
+const Producto = require('../models/product');
 
 /**
  * Creación del modelo Valoracion_Producto
@@ -34,6 +36,44 @@ const Valoracion_Producto = db.define('PRGADH_Valoracion_Producto', {
             key: 'id'
         }
     }
+});
+
+/**
+ * Configurando la relación de uno a muchos
+ * Fecha creación: 26/09/2023
+ * Autor: Hector Armando García González
+ * Referencia:
+ *              Modelo Cliente (customer.js) -> uno
+ *              Modelo Inventario (inventory.js)  -> muchos
+ */
+
+Cliente.hasMany(Valoracion_Producto, {
+    foreignKey: 'ID_Cliente_FK',
+    as: 'valoraciones_producto'
+});
+
+Valoracion_Producto.belongsTo(Cliente, {
+    foreignKey: 'ID_Cliente_FK',
+    as: 'cliente'
+});
+
+/**
+ * Configurando la relación de uno a muchos
+ * Fecha creación: 26/09/2023
+ * Autor: Hector Armando García González
+ * Referencia:
+ *              Modelo Producto (product.js) -> uno
+ *              Modelo Inventario (inventory.js)  -> muchos
+ */
+
+Producto.hasMany(Valoracion_Producto, {
+    foreignKey: 'ID_Producto_FK',
+    as: 'valoraciones_producto'
+});
+
+Valoracion_Producto.belongsTo(Producto, {
+    foreignKey: 'ID_Producto_FK',
+    as: 'producto'
 });
 
 /**

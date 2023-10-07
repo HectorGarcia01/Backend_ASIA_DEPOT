@@ -11,6 +11,7 @@ const customError = require('../utils/custom_error');
 
 const productReviewValidateSchema = Joi.object({
     Comentario_Producto: Joi.string()
+        .pattern(new RegExp('^[^\\[\\]<>(){}_=\\\\|\\\'\';]+$'))        
         .trim(),
     Puntuacion_Producto: Joi.number()
         .integer()

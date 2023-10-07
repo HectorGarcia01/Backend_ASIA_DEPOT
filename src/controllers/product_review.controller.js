@@ -1,5 +1,5 @@
 const Sequelize = require('sequelize');
-const ProductModel = require('../models/product');
+const { findProduct } = require('../utils/find_product');
 const ProductReviewModel = require('../models/product_review');
 
 /**
@@ -7,7 +7,7 @@ const ProductReviewModel = require('../models/product_review');
  * Fecha creación: 28/08/2023
  * Autor: Hector Armando García González
  * Referencias: 
- *              Modelo Producto (product.js),
+ *              Función para buscar producto (find_product.js),
  *              Modelo Valoración de Producto (product_review.js)
  */
 
@@ -20,11 +20,7 @@ const addProductReview = async (req, res) => {
             ID_Producto_FK
         } = req.body;
 
-        const product = await ProductModel.findByPk(ID_Producto_FK);
-
-        if (!product) {
-            return res.status(404).send({ error: "Producto no encontrado." });
-        }
+        await findProduct(ID_Producto_FK);
 
         const newProductReview = await ProductReviewModel.create({  
             Comentario_Producto,
@@ -35,7 +31,11 @@ const addProductReview = async (req, res) => {
 
         res.status(201).send({ msg: "Se ha registrado una nueva reseña.", newProductReview })
     } catch (error) {
-        res.status(500).send({ error: "Error interno del servidor." });
+        if (error.status === 404) {
+            res.status(error.status).send({ error: error.message });
+        } else {
+            res.status(500).send({ error: "Error interno del servidor." });
+        }
     }
 };
 

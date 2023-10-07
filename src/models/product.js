@@ -1,5 +1,8 @@
 const { DataTypes } = require('sequelize');
 const db = require('../database/db_connection');
+const Estado = require('../models/state');
+const Categoria = require('../models/category');
+const Marca = require('../models/brand_product');
 
 /**
  * Creación del modelo Producto
@@ -7,7 +10,8 @@ const db = require('../database/db_connection');
  * Autor: Hector Armando García González
  * Referencias:
  *              Modelo Estado (state.js),
- *              Modelo Categoria (category.js)
+ *              Modelo Categoria (category.js),
+ *              Modelo Marca (brand_product)
  */
 
 const Producto = db.define('PRGADH_Producto', {
@@ -15,15 +19,27 @@ const Producto = db.define('PRGADH_Producto', {
         type: DataTypes.STRING(50),
         allowNull: false
     },
-    Precio_Promedio: {
+    Precio_Venta: {
         type: DataTypes.DOUBLE,
         allowNull: false
+    },
+    Precio_Compra: {
+        type: DataTypes.DOUBLE,
+        allowNull: true
     },
     Descripcion_Producto: {
         type: DataTypes.STRING(200),
         allowNull: true
     },
+    Cantidad_Stock: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
     Imagen_Producto: {
+        type: DataTypes.BLOB,
+        allowNull: true
+    },
+    Codigo_Barras: {
         type: DataTypes.BLOB,
         allowNull: true
     },
@@ -45,12 +61,68 @@ const Producto = db.define('PRGADH_Producto', {
     },
     ID_Marca_FK: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
         references: {
             model: 'PRGADH_Marca_Productos',
             key: 'id'
         }
     }
+});
+
+/**
+ * Configurando la relación de uno a uno
+ * Fecha creación: 26/09/2023
+ * Autor: Hector Armando García González
+ * Referencia:
+ *              Modelo Producto (employee.js) -> uno
+ *              Modelo Estado (state.js)  -> uno
+ */
+
+Estado.hasOne(Producto, {
+    foreignKey: 'ID_Estado_FK'
+});
+
+Producto.belongsTo(Estado, {
+    foreignKey: 'ID_Estado_FK',
+    as: 'estado'
+});
+
+/**
+ * Configurando la relación de uno a muchos
+ * Fecha creación: 26/09/2023
+ * Autor: Hector Armando García González
+ * Referencia:
+ *              Modelo Categoría (category.js) -> uno
+ *              Modelo Producto (product.js)  -> muchos
+ */
+
+Categoria.hasMany(Producto, {
+    foreignKey: 'ID_Categoria_FK',
+    as: 'productos'
+});
+
+Producto.belongsTo(Categoria, {
+    foreignKey: 'ID_Categoria_FK',
+    as: 'categoria'
+});
+
+/**
+ * Configurando la relación de uno a muchos
+ * Fecha creación: 26/09/2023
+ * Autor: Hector Armando García González
+ * Referencia:
+ *              Modelo Marca_Producto (brand_product.js) -> uno
+ *              Modelo Producto (product.js)  -> muchos
+ */
+
+Marca.hasMany(Producto, {
+    foreignKey: 'ID_Marca_FK',
+    as: 'productos'
+});
+
+Producto.belongsTo(Marca, {
+    foreignKey: 'ID_Marca_FK',
+    as: 'marca'
 });
 
 /**
@@ -62,6 +134,11 @@ const Producto = db.define('PRGADH_Producto', {
 Producto.prototype.toJSON = function () {
     const product = { ...this.get() };
 
+    delete product.Imagen_Producto;
+    delete product.Codigo_Barras;
+    delete product.ID_Estado_FK;
+    delete product.ID_Categoria_FK;
+    delete product.ID_Marca_FK;
     delete product.createdAt;
     delete product.updatedAt;
 

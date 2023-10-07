@@ -3,13 +3,16 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const db = require('../database/db_connection');
 const { KEY_TOKEN } = require('../config/config');
+const Municipio = require('../models/municipality');
+const Departamento = require('../models/department');
+const Estado = require('../models/state');
 
 /**
  * Creación del modelo Cliente
  * Fecha creación: 03/08/2023
  * Autor: Hector Armando García González
  * Referencias: 
- *              Modelo Direccion (address.js).
+ *              Modelo Municipio (municipality.js).
  *              Modelo Estado (state.js).
  *              Modelo Rol (role.js).
  */
@@ -36,7 +39,7 @@ const Cliente = db.define('PRGADH_Cliente', {
         allowNull: true
     },
     Correo_Cliente: {
-        type: DataTypes.STRING(30),
+        type: DataTypes.STRING(40),
         allowNull: false,
         low: true,
         unique: true
@@ -76,6 +79,43 @@ const Cliente = db.define('PRGADH_Cliente', {
 });
 
 /**
+ * Configurando la relación de uno a uno
+ * Fecha creación: 26/09/2023
+ * Autor: Hector Armando García González
+ * Referencia:
+ *              Modelo Cliente (customer.js) -> uno
+ *              Modelo Estado (state.js)  -> uno
+ */
+
+Estado.hasOne(Cliente, {
+    foreignKey: 'ID_Estado_FK'
+});
+
+Cliente.belongsTo(Estado, {
+    foreignKey: 'ID_Estado_FK',
+    as: 'estado'
+});
+
+/**
+ * Configurando la relación de uno a muchos
+ * Fecha creación: 26/09/2023
+ * Autor: Hector Armando García González
+ * Referencia:
+ *              Modelo Municipio (municipality.js)  -> uno
+ *              Modelo Cliente (customer.js) -> muchos
+ */
+
+Municipio.hasMany(Cliente, {
+    foreignKey: 'ID_Municipio_FK',
+    as: 'clientes'
+});
+
+Cliente.belongsTo(Municipio, {
+    foreignKey: 'ID_Municipio_FK',
+    as: 'municipio'
+});
+
+/**
  * Hook para el cifrado de contraseña
  * Fecha creación: 03/08/2023
  * Autor: Hector Armando García González
@@ -102,13 +142,30 @@ Cliente.prototype.generateAuthToken = (id, rol) => {
  * Método personalizado para validar credenciales
  * Fecha creación: 04/08/2023
  * Autor: Hector Armando García González
+ * Referencias:
+ *              Modelo Municipio (municipality.js),
+ *              Modelo Departamento (department.js),
+ *              Modelo Estado (state.js)
  */
 
-Cliente.prototype.findByCredentials = async (Correo_Cliente, Password_Cliente) => {
+Cliente.prototype.findByCredentials = async (Correo_Cliente, Password_Cliente, ID_Estado_FK) => {
     const customer = await Cliente.findOne({
         where: {
-            Correo_Cliente
-        }
+            Correo_Cliente,
+            ID_Estado_FK
+        },
+        include: [{
+            model: Municipio,
+            as: 'municipio',
+            include: [{
+                model: Departamento,
+                as: 'departamento'
+            }]
+        }, {
+            model: Estado,
+            as: 'estado',
+            attributes: ['Tipo_Estado']
+        }]
     });
 
     if (!customer) {
@@ -135,9 +192,11 @@ Cliente.prototype.toJSON = function () {
 
     delete customer.Avatar_Cliente;
     delete customer.Password_Cliente;
+    delete customer.ID_Estado_FK;
+    delete customer.ID_Rol_FK;
+    delete customer.ID_Municipio_FK;
     delete customer.createdAt;
     delete customer.updatedAt;
-    delete customer.ID_Rol_FK;
 
     return customer;
 };

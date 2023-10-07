@@ -3,6 +3,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const db = require('../database/db_connection');
 const { KEY_TOKEN } = require('../config/config');
+const Estado = require('../models/state');
 
 /**
  * Creación del modelo Empleado
@@ -31,7 +32,7 @@ const Empleado = db.define('PRGADH_Empleado', {
         allowNull: true
     },
     Correo_Empleado: {
-        type: DataTypes.STRING(30),
+        type: DataTypes.STRING(40),
         allowNull: false,
         low: true,
         unique: true
@@ -63,6 +64,24 @@ const Empleado = db.define('PRGADH_Empleado', {
 });
 
 /**
+ * Configurando la relación de uno a uno
+ * Fecha creación: 26/09/2023
+ * Autor: Hector Armando García González
+ * Referencia:
+ *              Modelo Empleado (employee.js) -> uno
+ *              Modelo Estado (state.js)  -> uno
+ */
+
+Estado.hasOne(Empleado, {
+    foreignKey: 'ID_Estado_FK'
+});
+
+Empleado.belongsTo(Estado, {
+    foreignKey: 'ID_Estado_FK',
+    as: 'estado'
+});
+
+/**
  * Hook para el cifrado de contraseña
  * Fecha creación: 03/08/2023
  * Autor: Hector Armando García González
@@ -91,10 +110,11 @@ Empleado.prototype.generateAuthToken = (id, rol) => {
  * Autor: Hector Armando García González
  */
 
-Empleado.prototype.findByCredentials = async (Correo_Empleado, Password_Empleado) => {
+Empleado.prototype.findByCredentials = async (Correo_Empleado, Password_Empleado, ID_Estado_FK) => {
     const employee = await Empleado.findOne({
         where: {
-            Correo_Empleado
+            Correo_Empleado,
+            ID_Estado_FK
         }
     });
 
@@ -122,9 +142,10 @@ Empleado.prototype.toJSON = function () {
     
     delete employee.Avatar_Empleado;
     delete employee.Password_Empleado;
+    delete employee.ID_Estado_FK;
+    delete employee.ID_Rol_FK;
     delete employee.createdAt;
     delete employee.updatedAt;
-    delete employee.ID_Rol_FK;
     
     return employee;
 };

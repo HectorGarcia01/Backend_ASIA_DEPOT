@@ -7,7 +7,10 @@ const {
     updateSupplierId,
     deleteSupplierId
 } = require('../controllers/supplier.controller');
-const supplierSchema = require('../schemas/supplier.schema');
+const {
+    supplierValidateSchema,
+    updateSupplierValidateSchema
+} = require('../schemas/supplier.schema');
 const validateMiddleware = require('../middlewares/validate');
 const authMiddleware = require('../middlewares/auth');
 const roleMiddleware = require('../middlewares/check_rol');
@@ -17,12 +20,18 @@ router.post(
     '/superAdmin/nuevo/proveedor',
     authMiddleware,
     roleMiddleware('SuperAdmin'),
-    validateMiddleware(supplierSchema),
+    validateMiddleware(supplierValidateSchema),
     addSupplier
 );
 router.get('/superAdmin/ver/proveedores', authMiddleware, roleMiddleware('SuperAdmin'), readSuppliers);
 router.get('/superAdmin/ver/proveedor/:id', authMiddleware, roleMiddleware('SuperAdmin'), readSupplierId);
-router.patch('/superAdmin/actualizar/proveedor/:id', authMiddleware, roleMiddleware('SuperAdmin'), updateSupplierId);
+router.patch(
+    '/superAdmin/actualizar/proveedor/:id', 
+    authMiddleware, 
+    roleMiddleware('SuperAdmin'), 
+    validateMiddleware(updateSupplierValidateSchema),
+    updateSupplierId
+);
 router.delete('/superAdmin/eliminar/proveedor/:id', authMiddleware, roleMiddleware('SuperAdmin'), deleteSupplierId);
 
 //Configuración de rutas (endpoints) para el Admin
@@ -30,12 +39,18 @@ router.post(
     '/admin/nuevo/proveedor',
     authMiddleware,
     roleMiddleware('Admin'),
-    validateMiddleware(supplierSchema),
+    validateMiddleware(supplierValidateSchema),
     addSupplier
 );
 router.get('/admin/ver/proveedores', authMiddleware, roleMiddleware('Admin'), readSuppliers);
 router.get('/admin/ver/proveedor/:id', authMiddleware, roleMiddleware('Admin'), readSupplierId);
-router.patch('/admin/actualizar/proveedor/:id', authMiddleware, roleMiddleware('Admin'), updateSupplierId);
+router.patch(
+    '/admin/actualizar/proveedor/:id', 
+    authMiddleware, 
+    roleMiddleware('Admin'), 
+    validateMiddleware(updateSupplierValidateSchema),
+    updateSupplierId
+);
 
 //Exportación de todas las rutas de proveedor
 module.exports = router;

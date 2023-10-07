@@ -13,7 +13,8 @@ const addresses = require('../utils/seed/address_seed_data');
  * Referencias: 
  *              Modelo Estado (state.js).
  *              Modelo Rol (role.js).
- *              Modelo Direccion (address.js).
+ *              Modelo Departamento (department.js).
+ *              Modelo Municipio (municipality.js).
  *              Para estados predefinidos (state_seed_data.js).
  *              Para roles predefinidos (role_seed_data.js).
  *              Para direcciones predefinidas (address_seed_data.js).

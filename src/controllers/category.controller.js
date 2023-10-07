@@ -1,6 +1,8 @@
 const Sequelize = require('sequelize');
-const CategoryModel = require('../models/category');
+const findState = require('../utils/find_state');
+const { findCategory } = require('../utils/find_product');
 const StateModel = require('../models/state');
+const CategoryModel = require('../models/category');
 
 /**
  * Función para registrar una nueva categoría
@@ -8,22 +10,14 @@ const StateModel = require('../models/state');
  * Autor: Hector Armando García González
  * Referencias: 
  *              Modelo Categoría (category.js), 
- *              Modelo Estado (state.js)
+ *              Función para buscar estado (find_state.js)
  */
 
 const addCategory = async (req, res) => {
     try {
         const { Nombre_Categoria, Descripcion_Categoria } = req.body;
 
-        const stateCategory = await StateModel.findOne({
-            where: {
-                Tipo_Estado: 'Activo'
-            }
-        });
-
-        if (!stateCategory) {
-            return res.status(404).send({ error: "Estado no encontrado." });
-        }
+        const stateCategory = await findState('Activo');
 
         const newCategory = await CategoryModel.create({ 
             Nombre_Categoria, 
@@ -35,6 +29,8 @@ const addCategory = async (req, res) => {
     } catch (error) {
         if (error instanceof Sequelize.UniqueConstraintError) {
             res.status(400).send({ error: "¡La categoría ya existe!" });
+        } else if (error.status === 404) {
+            res.status(error.status).send({ error: error.message });
         } else {
             res.status(500).send({ error: "Error interno del servidor." });
         }
@@ -51,7 +47,13 @@ const addCategory = async (req, res) => {
 
 const readCategories = async (req, res) => {
     try {
-        const categories = await CategoryModel.findAll({});
+        const categories = await CategoryModel.findAll({
+            include: [{
+                model: StateModel,
+                as: 'estado',
+                attributes: ['id', 'Tipo_Estado']
+            }]
+        });
 
         if (categories.length === 0) {
             return res.status(404).send({ error: "No hay categorías registradas." });
@@ -74,7 +76,13 @@ const readCategories = async (req, res) => {
 const readCategoryId = async (req, res) => {
     try {
         const { id } = req.params;
-        const category = await CategoryModel.findByPk(id);
+        const category = await CategoryModel.findByPk(id, {
+            include: [{
+                model: StateModel,
+                as: 'estado',
+                attributes: ['id', 'Tipo_Estado']
+            }]
+        });
 
         if (!category) {
             return res.status(404).send({ error: "Categoría no encontrada." });
@@ -91,7 +99,7 @@ const readCategoryId = async (req, res) => {
  * Fecha creación: 28/08/2023
  * Autor: Hector Armando García González
  * Referencias:
- *              Modelo Categoría (category.js)
+ *              Función para buscar categoría (find_product.js)
  */
 
 const updateCategoryId = async (req, res) => {
@@ -106,18 +114,17 @@ const updateCategoryId = async (req, res) => {
             return res.status(400).send({ error: '¡Actualización inválida!' });
         }
 
-        const category = await CategoryModel.findByPk(id);
-
-        if (!category) {
-            return res.status(404).send({ error: "Categoría no encontrada." });
-        }
-
+        const category = await findCategory(id);
         updates.forEach((update) => category[update] = req.body[update]);
         
         await category.save();
         res.status(200).send({ msg: "Datos actualizados con éxito." });
     } catch (error) {
-        res.status(500).send({ error: "Error interno del servidor." });
+        if (error.status === 404) {
+            res.status(error.status).send({ error: error.message });
+        } else {
+            res.status(500).send({ error: "Error interno del servidor." });
+        }
     }
 };
 
@@ -126,30 +133,25 @@ const updateCategoryId = async (req, res) => {
  * Fecha creación: 24/08/2023
  * Autor: Hector Armando García González
  * Referencias:
- *              Modelo Categoría (category.js),
- *              Modelo Estado (state.js)
+ *              Función para buscar categoría (find_product.js)
+ *              Función para buscar estado (find_state.js)
  */
 
 const deleteCategoryId = async (req, res) => {
     try {
         const { id } = req.params;
-        const category = await CategoryModel.findByPk(id);
-
-        if (!category) {
-            return res.status(404).send({ error: "Categoría no encontrada." });
-        }
-
-        const stateCategory = await StateModel.findOne({
-            where: {
-                Tipo_Estado: "Inactivo"
-            }
-        });
+        const category = await findCategory(id);
+        const stateCategory = await findState('Inactivo');
 
         category.ID_Estado_FK = stateCategory.id;
         await category.save();
         res.status(200).send({ msg: "Categoría eliminada con éxito." });
     } catch (error) {
-        res.status(500).send({ error: "Error interno del servidor." });
+        if (error.status === 404) {
+            res.status(error.status).send({ error: error.message });
+        } else {
+            res.status(500).send({ error: "Error interno del servidor." });
+        }
     }
 };
 

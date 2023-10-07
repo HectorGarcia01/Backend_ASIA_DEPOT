@@ -3,13 +3,16 @@ const express = require('express');
 const db = require('./database/db_connection');
 const predefinedData = require('./controllers/seed_data.controller');
 const customerRoutes = require('./routes/customer.routes');
+const addressRoutes = require('./routes/address.routes');
 const employeeRoutes = require('./routes/employee.routes');
 const authRoutes = require('./routes/auth.routes');
 const imagesRoutes = require('./routes/upload_images.routes');
 const supplierRoutes = require('./routes/supplier.routes');
 const categoryRoutes = require('./routes/category.routes');
+const productBrandRoutes = require('./routes/brand_product.routes');
 const productRoutes = require('./routes/product.routes');
 const productReviewRoutes = require('./routes/product_review.routes');
+const nonexistentRoutes = require('./routes/nonexistent.routes');
 
 const app = express();    
 
@@ -37,22 +40,16 @@ app.use(express.json());
 
 //Configuración de rutas
 app.use(customerRoutes);
+app.use(addressRoutes);
 app.use(employeeRoutes);
 app.use(authRoutes);
 app.use(imagesRoutes);
 app.use(supplierRoutes);
 app.use(categoryRoutes);
+app.use(productBrandRoutes);
 app.use(productRoutes);
 app.use(productReviewRoutes);
-
-//Configuración del manejo de rutas inexistentes
-app.get('*', (req, res) => {
-    //Enviamos un estado de error 404 y un objeto
-    res.status(404).send({
-        title: '404',
-        errorMessage: "Página no encontrada."
-    });
-});
+app.use(nonexistentRoutes);
 
 //Inicializando el servidor 
 app.listen(PORT, () => {
