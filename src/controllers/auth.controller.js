@@ -42,6 +42,7 @@ const login = async (req, res) => {
         const userToken = await user.generateAuthToken(user.id, Nombre_Rol);
         createToken(Nombre_Rol, userToken, activeState.id, user.id);
 
+        res.cookie('token', userToken, { httOnly: true, sameSite: 'Strict' });
         res.status(200).send({ user, userRole: Nombre_Rol, userToken });
     } catch (error) {
         if (error.status === 404) {
@@ -86,6 +87,7 @@ const logout = async (req, res) => {
         userToken.ID_Estado_FK = inactiveState.id;
 
         await userToken.save();
+        res.clearCookie('token');
         res.status(200).send({ msg: "Sesión cerrada correctamente." });
     } catch (error) {
         if (error.status === 404) {
