@@ -1,5 +1,6 @@
 const { PORT } = require('./config/config');
 const express = require('express');
+const cookieParser = require('cookie-parser');
 const db = require('./database/db_connection');
 const predefinedData = require('./controllers/seed_data.controller');
 const customerRoutes = require('./routes/customer.routes');
@@ -37,6 +38,7 @@ app.use((req, res, next) => {
 });
 
 app.use(express.json());
+app.use(cookieParser());
 
 //Configuración de rutas
 app.use(customerRoutes);

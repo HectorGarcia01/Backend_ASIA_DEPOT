@@ -24,10 +24,15 @@ const TokenModel = require('../models/token');
 
 const authentication = async (req, res, next) => {
     try {
-        const userToken = req.header('Authorization')?.replace('Bearer ', '');
-        if (!userToken) {
+        const userToken = req.cookies.token;
+
+        if (!token) {
             throw new Error("Por favor autenticarse.");
         }
+        // const userToken = req.header('Authorization')?.replace('Bearer ', '');
+        // if (!userToken) {
+        //     throw new Error("Por favor autenticarse.");
+        // }
 
         const decodedToken = jwt.verify(userToken, KEY_TOKEN);
 
