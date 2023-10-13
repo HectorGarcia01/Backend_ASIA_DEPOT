@@ -66,6 +66,43 @@ const readCategories = async (req, res) => {
 };
 
 /**
+ * Función para ver categorías por paginación
+ * Fecha creación: 24/08/2023
+ * Autor: Hector Armando García González
+ * Referencias:
+ *              Modelo Categoría (category.js) 
+ */
+
+const categoryPagination = async (req, res) => {
+    try {
+        const { page, pageSize } = req.query;
+        const pageValue = req.query.page ? parseInt(page) : 1;
+        const pageSizeValue = req.query.pageSize ? parseInt(pageSize) : 6;
+
+        const count = await CategoryModel.count();
+        const categories = await CategoryModel.findAll({
+            include: [{
+                model: StateModel,
+                as: 'estado',
+                attributes: ['id', 'Tipo_Estado']
+            }],
+            offset: (pageValue - 1) * pageSizeValue,
+            limit: pageSizeValue
+        });
+
+        if (categories.length === 0) {
+            return res.status(404).send({ error: "No hay categorías registradas." });
+        }
+
+        const totalPages = Math.ceil(count / pageSizeValue);
+
+        res.status(200).send({ categories, currentPage: pageValue, totalPages });
+    } catch (error) {
+        res.status(500).send({ error: "Error interno del servidor." });
+    }
+};
+
+/**
  * Función para ver la categoría por id
  * Fecha creación: 28/08/2023
  * Autor: Hector Armando García González
@@ -158,6 +195,7 @@ const deleteCategoryId = async (req, res) => {
 module.exports = {
     addCategory,
     readCategories,
+    categoryPagination,
     readCategoryId,
     updateCategoryId,
     deleteCategoryId
