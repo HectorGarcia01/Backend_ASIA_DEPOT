@@ -43,7 +43,7 @@ const login = async (req, res) => {
         createToken(Nombre_Rol, userToken, activeState.id, user.id);
 
         res.cookie('authCookie', userToken, { httOnly: true, sameSite: 'Strict' });
-        res.status(200).send({ user, userRole: Nombre_Rol, userToken });
+        res.status(200).send({ user, userRole: Nombre_Rol });
     } catch (error) {
         if (error.status === 404) {
             res.status(error.status).send({ error: error.message });
