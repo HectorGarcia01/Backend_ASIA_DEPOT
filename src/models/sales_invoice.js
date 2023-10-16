@@ -1,5 +1,6 @@
 const { DataTypes } = require('sequelize');
 const db = require('../database/db_connection');
+const { NAME_PREFIX } = require('../config/config');
 const Empleado = require('../models/employee');
 const Cliente = require('../models/customer');
 const Metodo_Pago = require('../models/payment_method');
@@ -18,7 +19,7 @@ const Estado = require('../models/state');
  *              Modelo Estado (state.js)
  */
 
-const Factura_Venta = db.define('PRGADH_Factura_Venta', {
+const Factura_Venta = db.define(`${NAME_PREFIX}_Factura_Venta`, {
     NIT_Cliente: {
         type: DataTypes.INTEGER,
         allowNull: true
@@ -31,7 +32,7 @@ const Factura_Venta = db.define('PRGADH_Factura_Venta', {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: 'PRGADH_Empleados',
+            model: `${NAME_PREFIX}_Empleados`,
             key: 'id'
         }
     },
@@ -39,7 +40,7 @@ const Factura_Venta = db.define('PRGADH_Factura_Venta', {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: 'PRGADH_Proveedors',
+            model: `${NAME_PREFIX}_Proveedors`,
             key: 'id'
         }
     },
@@ -47,7 +48,7 @@ const Factura_Venta = db.define('PRGADH_Factura_Venta', {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: 'PRGADH_Metodo_Pagos',
+            model: `${NAME_PREFIX}_Metodo_Pagos`,
             key: 'id'
         }
     },
@@ -55,7 +56,7 @@ const Factura_Venta = db.define('PRGADH_Factura_Venta', {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: 'PRGADH_Tipo_Envios',
+            model: `${NAME_PREFIX}_Tipo_Envios`,
             key: 'id'
         }
     },
@@ -63,7 +64,7 @@ const Factura_Venta = db.define('PRGADH_Factura_Venta', {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: 'PRGADH_Estados',
+            model: `${NAME_PREFIX}_Estados`,
             key: 'id'
         }
     }

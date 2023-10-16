@@ -1,5 +1,6 @@
 const { DataTypes } = require('sequelize');
 const db = require('../database/db_connection');
+const { NAME_PREFIX } = require('../config/config');
 const Rol = require('../models/role');
 const Permiso = require('../models/permission');
 
@@ -12,12 +13,12 @@ const Permiso = require('../models/permission');
  *              Modelo Permiso (permission.js)
  */
 
-const Rol_Permiso = db.define('PRGADH_Rol_Permiso', {
+const Rol_Permiso = db.define(`${NAME_PREFIX}_Rol_Permiso`, {
     ID_Rol_FK: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: 'PRGADH_Rols',
+            model: `${NAME_PREFIX}_Rols`,
             key: 'id'
         }
     },
@@ -25,7 +26,7 @@ const Rol_Permiso = db.define('PRGADH_Rol_Permiso', {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: 'PRGADH_Permisos',
+            model: `${NAME_PREFIX}_Permisos`,
             key: 'id'
         }
     }

@@ -1,5 +1,6 @@
 const { DataTypes } = require('sequelize');
 const db = require('../database/db_connection');
+const { NAME_PREFIX } = require('../config/config');
 const Estado = require('../models/state');
 
 /**
@@ -10,7 +11,7 @@ const Estado = require('../models/state');
  *              Modelo Estado (state.js)
  */
 
-const Proveedor = db.define('PRGADH_Proveedor', {
+const Proveedor = db.define(`${NAME_PREFIX}_Proveedor`, {
     Nombre_Proveedor: {
         type: DataTypes.STRING(30),
         allowNull: true,
@@ -39,7 +40,7 @@ const Proveedor = db.define('PRGADH_Proveedor', {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: 'PRGADH_Estados',
+            model: `${NAME_PREFIX}_Estados`,
             key: 'id'
         }
     }

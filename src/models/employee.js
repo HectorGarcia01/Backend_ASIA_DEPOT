@@ -2,7 +2,7 @@ const { DataTypes } = require('sequelize');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const db = require('../database/db_connection');
-const { KEY_TOKEN } = require('../config/config');
+const { KEY_TOKEN, NAME_PREFIX } = require('../config/config');
 const Estado = require('../models/state');
 
 /**
@@ -14,7 +14,7 @@ const Estado = require('../models/state');
  *              Modelo Rol (role.js).
  */
 
-const Empleado = db.define('PRGADH_Empleado', {
+const Empleado = db.define(`${NAME_PREFIX}_Empleado`, {
     Nombre_Empleado: {
         type: DataTypes.STRING(30),
         allowNull: false
@@ -49,7 +49,7 @@ const Empleado = db.define('PRGADH_Empleado', {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: 'PRGADH_Estados',
+            model: `${NAME_PREFIX}_Estados`,
             key: 'id'
         }
     },
@@ -57,7 +57,7 @@ const Empleado = db.define('PRGADH_Empleado', {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: 'PRGADH_Rols',
+            model: `${NAME_PREFIX}_Rols`,
             key: 'id'
         }
     }

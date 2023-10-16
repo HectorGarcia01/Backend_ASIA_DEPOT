@@ -1,5 +1,7 @@
 const { DataTypes } = require('sequelize');
 const db = require('../database/db_connection');
+const { NAME_PREFIX } = require('../config/config');
+
 
 /**
  * Creación del modelo Metodo_Pago
@@ -7,7 +9,7 @@ const db = require('../database/db_connection');
  * Autor: Hector Armando García González
  */
 
-const Metodo_Pago = db.define('PRGADH_Metodo_Pago', {
+const Metodo_Pago = db.define(`${NAME_PREFIX}_Metodo_Pago`, {
     Tipo_Pago: {
         type: DataTypes.STRING(40),
         allowNull: false

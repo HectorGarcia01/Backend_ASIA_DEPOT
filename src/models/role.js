@@ -1,5 +1,6 @@
 const { DataTypes } = require('sequelize');
 const db = require('../database/db_connection');
+const { NAME_PREFIX } = require('../config/config');
 
 /**
  * Creación del modelo Rol
@@ -7,7 +8,7 @@ const db = require('../database/db_connection');
  * Autor: Hector Armando García González
  */
 
-const Rol = db.define('PRGADH_Rol', {
+const Rol = db.define(`${NAME_PREFIX}_Rol`, {
     Nombre_Rol: {
         type: DataTypes.STRING(10),
         allowNull: false,
