@@ -1,9 +1,13 @@
 const StateModel = require('../models/state');
 const RoleModel = require('../models/role');
+const PermissionModel = require('../models/permission');
+const RolePermissionModel = require('../models/role_permission');
 const DepartmentModel = require('../models/department');
 const MunicipalityModel = require('../models/municipality');
 const typeStates = require('../utils/seed/state_seed_data');
 const typeRoles = require('../utils/seed/role_seed_data');
+const typePermissions = require('../utils/seed/permission_seed_data');
+const roleWithPermissions = require('../utils/seed/role_permission_seed_data');
 const addresses = require('../utils/seed/address_seed_data');
 
 /**
@@ -13,10 +17,14 @@ const addresses = require('../utils/seed/address_seed_data');
  * Referencias: 
  *              Modelo Estado (state.js).
  *              Modelo Rol (role.js).
+ *              Modelo Permiso (permission.js).
+ *              Modelo Rol_Permiso (role_permission.js).
  *              Modelo Departamento (department.js).
  *              Modelo Municipio (municipality.js).
  *              Para estados predefinidos (state_seed_data.js).
  *              Para roles predefinidos (role_seed_data.js).
+ *              Para permisos predefinidos (permission_seed_data.js).
+ *              Para roles con permisos predefinidos (role_permission_seed_data.js).
  *              Para direcciones predefinidas (address_seed_data.js).
  */
 const insertPredefinedData = async () => {
@@ -33,6 +41,20 @@ const insertPredefinedData = async () => {
         if (existingRole.length === 0) {
             await RoleModel.bulkCreate(typeRoles);
             console.log("Datos predefinidos de roles insertados con éxito.");
+        }
+
+        const existingPermission = await PermissionModel.findAll();
+
+        if (existingPermission.length === 0) {
+            await PermissionModel.bulkCreate(typePermissions);
+            console.log("Datos predefinidos de permisos insertados con éxito.");
+
+            const existingRolePermission = await RolePermissionModel.findAll();
+
+            if (existingRolePermission.length === 0) {
+                await PermissionModel.bulkCreate(roleWithPermissions);
+                console.log("Datos predefinidos de roles con permisos insertados con éxito.");
+            }
         }
 
         const existingDepartments = await DepartmentModel.findAll();
