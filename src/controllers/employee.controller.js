@@ -1,6 +1,7 @@
 const Sequelize = require('sequelize');
 const findState = require('../utils/find_state');
 const findRole = require('../utils/find_role');
+const createToken = require('../utils/create_token');
 const EmployeeModel = require('../models/employee');
 const StateModel = require('../models/state');
 
@@ -51,7 +52,7 @@ const addEmployee = async (req, res) => {
         } else if (error.status === 404) {
             res.status(error.status).send({ error: error.message });
         } else {
-            res.status(500).send({ error: "Error interno del servidor." });
+            res.status(500).send({ error: error.message });
         }
     }
 };
