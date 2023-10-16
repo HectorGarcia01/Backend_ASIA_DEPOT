@@ -22,6 +22,10 @@ const Inventario = db.define('PRGADH_Inventario', {
         type: DataTypes.INTEGER,
         allowNull: false
     },
+    Monto_Movimiento: {
+        type: DataTypes.DOUBLE,
+        allowNull: false
+    },
     ID_Empleado_FK: {
         type: DataTypes.INTEGER,
         allowNull: false,
