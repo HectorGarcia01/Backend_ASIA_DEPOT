@@ -6,11 +6,11 @@ module.exports = [
         ID_Permiso_FK: 1
     },
     {
-        ID_Permiso_FK: 2,
+        ID_Rol_FK: 2,
         ID_Permiso_FK: 2
     },
     {
-        ID_Permiso_FK: 2,
+        ID_Rol_FK: 2,
         ID_Permiso_FK: 3
     },
     //Para el superAdmin
@@ -19,15 +19,15 @@ module.exports = [
         ID_Permiso_FK: 1
     },
     {
-        ID_Permiso_FK: 3,
+        ID_Rol_FK: 3,
         ID_Permiso_FK: 2
     },
     {
-        ID_Permiso_FK: 3,
+        ID_Rol_FK: 3,
         ID_Permiso_FK: 3
     },
     {
-        ID_Permiso_FK: 3,
+        ID_Rol_FK: 3,
         ID_Permiso_FK: 4
     }
 ]
