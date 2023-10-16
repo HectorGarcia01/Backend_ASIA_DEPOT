@@ -17,68 +17,68 @@ const {
 } = require('../schemas/address.schema');
 const validateMiddleware = require('../middlewares/validate');
 const authMiddleware = require('../middlewares/auth');
-const roleMiddleware = require('../middlewares/check_rol');
+const roleMiddleware = require('../middlewares/check_role_permission');
 
 //Rutas (endpoints) para el SuperAdmin
 router.post(
     '/superAdmin/crear/departamento', 
     authMiddleware, 
-    roleMiddleware('SuperAdmin'), 
+    roleMiddleware('SuperAdmin', 'Crear'), 
     validateMiddleware(departmentSchema), 
     addDepartment
 );
 router.post(
     '/superAdmin/crear/municipio',
     authMiddleware,
-    roleMiddleware('SuperAdmin'),
+    roleMiddleware('SuperAdmin', 'Crear'),
     validateMiddleware(municipalitySchema),
     addMunicipality
 );
-router.get('/superAdmin/ver/direcciones', authMiddleware, roleMiddleware('SuperAdmin'), readAddresses);
+router.get('/superAdmin/ver/direcciones', authMiddleware, roleMiddleware('SuperAdmin', 'Ver'), readAddresses);
 router.patch(
     '/superAdmin/actualizar/departamento/:id', 
     authMiddleware, 
-    roleMiddleware('SuperAdmin'), 
+    roleMiddleware('SuperAdmin', 'Modificar'), 
     validateMiddleware(updateDepartmentSchema), 
     updateDepartmentId
 );
 router.patch(
     '/superAdmin/actualizar/municipio/:id',
     authMiddleware,
-    roleMiddleware('SuperAdmin'),
+    roleMiddleware('SuperAdmin', 'Modificar'),
     validateMiddleware(updateMunicipalitySchema),
     updateMunicipalityId
 );
-router.delete('/superAdmin/eliminar/departamento/:id', authMiddleware, roleMiddleware('SuperAdmin'), deleteDepartmentId);
-router.delete('/superAdmin/eliminar/municipio/:id', authMiddleware, roleMiddleware('SuperAdmin'), deleteMunicipalityId);
+router.delete('/superAdmin/eliminar/departamento/:id', authMiddleware, roleMiddleware('SuperAdmin', 'Eliminar'), deleteDepartmentId);
+router.delete('/superAdmin/eliminar/municipio/:id', authMiddleware, roleMiddleware('SuperAdmin', 'Eliminar'), deleteMunicipalityId);
 
 //Rutas (endpoints) para el Admin
 router.post(
     '/admin/crear/departamento',
     authMiddleware,
-    roleMiddleware('Admin'),
+    roleMiddleware('Admin', 'Crear'),
     validateMiddleware(departmentSchema),
     addDepartment
 );
 router.post(
     '/admin/crear/municipio',
     authMiddleware,
-    roleMiddleware('Admin'),
+    roleMiddleware('Admin', 'Crear'),
     validateMiddleware(municipalitySchema),
     addMunicipality
 );
-router.get('/admin/ver/direcciones', authMiddleware, roleMiddleware('Admin'), readAddresses);
+router.get('/admin/ver/direcciones', authMiddleware, roleMiddleware('Admin', 'Ver'), readAddresses);
 router.patch(
     '/admin/actualizar/departamento/:id',
     authMiddleware,
-    roleMiddleware('Admin'),
+    roleMiddleware('Admin', 'Modificar'),
     validateMiddleware(updateDepartmentSchema),
     updateDepartmentId
 );
 router.patch(
     '/admin/actualizar/municipio/:id',
     authMiddleware,
-    roleMiddleware('Admin'),
+    roleMiddleware('Admin', 'Modificar'),
     validateMiddleware(updateMunicipalitySchema),
     updateMunicipalityId
 );

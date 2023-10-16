@@ -11,7 +11,7 @@ const {
 } = require('../schemas/customer.schema');
 const validateMiddleware = require('../middlewares/validate');
 const authMiddleware = require('../middlewares/auth');
-const roleMiddleware = require('../middlewares/check_rol');
+const roleMiddleware = require('../middlewares/check_role_permission');
 
 router.post('/nuevo/cliente', validateMiddleware(customerValidateSchema), addCustomer);
 router.get('/usuario/ver/perfil', authMiddleware, roleMiddleware('User'), customerProfile);

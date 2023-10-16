@@ -13,41 +13,41 @@ const {
 } = require('../schemas/brand_product.schema');
 const validateMiddleware = require('../middlewares/validate');
 const authMiddleware = require('../middlewares/auth');
-const roleMiddleware = require('../middlewares/check_rol');
+const roleMiddleware = require('../middlewares/check_role_permission');
 
 //Configuración de rutas (endpoints) para el SuperAdmin
 router.post(
     '/superAdmin/crear/marca',
     authMiddleware,
-    roleMiddleware('SuperAdmin'),
+    roleMiddleware('SuperAdmin', 'Crear'),
     validateMiddleware(productBrandSchema),
     addProductBrand
 );
-router.get('/superAdmin/ver/marcas', authMiddleware, roleMiddleware('SuperAdmin'), readProductBrands);
-router.get('/superAdmin/ver/marca/:id', authMiddleware, roleMiddleware('SuperAdmin'), readProductBrandId);
+router.get('/superAdmin/ver/marcas', authMiddleware, roleMiddleware('SuperAdmin', 'Ver'), readProductBrands);
+router.get('/superAdmin/ver/marca/:id', authMiddleware, roleMiddleware('SuperAdmin', 'Ver'), readProductBrandId);
 router.patch(
     '/superAdmin/actualizar/marca/:id',
     authMiddleware,
-    roleMiddleware('SuperAdmin'),
+    roleMiddleware('SuperAdmin', 'Modificar'),
     validateMiddleware(updateProductBrandSchema),
     updateProductBrandId
 );
-router.delete('/superAdmin/eliminar/marca/:id', authMiddleware, roleMiddleware('SuperAdmin'), deleteProductBrandId);
+router.delete('/superAdmin/eliminar/marca/:id', authMiddleware, roleMiddleware('SuperAdmin', 'Eliminar'), deleteProductBrandId);
 
 //Configuración de rutas (endpoints) para el Admin
 router.post(
     '/admin/crear/marca',
     authMiddleware,
-    roleMiddleware('Admin'),
+    roleMiddleware('Admin', 'Crear'),
     validateMiddleware(productBrandSchema),
     addProductBrand
 );
-router.get('/admin/ver/marcas', authMiddleware, roleMiddleware('Admin'), readProductBrands);
-router.get('/admin/ver/marca/:id', authMiddleware, roleMiddleware('Admin'), readProductBrandId);
+router.get('/admin/ver/marcas', authMiddleware, roleMiddleware('Admin', 'Ver'), readProductBrands);
+router.get('/admin/ver/marca/:id', authMiddleware, roleMiddleware('Admin', 'Ver'), readProductBrandId);
 router.patch(
     '/admin/actualizar/marca/:id',
     authMiddleware,
-    roleMiddleware('Admin'),
+    roleMiddleware('Admin', 'Modificar'),
     validateMiddleware(updateProductBrandSchema),
     updateProductBrandId
 );
