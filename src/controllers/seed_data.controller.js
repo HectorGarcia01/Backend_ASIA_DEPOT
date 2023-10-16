@@ -52,7 +52,7 @@ const insertPredefinedData = async () => {
             const existingRolePermission = await RolePermissionModel.findAll();
 
             if (existingRolePermission.length === 0) {
-                await PermissionModel.bulkCreate(roleWithPermissions);
+                await RolePermissionModel.bulkCreate(roleWithPermissions);
                 console.log("Datos predefinidos de roles con permisos insertados con éxito.");
             }
         }
