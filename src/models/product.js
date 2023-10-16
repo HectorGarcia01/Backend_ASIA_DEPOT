@@ -43,6 +43,11 @@ const Producto = db.define('PRGADH_Producto', {
         type: DataTypes.BLOB,
         allowNull: true
     },
+    Producto_Destacado: {
+        type: DataTypes.BOOLEAN, 
+        allowNull: false, 
+        defaultValue: false 
+    },
     ID_Estado_FK: {
         type: DataTypes.INTEGER,
         allowNull: false,
