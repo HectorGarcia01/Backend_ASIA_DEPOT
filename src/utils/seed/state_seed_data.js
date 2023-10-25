@@ -5,5 +5,6 @@ module.exports = [
     { Tipo_Estado: 'Inactivo' },
     { Tipo_Estado: 'Carrito' },
     { Tipo_Estado: 'En proceso' },
-    { Tipo_Estado: 'Completado' }
+    { Tipo_Estado: 'Completado' },
+    { Tipo_Estado: 'Cancelado' }
 ]
