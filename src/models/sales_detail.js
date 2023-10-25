@@ -22,7 +22,7 @@ const Detalle_Venta = db.define(`${NAME_PREFIX}_Detalle_Venta`, {
         type: DataTypes.DOUBLE,
         allowNull: false
     },
-    Subtotal_Compra: {
+    Subtotal_Venta: {
         type: DataTypes.DOUBLE,
         allowNull: false
     },
