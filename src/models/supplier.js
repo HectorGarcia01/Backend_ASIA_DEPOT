@@ -15,7 +15,6 @@ const Proveedor = db.define(`${NAME_PREFIX}_Proveedor`, {
     Nombre_Proveedor: {
         type: DataTypes.STRING(30),
         allowNull: true,
-        unique: true
     },
     Apellido_Proveedor: {
         type: DataTypes.STRING(30),
@@ -24,7 +23,6 @@ const Proveedor = db.define(`${NAME_PREFIX}_Proveedor`, {
     Nombre_Empresa: {
         type: DataTypes.STRING(50),
         allowNull: true,
-        unique: true
     },
     Telefono_Proveedor: {
         type: DataTypes.STRING(8),
