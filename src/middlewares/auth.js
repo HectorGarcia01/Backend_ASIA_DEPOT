@@ -7,6 +7,7 @@ const DepartmentModel = require('../models/department');
 const MunicipalityModel = require('../models/municipality');
 const EmployeeModel = require('../models/employee');
 const TokenModel = require('../models/token');
+const StateModel = require('../models/state');
 
 /**
  * Middleware de autenticación
@@ -19,16 +20,17 @@ const TokenModel = require('../models/token');
  *              Modelo Cliente (customer.js),
  *              Modelo Departamento (department.js),
  *              Modelo Municipio (municipality.js),
- *              Modelo Empleado (employee.js)
+ *              Modelo Empleado (employee.js),
+ *              Modelo Estado (state.js)
  */
 
 const authentication = async (req, res, next) => {
     try {
-        const userToken = req.cookies.authCookie;
-
-        if (!userToken) {
+        if (!req.header('Authorization')) {
             throw new Error("Por favor autenticarse.");
         }
+
+        const userToken = req.header('Authorization').replace('Bearer ', '');
 
         const decodedToken = jwt.verify(userToken, KEY_TOKEN);
 
@@ -60,6 +62,10 @@ const authentication = async (req, res, next) => {
                     model: DepartmentModel,
                     as: 'departamento'
                 }]
+            }, {
+                model: StateModel,
+                as: 'estado',
+                attributes: ['id', 'Tipo_Estado']
             }]
         });
 
