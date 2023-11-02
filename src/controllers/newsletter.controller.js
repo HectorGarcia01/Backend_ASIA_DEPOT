@@ -1,7 +1,10 @@
 const Sequelize = require('sequelize');
 const CustomerModel = require('../models/customer');
 const NewsletterModel = require('../models/newsletter');
-const { newsletterEmail } = require('../email/controllers/newsletter');
+const { 
+    newsletterEmail, 
+    unsubscriptionNewsletterEmail 
+} = require('../email/controllers/newsletter');
 
 /**
  * Función para suscribirse al newsletter
@@ -9,7 +12,8 @@ const { newsletterEmail } = require('../email/controllers/newsletter');
  * Autor: Hector Armando García González
  * Referencias: 
  *              Modelo Cliente (customer.js),
- *              Modelo Newsletter (newsletter.js)
+ *              Modelo Newsletter (newsletter.js),
+ *              Función para enviar correo de suscripción de newsletter (newsletter.js)
  */
 
 const subscriptionNewsletter = async (req, res) => { 
@@ -39,7 +43,8 @@ const subscriptionNewsletter = async (req, res) => {
  * Autor: Hector Armando García González
  * Referencias: 
  *              Modelo Cliente (customer.js),
- *              Modelo Newsletter (newsletter.js)
+ *              Modelo Newsletter (newsletter.js),
+ *              Función para enviar correo de desuscripción de newsletter (newsletter.js)
  */
 
 const unsubscriptionNewsletter = async (req, res) => {
@@ -51,9 +56,10 @@ const unsubscriptionNewsletter = async (req, res) => {
             return res.status(404).send({ error: "Lo siento, no estás suscrito al newsletter." });
         }
 
-        res.status(200).send({ msg: "Tu solicitud de desuscripción se ha completado con éxito." });
+        await unsubscriptionNewsletterEmail(user.Correo_Cliente);
+        res.status(200).send({ msg: "Tu solicitud de anulación de suscripción se ha completado con éxito." });
     } catch (error) {
-        res.status(500).send({ error: "Error interno del servidor." });
+        res.status(500).send({ error: error.message });
     }
 };
 
