@@ -24,6 +24,10 @@ const Factura_Venta = db.define(`${NAME_PREFIX}_Factura_Venta`, {
         type: DataTypes.INTEGER,
         allowNull: true
     },
+    Numero_Orden: {
+        type: DataTypes.STRING(100),
+        allowNull: true
+    },
     Total_Factura: {
         type: DataTypes.DOUBLE,
         allowNull: false
