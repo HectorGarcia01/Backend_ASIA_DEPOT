@@ -44,7 +44,7 @@ const Factura_Venta = db.define(`${NAME_PREFIX}_Factura_Venta`, {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: `${NAME_PREFIX}_Proveedors`,
+            model: `${NAME_PREFIX}_Clientes`,
             key: 'id'
         }
     },
