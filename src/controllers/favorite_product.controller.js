@@ -1,6 +1,7 @@
 const Sequelize = require('sequelize');
 const FavoriteProductModel = require('../models/favorite_product');
 const ProductModel = require('../models/product');
+const StateModel = require('../models/state');
 const { findProduct } = require('../utils/find_product');
 
 /**
@@ -41,7 +42,8 @@ const addFavoriteProduct = async (req, res) => {
  * Autor: Hector Armando García González
  * Referencias:
  *              Modelo Producto_Favorito (favorite_product.js),
- *              Modelo Producto (product.js)
+ *              Modelo Producto (product.js),
+ *              Modelo Estado (state.js)
  */
 
 const readFavoriteProduct = async (req, res) => {
@@ -53,11 +55,19 @@ const readFavoriteProduct = async (req, res) => {
 
         const count = await FavoriteProductModel.count();
         const favoriteProduct = await FavoriteProductModel.findAll({
-            where: { ID_Cliente_FK: user.id },
+            where: { 
+                ID_Cliente_FK: user.id 
+            },
+            attributes: ['id'],
             include: [{
                 model: ProductModel,
                 as: 'producto',
-                attributes: ['id', 'Nombre_Producto', 'Descripcion_Producto', 'Cantidad_Stock', 'Precio_Venta']
+                attributes: ['id', 'Nombre_Producto', 'Descripcion_Producto', 'Cantidad_Stock', 'Precio_Venta'],
+                include: [{
+                    model: StateModel,
+                    as: 'estado',
+                    attributes: ['id', 'Tipo_Estado']
+                }]
             }],
             offset: (pageValue - 1) * pageSizeValue,
             limit: pageSizeValue
