@@ -13,6 +13,7 @@ const categoryRoutes = require('./routes/category.routes');
 const productBrandRoutes = require('./routes/brand_product.routes');
 const productRoutes = require('./routes/product.routes');
 const productReviewRoutes = require('./routes/product_review.routes');
+const favoriteProductRoutes = require('./routes/favorite_product.routes');
 const nonexistentRoutes = require('./routes/nonexistent.routes');
 const captchaRoutes = require('./routes/recaptcha.routes');
 
@@ -54,6 +55,7 @@ app.use(categoryRoutes);
 app.use(productBrandRoutes);
 app.use(productRoutes);
 app.use(productReviewRoutes);
+app.use(favoriteProductRoutes);
 app.use(captchaRoutes);
 app.use(nonexistentRoutes);
 
