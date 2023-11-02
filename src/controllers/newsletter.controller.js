@@ -14,18 +14,22 @@ const { newsletterEmail } = require('../email/controllers/newsletter');
 
 const subscriptionNewsletter = async (req, res) => { 
     try {
+        const { user } = req;
         const { Correo_Cliente } = req.body;
-        const customer = await CustomerModel.findOne({ where: { Correo_Cliente } });
 
-        if (customer) {
-            return res.status(400).send({ error: "¡Ya eres un suscriptor de nuestro newsletter! Te mantendremos actualizado con nuestras últimas noticias y ofertas." });
+        if (user.Correo_Cliente !== Correo_Cliente) {
+            return res.status(400).send({ error: "Lo siento, el correo ingresado no coincide con tu correo actual." });
         }
 
-        await NewsletterModel.create({ ID_Cliente_FK: customer.id });
-        await newsletterEmail(Correo_Cliente);
+        await NewsletterModel.create({ ID_Cliente_FK: user.id });
+        await newsletterEmail(user.Correo_Cliente);
         res.status(200).send({ msg: "¡Gracias por suscribirte a nuestro newsletter! Ahora estarás al tanto de nuestras últimas noticias y ofertas especiales." });
     } catch (error) {
-        res.status(500).send({ error: "Error interno del servidor." });
+        if (error instanceof Sequelize.UniqueConstraintError) {
+            res.status(400).send({ error: "¡Ya eres un suscriptor de nuestro newsletter! Te mantendremos actualizado con nuestras últimas noticias y ofertas." });
+        } else {
+            res.status(500).send({ error: "Error interno del servidor." });
+        }
     }
 };
 
