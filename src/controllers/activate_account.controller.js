@@ -6,6 +6,7 @@ const findState = require('../utils/find_state');
 const findRole = require('../utils/find_role');
 const TokenModel = require('../models/token');
 const welcomeEmail = require('../email/controllers/welcome');
+const { accountActivationEmail } = require('../email/controllers/activate_account')
 
 /**
  * Función para activar una cuenta de usuario (cliente/empleado)
@@ -100,7 +101,7 @@ const activateUserAccount = async (req, res) => {
  *              Función para buscar estado (find_state.js),
  *              Función para buscar rol (find_role.js),
  *              Modelo Token (token.js),
- *              Función para enviar un correo de bienvenida (welcome_email.js)
+ *              Función para enviar un correo de activación de cuenta (activate_account.js)
  */
 
 const sendNewToken = async (req, res) => {
@@ -132,9 +133,9 @@ const sendNewToken = async (req, res) => {
         createToken(Nombre_Rol, userToken, activeState.id, user.id);
 
         if (user.Correo_Cliente) {
-            await welcomeEmail(user.Correo_Cliente);
+            await accountActivationEmail(user.Correo_Cliente, userToken);
         } else if (user.Correo_Empleado) {
-            await welcomeEmail(user.Correo_Empleado);
+            await accountActivationEmail(user.Correo_Empleado, userToken);
         }
 
         res.status(200).send({ msg: "Se ha enviado un nuevo token a tu correo electrónico." });
