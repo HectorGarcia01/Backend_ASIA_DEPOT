@@ -68,6 +68,9 @@ const addProduct = async (req, res) => {
  * Autor: Hector Armando García González
  * Referencias:
  *              Modelo Producto (product.js), 
+ *              Modelo Estado (state.js),
+ *              Modelo Categoría (category.js),
+ *              Modelo Marca_Producto (brand_product.js)
  */
 
 const readProducts = async (req, res) => {
