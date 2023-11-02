@@ -1,9 +1,7 @@
 const PurchaseInvoiceModel = require('../models/purchase_invoice');
 const PurchaseDetailModel = require('../models/purchase_detail');
-const SupplierModel = require('../models/supplier');
 const ProductModel = require('../models/product');
 const InventoryModel = require('../models/inventory');
-const StateModel = require('../models/state');
 const findState = require('../utils/find_state');
 const findSupplier = require('../utils/find_supplier');
 const { findProduct } = require('../utils/find_product');
