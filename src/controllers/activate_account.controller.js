@@ -2,11 +2,9 @@ const jwt = require('jsonwebtoken');
 const { KEY_TOKEN } = require('../config/config');
 const CustomerModel = require('../models/customer');
 const EmployeeModel = require('../models/employee');
-const StateModel = require('../models/state');
 const findState = require('../utils/find_state');
 const findRole = require('../utils/find_role');
 const TokenModel = require('../models/token');
-const RoleModel = require('../models/role');
 const welcomeEmail = require('../email/welcome_email');
 
 /**
@@ -65,9 +63,13 @@ const activateUserAccount = async (req, res) => {
         }
 
         const newStateUser = await findState('Activo');
+        const inactiveState = await findState('Inactivo');
+
         user.ID_Estado_FK = newStateUser.id;
+        validateToken.ID_Estado_FK = inactiveState.id;
 
         await user.save();
+        await validateToken.save();
 
         if (user.Correo_Cliente) {
             await welcomeEmail(user.Correo_Cliente);
