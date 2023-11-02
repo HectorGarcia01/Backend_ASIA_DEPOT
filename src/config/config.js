@@ -1,4 +1,4 @@
-require('dotenv').config({ path: `.env.env` });
+require('dotenv').config({ path: `.dev.env` });
 const randomPrefix = require('../utils/generate_prefix');
 
 //Exportando las variables de entorno
