@@ -4,7 +4,57 @@
 <head>
     <meta charset="UTF-8">
     <title>Activación de cuenta de usuario.</title>
-    <link rel="stylesheet" href="../public/css/styles.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            font-family: Arial, sans-serif;
+        }
+
+        table.container {
+            border-collapse: collapse;
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        table.inner {
+            border-collapse: collapse;
+            width: 100%;
+            max-width: 600px;
+            background-color: #ffffff;
+            border: 1px solid #e0e0e0;
+            box-shadow: 0px 0px 10px #888888;
+            margin: 0 auto;
+        }
+
+        td.content {
+            padding: 20px;
+            text-align: center;
+            background-color: #f5f5f5;
+        }
+
+        p {
+            margin: 0;
+        }
+
+        a.button {
+            display: inline-block;
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+
+        @media (max-width: 600px) {
+            table.container {
+                max-width: 100%;
+            }
+        }
+    </style>
 </head>
 
 <body>
@@ -21,13 +71,13 @@
                                 Estás a un paso de activar tu cuenta.
                             </p>
                             <h3 style="margin-top: 20px;">Para activar tu cuenta, ingresa el siguiente token en el formulario:</h3>
-                            <a class="button" href="http://localhost:4200/authentication/activation-mail">
-                                <%= userToken %>
+                            <a href="http://localhost:4200/authentication/activation-mail">
+                                <p id="tokenText"><%= userToken %></p>
                             </a>
                             <p style="margin-top: 20px;">
                                 Una vez que ingreses el token, tu cuenta estará activada y podrás comenzar a disfrutar
                                 de nuestros servicios. <br>
-                                El token solo estará disponible 1 días.
+                                El token solo estará disponible 1 día.
                             </p>
                             <a style="margin-top: 20px;" class="button" href="http://localhost:4200/authentication/activation-mail">
                                 Activar cuenta
