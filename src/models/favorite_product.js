@@ -47,7 +47,7 @@ Cliente.hasMany(Producto_Favorito, {
     as: 'productos_favorito'
 });
 
-Producto_Favorito.belongsTo(Empleado, {
+Producto_Favorito.belongsTo(Cliente, {
     foreignKey: 'ID_Cliente_FK',
     as: 'cliente'
 });
