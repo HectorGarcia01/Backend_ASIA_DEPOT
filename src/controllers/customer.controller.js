@@ -7,6 +7,8 @@ const findState = require('../utils/find_state');
 const findRole = require('../utils/find_role');
 const createToken = require('../utils/create_token');
 const CustomerModel = require('../models/customer');
+const EmployeeModel = require('../models/employee');
+const { accountActivationEmail } = require('../email/controllers/activate_account');
 
 /**
  * Función para crear un nuevo cliente
@@ -14,10 +16,12 @@ const CustomerModel = require('../models/customer');
  * Autor: Hector Armando García González
  * Referencias: 
  *              Modelo Cliente (customer.js),
+ *              Modelo Empleado (employee.js),
  *              Función para validar existencia de municipio (find_address.js),
  *              Función para buscar estado (find_state.js),
  *              Función para buscar rol (find_role.js),
- *              Función para crear un token (create_token.js)
+ *              Función para crear un token (create_token.js),
+ *              Función para enviar correo de activación de cuenta (activate_account.js)
  */
 
 const addCustomer = async (req, res) => {
@@ -33,6 +37,12 @@ const addCustomer = async (req, res) => {
             ID_Departamento_FK,
             ID_Municipio_FK
         } = req.body;
+
+        const employee = await EmployeeModel.findOne({ where: { Correo_Empleado: Correo_Cliente } });
+
+        if (employee) {
+            return res.status(400).send({ error: "¡El usuario ya existe!" });
+        }
 
         if (ID_Municipio_FK) {
             await findMunicipality(ID_Municipio_FK, ID_Departamento_FK);
@@ -57,6 +67,7 @@ const addCustomer = async (req, res) => {
         const stateToken = await findState('Activo');
         const token = await newCustomer.generateAuthToken(newCustomer.id, roleCustomer.Nombre_Rol);
         await createToken(roleCustomer.Nombre_Rol, token, stateToken.id, newCustomer.id);
+        await accountActivationEmail(newCustomer.Correo_Cliente, token);
 
         res.status(201).send({ msg: "Se ha registrado con éxito." });
     } catch (error) {
@@ -65,7 +76,7 @@ const addCustomer = async (req, res) => {
         } else if (error.status === 404) {
             res.status(error.status).send({ error: error.message });
         } else {
-            res.status(500).send({ error: "Error interno del servidor." });
+            res.status(500).send({ error: error.message });
         }
     }
 };
