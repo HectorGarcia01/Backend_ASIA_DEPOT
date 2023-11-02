@@ -1,3 +1,4 @@
+const StateModel = require('../models/state');
 const CategoryModel = require('../models/category');
 const BrandProductModel = require('../models/brand_product');
 const ProductModel = require('../models/product');
@@ -47,11 +48,28 @@ const findProductBrand = async (id) => {
  * Fecha creación: 02/10/2023
  * Autor: Hector Armando García González
  * Referencias:
- *              Modelo Producto (product.js)
+ *              Modelo Producto (product.js),
+ *              Modelo Estado (state.js),
+ *              Modelo Categoría (category.js),
+ *              Modelo Marca_Producto (brand_product.js)
  */
 
 const findProduct = async (id) => {
-    const product = await ProductModel.findByPk(id);
+    const product = await ProductModel.findByPk(id, {
+        include: [{
+            model: StateModel,
+            as: 'estado',
+            attributes: ['id', 'Tipo_Estado']
+        }, {
+            model: CategoryModel,
+            as: 'categoria',
+            attributes: ['id', 'Nombre_Categoria']
+        }, {
+            model: BrandProductModel,
+            as: 'marca',
+            attributes: ['id', 'Nombre_Marca']
+        }]
+    });
 
     if (!product) {
         const error = new Error("Producto no encontrado.");
