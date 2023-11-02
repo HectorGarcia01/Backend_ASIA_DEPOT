@@ -5,7 +5,7 @@ const EmployeeModel = require('../models/employee');
 const findState = require('../utils/find_state');
 const findRole = require('../utils/find_role');
 const TokenModel = require('../models/token');
-const welcomeEmail = require('../email/welcome_email');
+const welcomeEmail = require('../email/controllers/welcome');
 
 /**
  * Función para activar una cuenta de usuario (cliente/empleado)
