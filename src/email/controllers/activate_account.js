@@ -12,7 +12,7 @@ const path = require('path');
 
 const accountActivationEmail = async (destination, userToken) => {
     try {
-        const html = await ejs.renderFile(path.join(__dirname, 'views/activate_account.ejs'), { userToken });
+        const html = await ejs.renderFile(path.join(__dirname, '../views/activate_account.ejs'), { userToken });
         const mailOptions = {
             from: "ASIA DEPOT",
             to: destination,

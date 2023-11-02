@@ -5,7 +5,7 @@ const {
     CLIENT_SECRET_MAIL,
     REDIRECT_URI_MAIL,
     REFRESH_TOKEN_MAIL
-} = require('../config/config');
+} = require('../../config/config');
 
 /**
  * Configuración del transportador para el uso de nodemailer

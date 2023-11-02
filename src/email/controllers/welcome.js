@@ -12,7 +12,7 @@ const path = require('path');
 
 const welcomeEmail = async (destination) => {
     try {
-        const pathHTML = path.join(__dirname, 'views/welcome.ejs');
+        const pathHTML = path.join(__dirname, '../views/welcome.ejs');
         const html = fs.readFileSync(pathHTML, 'utf8');
 
         const mailOptions = {
