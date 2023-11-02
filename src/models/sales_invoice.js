@@ -34,7 +34,7 @@ const Factura_Venta = db.define(`${NAME_PREFIX}_Factura_Venta`, {
     },
     ID_Empleado_FK: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
         references: {
             model: `${NAME_PREFIX}_Empleados`,
             key: 'id'
@@ -50,7 +50,7 @@ const Factura_Venta = db.define(`${NAME_PREFIX}_Factura_Venta`, {
     },
     ID_Metodo_Pago_FK: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
         references: {
             model: `${NAME_PREFIX}_Metodo_Pagos`,
             key: 'id'
@@ -58,7 +58,7 @@ const Factura_Venta = db.define(`${NAME_PREFIX}_Factura_Venta`, {
     },
     ID_Tipo_Envio_FK: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
         references: {
             model: `${NAME_PREFIX}_Tipo_Envios`,
             key: 'id'
