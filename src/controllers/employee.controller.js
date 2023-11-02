@@ -3,7 +3,9 @@ const findState = require('../utils/find_state');
 const findRole = require('../utils/find_role');
 const createToken = require('../utils/create_token');
 const EmployeeModel = require('../models/employee');
+const CustomerModel = require('../models/customer');
 const StateModel = require('../models/state');
+const { accountActivationEmail } = require('../email/controllers/activate_account');
 
 /**
  * Función para crear un nuevo empleado
@@ -11,9 +13,11 @@ const StateModel = require('../models/state');
  * Autor: Hector Armando García González
  * Referencias: 
  *              Modelo Empleado (employee.js), 
+ *              Modelo Cliente (customer.js),
  *              Función para buscar estado (find_state.js),
  *              Función para buscar rol (find_role.js),
- *              Función para crear un token (create_token.js)
+ *              Función para crear un token (create_token.js),
+ *              Función para enviar correo de activación de cuenta (activate_account.js)
  */
 
 const addEmployee = async (req, res) => {
@@ -26,6 +30,12 @@ const addEmployee = async (req, res) => {
             Correo_Empleado,
             Password_Empleado
         } = req.body;
+
+        const customer = await CustomerModel.findOne({ where: { Correo_Cliente: Correo_Empleado } });
+
+        if (customer) {
+            return res.status(400).send({ error: "¡El usuario ya existe!" });
+        }
 
         const stateEmployee = await findState('Pendiente');
         const roleEmployee = await findRole('Admin');
@@ -44,6 +54,7 @@ const addEmployee = async (req, res) => {
         const stateToken = await findState('Activo');
         const token = await newEmployee.generateAuthToken(newEmployee.id, roleEmployee.Nombre_Rol);
         await createToken(roleEmployee.Nombre_Rol, token, stateToken.id, newEmployee.id);
+        await accountActivationEmail(newEmployee.Correo_Empleado, token);
         
         res.status(201).send({ msg: "Empleado creado con éxito." });
     } catch (error) {
