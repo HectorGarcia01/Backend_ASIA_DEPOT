@@ -25,6 +25,7 @@ const Producto_Favorito = db.define(`${NAME_PREFIX}_Producto_Favorito`, {
     ID_Producto_FK: {
         type: DataTypes.INTEGER,
         allowNull: false,
+        unique: true,
         references: {
             model: `${NAME_PREFIX}_Productos`,
             key: 'id'
