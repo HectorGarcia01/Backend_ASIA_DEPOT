@@ -16,18 +16,18 @@ const readInventories = async (req, res) => {
         const { query } = req;
         const where = {};
 
-        if (query.tipo_movimiento) {
+        if (query.Tipo_Movimiento) {
             where.Tipo_Movimiento = {
-                [Sequelize.Op.like]: `%${query.tipo_movimiento}%`
+                [Sequelize.Op.like]: `%${query.Tipo_Movimiento}%`
             };
         }
 
-        if (query.cantidad_movimiento) {
-            where.Cantidad_Movimiento = query.cantidad_movimiento;
+        if (query.Cantidad_Movimiento) {
+            where.Cantidad_Movimiento = query.Cantidad_Movimiento;
         }
 
-        if (query.monto_movimiento) {
-            where.Monto_Movimiento = query.monto_movimiento;
+        if (query.Monto_Movimiento) {
+            where.Monto_Movimiento = query.Monto_Movimiento;
         }
 
         const inventories = await InventoryModel.findAll({ where });
