@@ -29,9 +29,12 @@ const activateUserAccount = async (req, res) => {
         const userToken = req.header('Authorization').replace('Bearer ', '');
         const decodedToken = jwt.verify(userToken, KEY_TOKEN);
 
+        const activeState = await findState('Activo');
+
         const validateToken = await TokenModel.findOne({
             where: {
-                token_usuario: userToken
+                token_usuario: userToken,
+                ID_Estado_FK: activeState.id
             }
         });
 
