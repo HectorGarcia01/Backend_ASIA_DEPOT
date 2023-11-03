@@ -77,7 +77,7 @@ const readProducts = async (req, res) => {
     try {
         const { page, pageSize } = req.query;
         const pageValue = req.query.page ? parseInt(page) : 1;
-        const pageSizeValue = req.query.pageSize ? parseInt(pageSize) : 6;
+        const pageSizeValue = req.query.pageSize ? parseInt(pageSize) : 8;
         const where = await buildWhereClause(req.query);
 
         const count = await ProductModel.count();
