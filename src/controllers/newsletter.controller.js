@@ -30,7 +30,7 @@ const subscriptionNewsletter = async (req, res) => {
         res.status(200).send({ msg: "¡Gracias por suscribirte a nuestro newsletter! Ahora estarás al tanto de nuestras últimas noticias y ofertas especiales." });
     } catch (error) {
         if (error instanceof Sequelize.UniqueConstraintError) {
-            res.status(400).send({ error: "¡Ya eres un suscriptor de nuestro newsletter! Te mantendremos actualizado con nuestras últimas noticias y ofertas." });
+            res.status(400).send({ error: "Te mantendremos actualizado con nuestras últimas noticias y ofertas." });
         } else {
             res.status(500).send({ error: "Error interno del servidor." });
         }
