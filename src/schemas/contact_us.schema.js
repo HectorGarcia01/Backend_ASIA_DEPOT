@@ -35,7 +35,7 @@ const contactUsScheme = Joi.object({
             });
         }),
     Asunto: Joi.string()
-        .pattern(new RegExp('^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\\s]+$'))
+        .pattern(new RegExp('^[^\\[\\]<>(){}_=\\\\|\\\'\';]+$'))
         .min(3)
         .max(50)
         .required()
@@ -49,7 +49,7 @@ const contactUsScheme = Joi.object({
             });
         }),
     Mensaje: Joi.string()
-        .pattern(new RegExp('^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\\s]+$'))
+        .pattern(new RegExp('^[^\\[\\]<>(){}_=\\\\|\\\'\';]+$'))
         .min(3)
         .max(200)
         .required()
@@ -61,7 +61,7 @@ const contactUsScheme = Joi.object({
                 Maximo: "El mensaje debe de tener un máximo de 200 carácteres.",
                 Valido: "El mensaje no debe de contener carácteres especiales."
             });
-        }),
+        })
 });
 
 //Exportación del esquema de validación para el formulario de contáctanos
