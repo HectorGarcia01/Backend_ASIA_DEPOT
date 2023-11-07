@@ -3,8 +3,8 @@ const db = require('../database/db_connection');
 const { NAME_PREFIX } = require('../config/config');
 const Empleado = require('../models/employee');
 const Cliente = require('../models/customer');
-const Metodo_Pago = require('../models/payment_method');
-const Tipo_Envio = require('../models/shipping_type');
+const Metodo_Pago = require('./shipping_type');
+const Tipo_Envio = require('./payment_method');
 const Estado = require('../models/state');
 
 /**
