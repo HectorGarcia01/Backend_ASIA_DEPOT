@@ -2,8 +2,10 @@ const SalesInvoiceModel = require('../models/sales_invoice');
 const SalesDetailModel = require('../models/sales_detail');
 const ProductModel = require('../models/product');
 const StateModel = require('../models/state');
+const { findProduct } = require('../utils/find_product');
+const findState = require('../utils/find_state');
 const { Sequelize } = require('sequelize');
-const sendPurchaseDetail = require('../email/purchase_detail');
+const sendPurchaseDetail = require('../email/controllers/purchase_detail');
 
 /**
  * Función para agregar productos en el carrito de compras
@@ -158,13 +160,6 @@ const updateShoppingCart = async (req, res) => {
         }
 
         const product = await findProduct(ID_Producto_FK);
-
-        if (product.Cantidad_Stock < Cantidad_Producto) {
-            return res.status(400).send({ error: "No hay suficiente stock disponible." });
-        }
-
-        const Subtotal_Venta = Cantidad_Producto * product.Precio_Venta;
-
         const stateShoppingCart = await findState('Carrito');
         let shoppingCart = await SalesInvoiceModel.findOne({
             where: {
@@ -174,12 +169,7 @@ const updateShoppingCart = async (req, res) => {
         });
 
         if (!shoppingCart) {
-            shoppingCart = await SalesInvoiceModel.create({
-                NIT_Cliente: user.nit,
-                Total_Factura: 0,
-                ID_Cliente_FK: user.id,
-                ID_Estado_FK: stateShoppingCart.id
-            });
+            return res.status(404).send({ error: "Carrito de compras no encontrado." });
         }
 
         let shoppingCartDetail = await SalesDetailModel.findOne({
@@ -189,27 +179,33 @@ const updateShoppingCart = async (req, res) => {
             }
         });
 
-        if (shoppingCartDetail) {
-            shoppingCartDetail.Cantidad_Producto = Cantidad_Producto;
-            shoppingCartDetail.Subtotal_Venta = Subtotal_Venta;
-            await shoppingCartDetail.save();
-        } else {
-            shoppingCartDetail = await SalesDetailModel.create({
-                Cantidad_Producto,
-                Precio_Unitario: product.Precio_Venta,
-                Subtotal_Venta,
-                ID_Producto_FK,
-                ID_Factura_Venta_FK: shoppingCart.id
-            });
+        if (!shoppingCartDetail) {
+            return res.status(404).send({ error: "Producto no encontrado en el carrito de compras." });
+        } 
+
+        const Nueva_Cantidad = Cantidad_Producto - shoppingCartDetail.Cantidad_Producto;
+
+        if (product.Cantidad_Stock < Nueva_Cantidad) {
+            return res.status(400).send({ error: "No hay suficiente stock disponible." });
         }
 
-        shoppingCart.Total_Factura += Subtotal_Venta;
-        await shoppingCart.save();
+        const Subtotal_Venta = Cantidad_Producto * product.Precio_Venta;
 
-        product.Cantidad_Stock -= Cantidad_Producto;
+        shoppingCartDetail.Cantidad_Producto = Cantidad_Producto;
+        shoppingCartDetail.Subtotal_Venta = Subtotal_Venta;
+        await shoppingCartDetail.save();
+
+        if (Nueva_Cantidad < 0) {
+            shoppingCart.Total_Factura += (product.Precio_Venta * Nueva_Cantidad);
+        } else {
+            shoppingCart.Total_Factura += (Subtotal_Venta - product.Precio_Venta);
+        }
+
+        product.Cantidad_Stock -= Nueva_Cantidad;
+        await shoppingCart.save();
         await product.save();
 
-        res.status(201).send({ msg: "Producto agregado al carrito con éxito." });
+        res.status(200).send({ msg: "El carrito ha sido actualizado con éxito." });
     } catch (error) {
         if (error.status === 404) {
             res.status(error.status).send({ error: error.message });
@@ -376,7 +372,7 @@ const processCustomerSale = async (req, res) => {
         salesInvoice.ID_Estado_FK = stateSalesInvoice.id;
 
         await salesInvoice.save();
-        await sendPurchaseDetail(user.correo, salesInvoice.detalles_venta);
+        // await sendPurchaseDetail(user.correo, salesInvoice.detalles_venta);
 
         res.status(200).send({ msg: `Compra procesada con éxito, tu número de orden es ${orden}.`, orden });
     } catch (error) {
