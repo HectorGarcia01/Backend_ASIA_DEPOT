@@ -63,7 +63,7 @@ const findProduct = async (id) => {
         }, {
             model: CategoryModel,
             as: 'categoria',
-            attributes: ['id', 'Nombre_Categoria']
+            attributes: ['id', 'Nombre_Categoria', 'Descripcion_Categoria']
         }, {
             model: BrandProductModel,
             as: 'marca',
