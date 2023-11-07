@@ -6,6 +6,7 @@ const PaymentMethodModel = require('../models/payment_method');
 const ShippingTypeModel = require('../models/shipping_type');
 const { findProduct } = require('../utils/find_product');
 const findState = require('../utils/find_state');
+const { findPaymentMethod, findShippingType } = require('../utils/find_shipment_information');
 const { Sequelize } = require('sequelize');
 const sendPurchaseDetail = require('../email/controllers/purchase_detail');
 
@@ -372,6 +373,10 @@ const shipmentInformation = async (req, res) => {
 const processCustomerSale = async (req, res) => {
     try {
         const { user } = req;
+        const { ID_Tipo_Envio_FK, ID_Metodo_Pago_FK } = req.body;
+
+        const payment_method = await findPaymentMethod(ID_Metodo_Pago_FK);
+        const shipping_type = await findShippingType(ID_Tipo_Envio_FK);
 
         const stateShoppingCart = await findState('Carrito');
         const salesInvoice = await SalesInvoiceModel.findOne({
@@ -397,6 +402,8 @@ const processCustomerSale = async (req, res) => {
         const orden = `ASDT-${user.id}-${salesInvoice.id}`;
         salesInvoice.numero_orden = orden;
         salesInvoice.ID_Estado_FK = stateSalesInvoice.id;
+        salesInvoice.ID_Metodo_Pago_FK = payment_method.id;
+        salesInvoice.ID_Tipo_Envio_FK = shipping_type.id;
 
         await salesInvoice.save();
         await sendPurchaseDetail(user.Correo_Cliente, orden, salesInvoice.detalles_venta, salesInvoice.Total_Factura);
