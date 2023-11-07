@@ -4,6 +4,7 @@ const CustomerModel = require('../models/customer');
 const EmployeeModel = require('../models/employee');
 const findState = require('../utils/find_state');
 const findRole = require('../utils/find_role');
+const RoleModel = require('../models/role');
 const TokenModel = require('../models/token');
 const welcomeEmail = require('../email/controllers/welcome');
 const { accountActivationEmail } = require('../email/controllers/activate_account')
@@ -31,10 +32,11 @@ const activateUserAccount = async (req, res) => {
         const decodedToken = jwt.verify(userToken, KEY_TOKEN);
 
         const activeState = await findState('Activo');
+        console.log("PRUEBA 1");
 
         const validateToken = await TokenModel.findOne({
             where: {
-                token_usuario: userToken,
+                Token_Usuario: userToken,
                 ID_Estado_FK: activeState.id
             }
         });
@@ -44,7 +46,7 @@ const activateUserAccount = async (req, res) => {
         }
 
         const stateUser = await findState('Pendiente');
-        const userRole = await findRole(decodedToken.role);
+        const userRole = await RoleModel.findOne({ Nombre_Rol: decodedToken.role });
 
         const customer = await CustomerModel.findOne({
             where: {
@@ -86,7 +88,7 @@ const activateUserAccount = async (req, res) => {
         if (error.status === 404) {
             res.status(error.status).send({ error: error.message });
         } else {
-            res.status(500).send({ error: "Error interno del servidor." });
+            res.status(500).send({ error: error.message });
         }
     }
 };
