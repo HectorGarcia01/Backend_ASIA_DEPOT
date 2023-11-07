@@ -10,9 +10,13 @@ const path = require('path');
  *              Transportador (email.js)
  */
 
-const sendPurchaseDetail = async (destination, purchaseDetail) => {
+const sendPurchaseDetail = async (destination, orden, purchaseDetail, total) => {
     try {
-        const html = await ejs.renderFile(path.join(__dirname, '../views/purchase.ejs'), { userToken, purchaseDetail });
+        const html = await ejs.renderFile(path.join(__dirname, '../views/purchase.ejs'), { 
+            orden,
+            purchaseDetail,
+            total
+        });
 
         const mailOptions = {
             from: "ASIA DEPOT",
