@@ -2,6 +2,8 @@ const SalesInvoiceModel = require('../models/sales_invoice');
 const SalesDetailModel = require('../models/sales_detail');
 const ProductModel = require('../models/product');
 const StateModel = require('../models/state');
+const PaymentMethodModel = require('../models/payment_method');
+const ShippingTypeModel = require('../models/shipping_type');
 const { findProduct } = require('../utils/find_product');
 const findState = require('../utils/find_state');
 const { Sequelize } = require('sequelize');
@@ -333,6 +335,30 @@ const deleteShoppingCart = async (req, res) => {
 };
 
 /**
+ * Función para ver la información de envío
+ * Fecha creación: 29/09/2023
+ * Autor: Hector Armando García González
+ * Referencias: 
+ *              Modelo Metodo_Pago (payment_method.js),
+ *              Modelo Tipo_Envio (shipping_type.js)
+ */
+
+const shipmentInformation = async (req, res) => {
+    try {
+        const payment_method = await PaymentMethodModel.findAll({});
+        const shipping_type = await ShippingTypeModel.findAll({});
+
+        if (!payment_method || !shipping_type) {
+            return res.status(404).send({ error: "Datos de envío no encontrados" });
+        }
+
+        res.status(200).send({ payment_method, shipping_type });
+    } catch (error) {
+        res.status(500).send({ error: "Error interno del servidor." });
+    }
+}
+
+/**
  * Función para procesar compra del cliente
  * Fecha creación: 29/09/2023
  * Autor: Hector Armando García González
@@ -555,6 +581,7 @@ module.exports = {
     updateShoppingCart,
     deleteProductIdShoppingCart,
     deleteShoppingCart,
+    shipmentInformation,
     processCustomerSale,
     cancelCustomerSaleId,
     shoppingHistory,
