@@ -299,6 +299,7 @@ const deleteShoppingCart = async (req, res) => {
                 include: {
                     model: ProductModel,
                     as: 'producto',
+                    attributes: ['id', 'Nombre_Producto', 'Descripcion_Producto']
                 }
             }]
         });
@@ -372,14 +373,14 @@ const processCustomerSale = async (req, res) => {
         salesInvoice.ID_Estado_FK = stateSalesInvoice.id;
 
         await salesInvoice.save();
-        // await sendPurchaseDetail(user.correo, salesInvoice.detalles_venta);
+        await sendPurchaseDetail(user.Correo_Cliente, orden, salesInvoice.detalles_venta, salesInvoice.Total_Factura);
 
         res.status(200).send({ msg: `Compra procesada con éxito, tu número de orden es ${orden}.`, orden });
     } catch (error) {
         if (error.status === 404) {
             res.status(error.status).send({ error: error.message });
         } else {
-            res.status(500).send({ error: "Error interno del servidor." });
+            res.status(500).send({ error: error.message });
         }
     }
 };
