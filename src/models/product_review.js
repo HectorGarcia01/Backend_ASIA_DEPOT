@@ -86,7 +86,6 @@ Valoracion_Producto.belongsTo(Producto, {
 Valoracion_Producto.prototype.toJSON = function () {
     const productReview = { ...this.get() };
 
-    delete productReview.createdAt;
     delete productReview.updatedAt;
 
     return productReview;
