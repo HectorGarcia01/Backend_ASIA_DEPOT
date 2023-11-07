@@ -6,6 +6,7 @@ const {
     updateShoppingCart,
     deleteProductIdShoppingCart,
     deleteShoppingCart,
+    shipmentInformation,
     processCustomerSale,
     cancelCustomerSaleId,
     shoppingHistory,
@@ -36,6 +37,7 @@ router.get('/usuario/historial/compras/:id', authMiddleware, roleMiddleware('Use
 router.delete('/usuario/carrito/eliminar/producto/:id', authMiddleware, roleMiddleware('User'), deleteProductIdShoppingCart);
 router.delete('/usuario/carrito/eliminar', authMiddleware, roleMiddleware('User'), deleteShoppingCart);
 router.delete('/usuario/compra/cancelar/:id', authMiddleware, roleMiddleware('User'), cancelCustomerSaleId);
+router.get('/usuario/ver/tipo/envio', authMiddleware, roleMiddleware('User'), shipmentInformation);
 router.patch('/usuario/carrito/procesar', authMiddleware, roleMiddleware('User'), processCustomerSale);
 
 module.exports = router;
