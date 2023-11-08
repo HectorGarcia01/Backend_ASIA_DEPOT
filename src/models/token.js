@@ -1,5 +1,6 @@
 const { DataTypes } = require('sequelize');
 const db = require('../database/db_connection');
+const { NAME_PREFIX } = require('../config/config');
 const Estado = require('../models/state');
 const Cliente = require('../models/customer');
 const Empleado = require('../models/employee');
@@ -14,7 +15,7 @@ const Empleado = require('../models/employee');
  *              Modelo Empleado (employee.js)
  */
 
-const Token = db.define('PRGADH_Token', {
+const Token = db.define(`${NAME_PREFIX}_Token`, {
     Token_Usuario: {
         type: DataTypes.STRING,
         allowNull: false
@@ -23,7 +24,7 @@ const Token = db.define('PRGADH_Token', {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: 'PRGADH_Estados',
+            model: `${NAME_PREFIX}_Estados`,
             key: 'id'
         }
     },
@@ -31,7 +32,7 @@ const Token = db.define('PRGADH_Token', {
         type: DataTypes.INTEGER,
         allowNull: true,
         references: {
-            model: 'PRGADH_Clientes',
+            model: `${NAME_PREFIX}_Clientes`,
             key: 'id'
         }
     },
@@ -39,7 +40,7 @@ const Token = db.define('PRGADH_Token', {
         type: DataTypes.INTEGER,
         allowNull: true,
         references: {
-            model: 'PRGADH_Empleados',
+            model: `${NAME_PREFIX}_Empleados`,
             key: 'id'
         }
     }

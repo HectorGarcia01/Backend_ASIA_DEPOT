@@ -1,6 +1,7 @@
 const Sequelize = require('sequelize');
 const { findProduct } = require('../utils/find_product');
 const ProductReviewModel = require('../models/product_review');
+const CustomerModel = require('../models/customer');
 
 /**
  * Función para agregar una reseña del producto
@@ -53,7 +54,13 @@ const readProductReviews = async (req, res) => {
         const productReviews = await ProductReviewModel.findAll({ 
             where: {
                 ID_Producto_FK: id
-            }
+            }, 
+            attributes: ['id', 'Comentario_Producto', 'Puntuacion_Producto', 'createdAt'],
+            include: [{
+                model: CustomerModel,
+                as: 'cliente',
+                attributes: ['Nombre_Cliente']
+            }]
         });
 
         if (productReviews.length === 0) {

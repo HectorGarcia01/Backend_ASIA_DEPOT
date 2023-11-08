@@ -9,7 +9,7 @@ const {
 const productoReviewSchema = require('../schemas/product_review.schema');
 const validateMiddleware = require('../middlewares/validate');
 const authMiddleware = require('../middlewares/auth');
-const roleMiddleware = require('../middlewares/check_rol');
+const roleMiddleware = require('../middlewares/check_role_permission');
 
 router.post(
     '/usuario/nueva/valoracion/producto', 

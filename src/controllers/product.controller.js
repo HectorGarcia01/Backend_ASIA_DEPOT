@@ -9,6 +9,7 @@ const ProductModel = require('../models/product');
 const StateModel = require('../models/state');
 const CategoryModel = require('../models/category');
 const BrandProductModel = require('../models/brand_product');
+const buildWhereClause = require('../utils/build_where_clause');
 
 /**
  * Función para registrar un nuevo producto
@@ -67,11 +68,21 @@ const addProduct = async (req, res) => {
  * Autor: Hector Armando García González
  * Referencias:
  *              Modelo Producto (product.js), 
+ *              Modelo Estado (state.js),
+ *              Modelo Categoría (category.js),
+ *              Modelo Marca_Producto (brand_product.js)
  */
 
 const readProducts = async (req, res) => {
     try {
+        const { page, pageSize } = req.query;
+        const pageValue = req.query.page ? parseInt(page) : 1;
+        const pageSizeValue = req.query.pageSize ? parseInt(pageSize) : 8;
+        const where = await buildWhereClause(req.query);
+
+        const count = await ProductModel.count();
         const products = await ProductModel.findAll({
+            where,
             include: [{
                 model: StateModel,
                 as: 'estado',
@@ -79,17 +90,22 @@ const readProducts = async (req, res) => {
             }, {
                 model: CategoryModel,
                 as: 'categoria',
+                attributes: ['id', 'Nombre_Categoria']
             }, {
                 model: BrandProductModel,
                 as: 'marca',
-            }]
+                attributes: ['id', 'Nombre_Marca']
+            }],
+            offset: (pageValue - 1) * pageSizeValue,
+            limit: pageSizeValue
         });
 
         if (products.length === 0) {
             return res.status(404).send({ error: "No hay productos registrados." });
         }
 
-        res.status(200).send({ products });
+        const totalPages = Math.ceil(count / pageSizeValue);
+        res.status(200).send({ products, currentPage: pageValue, totalPages });
     } catch (error) {
         res.status(500).send({ error: "Error interno del servidor." });
     }

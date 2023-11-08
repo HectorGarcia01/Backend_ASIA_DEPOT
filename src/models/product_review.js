@@ -1,5 +1,6 @@
 const { DataTypes } = require('sequelize');
 const db = require('../database/db_connection');
+const { NAME_PREFIX } = require('../config/config');
 const Cliente = require('../models/customer');
 const Producto = require('../models/product');
 
@@ -11,7 +12,7 @@ const Producto = require('../models/product');
  *              Modelo Producto (product.js)
  */
 
-const Valoracion_Producto = db.define('PRGADH_Valoracion_Producto', {
+const Valoracion_Producto = db.define(`${NAME_PREFIX}_Valoracion_Producto`, {
     Comentario_Producto: {
         type: DataTypes.STRING(200),
         allowNull: true
@@ -24,7 +25,7 @@ const Valoracion_Producto = db.define('PRGADH_Valoracion_Producto', {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: 'PRGADH_Clientes',
+            model: `${NAME_PREFIX}_Clientes`,
             key: 'id'
         }
     },
@@ -32,7 +33,7 @@ const Valoracion_Producto = db.define('PRGADH_Valoracion_Producto', {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: 'PRGADH_Productos',
+            model: `${NAME_PREFIX}_Productos`,
             key: 'id'
         }
     }
@@ -85,7 +86,6 @@ Valoracion_Producto.belongsTo(Producto, {
 Valoracion_Producto.prototype.toJSON = function () {
     const productReview = { ...this.get() };
 
-    delete productReview.createdAt;
     delete productReview.updatedAt;
 
     return productReview;

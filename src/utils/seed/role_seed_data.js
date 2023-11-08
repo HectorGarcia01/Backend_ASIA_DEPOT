@@ -1,4 +1,4 @@
-//Exportación de tipo de estados
+//Exportación de nombre de roles
 module.exports = [
     { Nombre_Rol: 'User' },
     { Nombre_Rol: 'Admin' },

@@ -2,7 +2,7 @@ const { DataTypes } = require('sequelize');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const db = require('../database/db_connection');
-const { KEY_TOKEN } = require('../config/config');
+const { KEY_TOKEN, NAME_PREFIX } = require('../config/config');
 const Municipio = require('../models/municipality');
 const Departamento = require('../models/department');
 const Estado = require('../models/state');
@@ -17,7 +17,7 @@ const Estado = require('../models/state');
  *              Modelo Rol (role.js).
  */
 
-const Cliente = db.define('PRGADH_Cliente', {
+const Cliente = db.define(`${NAME_PREFIX}_Cliente`, {
     Nombre_Cliente: {
         type: DataTypes.STRING(30),
         allowNull: false
@@ -56,7 +56,7 @@ const Cliente = db.define('PRGADH_Cliente', {
         type: DataTypes.INTEGER,
         allowNull: true,
         references: {
-            model: 'PRGADH_Municipios',
+            model: `${NAME_PREFIX}_Municipios`,
             key: 'id'
         }
     },
@@ -64,7 +64,7 @@ const Cliente = db.define('PRGADH_Cliente', {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: 'PRGADH_Estados',
+            model: `${NAME_PREFIX}_Estados`,
             key: 'id'
         }
     },
@@ -72,7 +72,7 @@ const Cliente = db.define('PRGADH_Cliente', {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: 'PRGADH_Rols',
+            model: `${NAME_PREFIX}_Rols`,
             key: 'id'
         }
     }
@@ -134,7 +134,8 @@ Cliente.beforeCreate(async (customer) => {
  */
 
 Cliente.prototype.generateAuthToken = (id, rol) => {
-    const token = jwt.sign({ id: id.toString(), rol }, KEY_TOKEN);
+    const expiresIn = '1d';
+    const token = jwt.sign({ id: id.toString(), rol }, KEY_TOKEN, { expiresIn });
     return token;
 };
 

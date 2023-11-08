@@ -1,5 +1,6 @@
 const { DataTypes } = require('sequelize');
 const db = require('../database/db_connection');
+const { NAME_PREFIX } = require('../config/config');
 const Departamento = require('../models/department');
 
 /**
@@ -10,7 +11,7 @@ const Departamento = require('../models/department');
  *              Modelo Departamento (department.js)
  */
 
-const Municipio = db.define('PRGADH_Municipio', {
+const Municipio = db.define(`${NAME_PREFIX}_Municipio`, {
     Nombre_Municipio: {
         type: DataTypes.STRING(30),
         allowNull: false
@@ -19,7 +20,7 @@ const Municipio = db.define('PRGADH_Municipio', {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: 'PRGADH_Departamentos',
+            model: `${NAME_PREFIX}_Departamentos`,
             key: 'id'
         }
     },

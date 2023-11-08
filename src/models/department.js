@@ -1,5 +1,6 @@
 const { DataTypes } = require('sequelize');
 const db = require('../database/db_connection');
+const { NAME_PREFIX } = require('../config/config');
 
 /**
  * Creación del modelo Departamento
@@ -7,7 +8,7 @@ const db = require('../database/db_connection');
  * Autor: Hector Armando García González
  */
 
-const Departamento = db.define('PRGADH_Departamento', {
+const Departamento = db.define(`${NAME_PREFIX}_Departamento`, {
     Nombre_Departamento: {
         type: DataTypes.STRING(30),
         allowNull: false,

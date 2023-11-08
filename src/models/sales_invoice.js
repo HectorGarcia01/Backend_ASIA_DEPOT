@@ -1,9 +1,10 @@
 const { DataTypes } = require('sequelize');
 const db = require('../database/db_connection');
+const { NAME_PREFIX } = require('../config/config');
 const Empleado = require('../models/employee');
 const Cliente = require('../models/customer');
-const Metodo_Pago = require('../models/payment_method');
-const Tipo_Envio = require('../models/shipping_type');
+const Metodo_Pago = require('./shipping_type');
+const Tipo_Envio = require('./payment_method');
 const Estado = require('../models/state');
 
 /**
@@ -18,9 +19,13 @@ const Estado = require('../models/state');
  *              Modelo Estado (state.js)
  */
 
-const Factura_Venta = db.define('PRGADH_Factura_Venta', {
+const Factura_Venta = db.define(`${NAME_PREFIX}_Factura_Venta`, {
     NIT_Cliente: {
         type: DataTypes.INTEGER,
+        allowNull: true
+    },
+    Numero_Orden: {
+        type: DataTypes.STRING(100),
         allowNull: true
     },
     Total_Factura: {
@@ -29,9 +34,9 @@ const Factura_Venta = db.define('PRGADH_Factura_Venta', {
     },
     ID_Empleado_FK: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
         references: {
-            model: 'PRGADH_Empleados',
+            model: `${NAME_PREFIX}_Empleados`,
             key: 'id'
         }
     },
@@ -39,23 +44,23 @@ const Factura_Venta = db.define('PRGADH_Factura_Venta', {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: 'PRGADH_Proveedors',
+            model: `${NAME_PREFIX}_Clientes`,
             key: 'id'
         }
     },
     ID_Metodo_Pago_FK: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
         references: {
-            model: 'PRGADH_Metodo_Pagos',
+            model: `${NAME_PREFIX}_Metodo_Pagos`,
             key: 'id'
         }
     },
     ID_Tipo_Envio_FK: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
         references: {
-            model: 'PRGADH_Tipo_Envios',
+            model: `${NAME_PREFIX}_Tipo_Envios`,
             key: 'id'
         }
     },
@@ -63,7 +68,7 @@ const Factura_Venta = db.define('PRGADH_Factura_Venta', {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: 'PRGADH_Estados',
+            model: `${NAME_PREFIX}_Estados`,
             key: 'id'
         }
     }

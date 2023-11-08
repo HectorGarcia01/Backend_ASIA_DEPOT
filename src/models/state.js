@@ -1,5 +1,6 @@
 const { DataTypes } = require('sequelize');
 const db = require('../database/db_connection');
+const { NAME_PREFIX } = require('../config/config');
 
 /**
  * Creación del modelo Estado
@@ -7,7 +8,7 @@ const db = require('../database/db_connection');
  * Autor: Hector Armando García González
  */
 
-const Estado = db.define('PRGADH_Estado', {
+const Estado = db.define(`${NAME_PREFIX}_Estado`, {
     Tipo_Estado: {
         type: DataTypes.STRING(10),
         allowNull: false,

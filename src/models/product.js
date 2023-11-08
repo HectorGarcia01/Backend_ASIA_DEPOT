@@ -1,5 +1,6 @@
 const { DataTypes } = require('sequelize');
 const db = require('../database/db_connection');
+const { NAME_PREFIX } = require('../config/config');
 const Estado = require('../models/state');
 const Categoria = require('../models/category');
 const Marca = require('../models/brand_product');
@@ -14,7 +15,7 @@ const Marca = require('../models/brand_product');
  *              Modelo Marca (brand_product)
  */
 
-const Producto = db.define('PRGADH_Producto', {
+const Producto = db.define(`${NAME_PREFIX}_Producto`, {
     Nombre_Producto: {
         type: DataTypes.STRING(50),
         allowNull: false
@@ -43,11 +44,16 @@ const Producto = db.define('PRGADH_Producto', {
         type: DataTypes.BLOB,
         allowNull: true
     },
+    Producto_Destacado: {
+        type: DataTypes.BOOLEAN, 
+        allowNull: false, 
+        defaultValue: false 
+    },
     ID_Estado_FK: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: 'PRGADH_Estados',
+            model: `${NAME_PREFIX}_Estados`,
             key: 'id'
         }
     },
@@ -55,7 +61,7 @@ const Producto = db.define('PRGADH_Producto', {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: 'PRGADH_Categoria',
+            model: `${NAME_PREFIX}_Categoria`,
             key: 'id'
         }
     },
@@ -63,7 +69,7 @@ const Producto = db.define('PRGADH_Producto', {
         type: DataTypes.INTEGER,
         allowNull: true,
         references: {
-            model: 'PRGADH_Marca_Productos',
+            model: `${NAME_PREFIX}_Marca_Productos`,
             key: 'id'
         }
     }

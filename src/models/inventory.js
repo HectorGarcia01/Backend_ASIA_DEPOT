@@ -1,5 +1,6 @@
 const { DataTypes } = require('sequelize');
 const db = require('../database/db_connection');
+const { NAME_PREFIX } = require('../config/config');
 const Empleado = require('../models/employee');
 const Producto = require('../models/product');
 
@@ -12,7 +13,7 @@ const Producto = require('../models/product');
  *              Modelo Producto (product.js)
  */
 
-const Inventario = db.define('PRGADH_Inventario', {
+const Inventario = db.define(`${NAME_PREFIX}_Inventario`, {
     Tipo_Movimiento: {
         type: DataTypes.STRING(6),
         allowNull: false,
@@ -22,11 +23,15 @@ const Inventario = db.define('PRGADH_Inventario', {
         type: DataTypes.INTEGER,
         allowNull: false
     },
+    Monto_Movimiento: {
+        type: DataTypes.DOUBLE,
+        allowNull: false
+    },
     ID_Empleado_FK: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: 'PRGADH_Empleados',
+            model: `${NAME_PREFIX}_Empleados`,
             key: 'id'
         }
     },
@@ -34,7 +39,7 @@ const Inventario = db.define('PRGADH_Inventario', {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: 'PRGADH_Productos',
+            model: `${NAME_PREFIX}_Productos`,
             key: 'id'
         }
     }

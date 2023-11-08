@@ -1,5 +1,6 @@
 const { DataTypes } = require('sequelize');
 const db = require('../database/db_connection');
+const { NAME_PREFIX } = require('../config/config');
 const Estado = require('../models/state');
 
 /**
@@ -8,7 +9,7 @@ const Estado = require('../models/state');
  * Autor: Hector Armando García González
  */
 
-const Categoria = db.define('PRGADH_Categoria', {
+const Categoria = db.define(`${NAME_PREFIX}_Categoria`, {
     Nombre_Categoria: {
         type: DataTypes.STRING(50),
         allowNull: false,
@@ -22,7 +23,7 @@ const Categoria = db.define('PRGADH_Categoria', {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: 'PRGADH_Estados',
+            model: `${NAME_PREFIX}_Estados`,
             key: 'id'
         }
     }

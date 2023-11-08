@@ -1,5 +1,6 @@
 const { DataTypes } = require('sequelize');
 const db = require('../database/db_connection');
+const { NAME_PREFIX } = require('../config/config');
 const Empleado = require('../models/employee');
 const Proveedor = require('../models/supplier');
 
@@ -12,7 +13,7 @@ const Proveedor = require('../models/supplier');
  *              Modelo Proveedor (supplier.js)
  */
 
-const Factura_Compra = db.define('PRGADH_Factura_Compra', {
+const Factura_Compra = db.define(`${NAME_PREFIX}_Factura_Compra`, {
     Total_Factura: {
         type: DataTypes.DOUBLE,
         allowNull: false
@@ -21,7 +22,7 @@ const Factura_Compra = db.define('PRGADH_Factura_Compra', {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: 'PRGADH_Empleados',
+            model: `${NAME_PREFIX}_Empleados`,
             key: 'id'
         }
     },
@@ -29,7 +30,7 @@ const Factura_Compra = db.define('PRGADH_Factura_Compra', {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: 'PRGADH_Proveedors',
+            model: `${NAME_PREFIX}_Proveedors`,
             key: 'id'
         }
     }

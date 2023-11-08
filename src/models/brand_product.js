@@ -1,5 +1,6 @@
 const { DataTypes } = require('sequelize');
 const db = require('../database/db_connection');
+const { NAME_PREFIX } = require('../config/config');
 const Estado = require('../models/state');
 
 /**
@@ -8,7 +9,7 @@ const Estado = require('../models/state');
  * Autor: Hector Armando García González
  */
 
-const Marca_Producto = db.define('PRGADH_Marca_Producto', {
+const Marca_Producto = db.define(`${NAME_PREFIX}_Marca_Producto`, {
     Nombre_Marca: {
         type: DataTypes.STRING(50),
         allowNull: false,
@@ -18,7 +19,7 @@ const Marca_Producto = db.define('PRGADH_Marca_Producto', {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: 'PRGADH_Estados',
+            model: `${NAME_PREFIX}_Estados`,
             key: 'id'
         }
     }
