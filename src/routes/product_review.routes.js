@@ -2,6 +2,7 @@ const express = require('express');
 const router = new express.Router();
 const {
     addProductReview,
+    readAllProductReviews,
     readProductReviews,
     readCustomerReviews,
     updateCustomerReviewId
@@ -18,6 +19,7 @@ router.post(
     validateMiddleware(productoReviewSchema), 
     addProductReview
 );
+router.get('/usuario/ver/valoraciones/productos', readAllProductReviews);
 router.get('/usuario/ver/todas/valoraciones/producto/:id', readProductReviews);
 router.get('/usuario/ver/tus/valoraciones/producto/:id', authMiddleware, roleMiddleware('User'), readCustomerReviews);
 router.patch('/usuario/actualizar/tu/valoracion/producto/:id', authMiddleware, roleMiddleware('User'), updateCustomerReviewId);
