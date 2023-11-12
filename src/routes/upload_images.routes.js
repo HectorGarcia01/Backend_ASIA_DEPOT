@@ -62,7 +62,7 @@ router.get('/superAdmin/ver/avatars/:id', authMiddleware, roleMiddleware('SuperA
 
 //Configuración de rutas (endpoints) para el producto
 router.post(
-    '/superAdmin/subir/foto/producto',
+    '/superAdmin/subir/foto/producto/:id',
     authMiddleware,
     roleMiddleware('SuperAdmin', 'Modificar'),
     uploadMiddleware.single('avatar'),
@@ -72,7 +72,7 @@ router.post(
     }
 );
 router.post(
-    '/admin/subir/avatar',
+    '/admin/subir/foto/producto/:id',
     authMiddleware,
     roleMiddleware('Admin', 'Modificar'),
     uploadMiddleware.single('avatar'),
@@ -81,10 +81,11 @@ router.post(
         res.status(400).send({ error: error.message });
     }
 );
-router.get('/superAdmin/ver/foto/producto', authMiddleware, roleMiddleware('SuperAdmin', 'Ver'), getProductPhoto);
-router.get('/admin/ver/avatar', authMiddleware, roleMiddleware('Admin', 'Ver'), getProductPhoto);
-router.delete('/superAdmin/eliminar/foto/producto', authMiddleware, roleMiddleware('SuperAdmin', 'Eliminar'), deleteProductPhoto);
-router.delete('/admin/eliminar/avatar', authMiddleware, roleMiddleware('Admin', 'Eliminar'), deleteProductPhoto);
+router.get('/usuario/ver/foto/producto/:id', getProductPhoto);
+router.get('/superAdmin/ver/foto/producto/:id', authMiddleware, roleMiddleware('SuperAdmin', 'Ver'), getProductPhoto);
+router.get('/admin/ver/foto/producto/:id', authMiddleware, roleMiddleware('Admin', 'Ver'), getProductPhoto);
+router.delete('/superAdmin/eliminar/foto/producto/:id', authMiddleware, roleMiddleware('SuperAdmin', 'Eliminar'), deleteProductPhoto);
+router.delete('/admin/eliminar/foto/producto/:id', authMiddleware, roleMiddleware('Admin', 'Eliminar'), deleteProductPhoto);
 
 //Exportación de todas las rutas para el manejo de imágen
 module.exports = router;
