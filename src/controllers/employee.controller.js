@@ -205,6 +205,38 @@ const deleteEmployeeId = async (req, res) => {
     }
 };
 
+/**
+ * Función para activar un empleado por id
+ * Fecha creación: 16/08/2023
+ * Autor: Hector Armando García González
+ * Referencias:
+ *              Modelo Empleado (employee.js),
+ *              Función para buscar estado (find_state.js)
+ */
+
+const activateEmployeeId = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const employee = await EmployeeModel.findByPk(id);
+
+        if (!employee) {
+            return res.status(404).send({ error: "Empleado no encontrado." });
+        }
+
+        const stateEmployee = await findState('Activo');
+
+        employee.ID_Estado_FK = stateEmployee.id;
+        await employee.save();
+        res.status(200).send({ msg: "Empleado activado con éxito." });
+    } catch (error) {
+        if (error.status === 404) {
+            res.status(error.status).send({ error: error.message });
+        } else {
+            res.status(500).send({ error: "Error interno del servidor." });
+        }
+    }
+};
+
 //Exportación de controladores para el empleado
 module.exports = {
     addEmployee,
@@ -212,5 +244,6 @@ module.exports = {
     updateEmployee,
     readEmployees,
     readEmployeeId,
-    deleteEmployeeId
+    deleteEmployeeId,
+    activateEmployeeId
 };
