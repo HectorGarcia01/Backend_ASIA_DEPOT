@@ -122,7 +122,11 @@ const updateEmployee = async (req, res) => {
 
 const readEmployees = async (req, res) => {
     try {
+        const roleEmployee = await findRole('Admin');
         const employees = await EmployeeModel.findAll({
+            where: {
+                ID_Rol_FK: roleEmployee.id
+            },
             include: [{
                 model: StateModel,
                 as: 'estado',
