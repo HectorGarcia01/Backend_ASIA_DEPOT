@@ -1,6 +1,7 @@
 const Sequelize = require('sequelize');
 const { findProduct } = require('../utils/find_product');
 const ProductReviewModel = require('../models/product_review');
+const ProductModel = require('../models/product');
 const CustomerModel = require('../models/customer');
 
 /**
@@ -46,6 +47,43 @@ const addProductReview = async (req, res) => {
  * Autor: Hector Armando García González
  * Referencias:
  *              Modelo Valoración de Producto (product_review.js), 
+ *              Modelo Cliente (customer.js),
+ *              Modelo Producto (product.js)
+ */
+
+const readAllProductReviews = async (req, res) => {
+    try {
+        const productReviews = await ProductReviewModel.findAll({
+            attributes: ['id', 'Comentario_Producto', 'Puntuacion_Producto', 'createdAt'],
+            include: [{
+                model: CustomerModel,
+                as: 'cliente',
+                attributes: ['id', 'Nombre_Cliente', 'Apellido_Cliente']
+            }, {
+                model: ProductModel,
+                as: 'producto',
+                attributes: ['Nombre_Producto']
+            }],
+            order: [['createdAt', 'DESC']]
+        });
+
+        if (productReviews.length === 0) {
+            return res.status(404).send({ error: "No hay reseñas para el producto." });
+        }
+
+        res.status(200).send({ productReviews });
+    } catch (error) {
+        res.status(500).send({ error: "Error interno del servidor." });
+    }
+};
+
+/**
+ * Función para ver todas las reseñas de un producto por id
+ * Fecha creación: 28/08/2023
+ * Autor: Hector Armando García González
+ * Referencias:
+ *              Modelo Valoración de Producto (product_review.js), 
+ *              Modelo Cliente (customer.js)
  */
 
 const readProductReviews = async (req, res) => {
@@ -59,8 +97,9 @@ const readProductReviews = async (req, res) => {
             include: [{
                 model: CustomerModel,
                 as: 'cliente',
-                attributes: ['Nombre_Cliente']
-            }]
+                attributes: ['id', 'Nombre_Cliente']
+            }],
+            order: [['createdAt', 'DESC']]
         });
 
         if (productReviews.length === 0) {
@@ -147,6 +186,7 @@ const updateCustomerReviewId = async (req, res) => {
 //Exportación de controladores para la reseña del producto
 module.exports = {
     addProductReview,
+    readAllProductReviews,
     readProductReviews,
     readCustomerReviews,
     updateCustomerReviewId

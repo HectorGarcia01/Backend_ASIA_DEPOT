@@ -8,6 +8,7 @@ const findRole = require('../utils/find_role');
 const createToken = require('../utils/create_token');
 const CustomerModel = require('../models/customer');
 const EmployeeModel = require('../models/employee');
+const StateModel = require('../models/state');
 const { accountActivationEmail } = require('../email/controllers/activate_account');
 
 /**
@@ -147,9 +148,135 @@ const updateCustomer = async (req, res) => {
     }
 };
 
+/**
+ * Función para ver todos los clientes
+ * Fecha creación: 16/08/2023
+ * Autor: Hector Armando García González
+ * Referencias:
+ *              Modelo Cliente (customer.js),
+ *              Función para buscar estado (find_state.js)
+ */
+
+const readCustomers = async (req, res) => {
+    try {
+        const customers = await CustomerModel.findAll({
+            include: [{
+                model: StateModel,
+                as: 'estado',
+                attributes: ['Tipo_Estado']
+            }]
+        });
+
+        if (customers.length === 0) {
+            return res.status(404).send({ error: "No existe ningún cliente registrado." });
+        }
+
+        res.status(200).send({ customers });
+    } catch (error) {
+        res.status(500).send({ error: "Error interno del servidor." });
+    }
+};
+
+/**
+ * Función para ver un cliente por ID
+ * Fecha creación: 16/08/2023
+ * Autor: Hector Armando García González
+ * Referencias:
+ *              Modelo Cliente (customer.js),
+ */
+
+const readCustomerId = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const customer = await CustomerModel.findByPk(id, {
+            include: [{
+                model: StateModel,
+                as: 'estado',
+                attributes: ['Tipo_Estado']
+            }]
+        });
+
+        if (!customer) {
+            return res.status(404).send({ error: "Cliente no encontrado." });
+        }
+
+        res.status(200).send({ customer });
+    } catch (error) {
+        res.status(500).send({ error: "Error interno del servidor." });
+    }
+};
+
+/**
+ * Función para eliminar de forma lógica un cliente por id
+ * Fecha creación: 16/08/2023
+ * Autor: Hector Armando García González
+ * Referencias:
+ *              Modelo Cliente (customer.js),
+ *              Función para buscar estado (find_state.js)
+ */
+
+const deleteCustomerId = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const customer = await CustomerModel.findByPk(id);
+
+        if (!customer) {
+            return res.status(404).send({ error: "Cliente no encontrado." });
+        }
+
+        const stateCustomer = await findState('Inactivo');
+
+        customer.ID_Estado_FK = stateCustomer.id;
+        await customer.save();
+        res.status(200).send({ msg: "Cliente eliminado con éxito." });
+    } catch (error) {
+        if (error.status === 404) {
+            res.status(error.status).send({ error: error.message });
+        } else {
+            res.status(500).send({ error: "Error interno del servidor." });
+        }
+    }
+};
+
+/**
+ * Función para activar un cliente por id
+ * Fecha creación: 16/08/2023
+ * Autor: Hector Armando García González
+ * Referencias:
+ *              Modelo Empleado (employee.js),
+ *              Función para buscar estado (find_state.js)
+ */
+
+const activateCustomerId = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const customer = await CustomerModel.findByPk(id);
+
+        if (!customer) {
+            return res.status(404).send({ error: "Cliente no encontrado." });
+        }
+
+        const stateCustomer = await findState('Activo');
+
+        customer.ID_Estado_FK = stateCustomer.id;
+        await customer.save();
+        res.status(200).send({ msg: "Cliente activado con éxito." });
+    } catch (error) {
+        if (error.status === 404) {
+            res.status(error.status).send({ error: error.message });
+        } else {
+            res.status(500).send({ error: "Error interno del servidor." });
+        }
+    }
+};
+
 //Exportación de controladores para el cliente
 module.exports = {
     addCustomer,
     customerProfile,
-    updateCustomer
+    updateCustomer,
+    readCustomers,
+    readCustomerId,
+    deleteCustomerId,
+    activateCustomerId
 };

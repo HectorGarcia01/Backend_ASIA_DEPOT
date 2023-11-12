@@ -42,7 +42,7 @@ const Empleado = db.define(`${NAME_PREFIX}_Empleado`, {
         allowNull: false
     },
     Avatar_Empleado: {
-        type: DataTypes.BLOB,
+        type: DataTypes.BLOB('long'),
         allowNull: true
     },
     ID_Estado_FK: {
@@ -145,7 +145,6 @@ Empleado.prototype.toJSON = function () {
     delete employee.Password_Empleado;
     delete employee.ID_Estado_FK;
     delete employee.ID_Rol_FK;
-    delete employee.createdAt;
     delete employee.updatedAt;
     
     return employee;

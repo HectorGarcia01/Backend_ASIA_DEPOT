@@ -4,6 +4,7 @@ const ProductModel = require('../models/product');
 const StateModel = require('../models/state');
 const PaymentMethodModel = require('../models/payment_method');
 const ShippingTypeModel = require('../models/shipping_type');
+const CustomerModel = require('../models/customer');
 const { findProduct } = require('../utils/find_product');
 const findState = require('../utils/find_state');
 const { findPaymentMethod, findShippingType } = require('../utils/find_shipment_information');
@@ -186,6 +187,7 @@ const updateShoppingCart = async (req, res) => {
             return res.status(404).send({ error: "Producto no encontrado en el carrito de compras." });
         } 
 
+        shoppingCart.Total_Factura -= shoppingCartDetail.Subtotal_Venta;
         const Nueva_Cantidad = Cantidad_Producto - shoppingCartDetail.Cantidad_Producto;
 
         if (product.Cantidad_Stock < Nueva_Cantidad) {
@@ -198,12 +200,13 @@ const updateShoppingCart = async (req, res) => {
         shoppingCartDetail.Subtotal_Venta = Subtotal_Venta;
         await shoppingCartDetail.save();
 
-        if (Nueva_Cantidad < 0) {
-            shoppingCart.Total_Factura += (product.Precio_Venta * Nueva_Cantidad);
-        } else {
-            shoppingCart.Total_Factura += (Subtotal_Venta - product.Precio_Venta);
-        }
+        // if (Nueva_Cantidad < 0) {
+        //     shoppingCart.Total_Factura += (product.Precio_Venta * Nueva_Cantidad);
+        // } else {
+        //     shoppingCart.Total_Factura += (Subtotal_Venta - product.Precio_Venta);
+        // }
 
+        shoppingCart.Total_Factura += shoppingCartDetail.Subtotal_Venta;
         product.Cantidad_Stock -= Nueva_Cantidad;
         await shoppingCart.save();
         await product.save();
@@ -505,24 +508,42 @@ const shoppingHistory = async (req, res) => {
                     [Sequelize.Op.notIn]: [inactiveStatusShopping.id, carritoStatusShopping.id]
                 }
             },
-            attributes: ['id', 'numero_orden', 'Total_Factura'],
-            include: {
+            attributes: ['id', 'Numero_Orden', 'Total_Factura', 'createdAt'],
+            include: [{
+                model: SalesDetailModel,
+                as: 'detalles_venta',
+                attributes: ['id', 'Cantidad_Producto', 'Precio_Unitario', 'Subtotal_Venta'],
+            }, {
+                model: CustomerModel,
+                as: 'cliente',
+                attributes: ['Nombre_Cliente', 'Apellido_Cliente']
+            }, {
                 model: StateModel,
                 as: 'estado',
-                attributes: ['id', 'nombre_estado']
-            }
+                attributes: ['id', 'Tipo_Estado']
+            }]
         });
 
         if (customerPurchase.length === 0) {
             return res.status(404).send({ error: "No tienes ninguna compra procesada." });
         }
 
-        res.status(200).send({ shoppingHistory: customerPurchase });
+        let countProducts = [];
+        let sumProduct = 0;
+        for (const details of customerPurchase) {
+            for (const detail of details.detalles_venta) {
+                sumProduct += detail.Cantidad_Producto;
+            }
+            countProducts.push(sumProduct);
+            sumProduct = 0;
+        }
+        
+        res.status(200).send({ shoppingHistory: customerPurchase, countProducts });
     } catch (error) {
         if (error.status === 404) {
             res.status(error.status).send({ error: error.message });
         } else {
-            res.status(500).send({ error: "Error interno del servidor." });
+            res.status(500).send({ error: error.message });
         }
     }
 };
@@ -562,13 +583,13 @@ const shoppingHistoryId = async (req, res) => {
                 include: {
                     model: ProductModel,
                     as: 'producto',
-                    attributes: ['id', 'nombre_producto', 'descripcion_producto']
+                    attributes: ['id', 'Nombre_Producto', 'Descripcion_Producto']
                 }
             },
             {
                 model: StateModel,
                 as: 'estado',
-                attributes: ['id', 'nombre_estado']
+                attributes: ['id', 'Tipo_Estado']
             }]
         });
 
