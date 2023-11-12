@@ -187,6 +187,7 @@ const updateShoppingCart = async (req, res) => {
             return res.status(404).send({ error: "Producto no encontrado en el carrito de compras." });
         } 
 
+        shoppingCart.Total_Factura -= shoppingCartDetail.Subtotal_Venta;
         const Nueva_Cantidad = Cantidad_Producto - shoppingCartDetail.Cantidad_Producto;
 
         if (product.Cantidad_Stock < Nueva_Cantidad) {
@@ -199,12 +200,13 @@ const updateShoppingCart = async (req, res) => {
         shoppingCartDetail.Subtotal_Venta = Subtotal_Venta;
         await shoppingCartDetail.save();
 
-        if (Nueva_Cantidad < 0) {
-            shoppingCart.Total_Factura += (product.Precio_Venta * Nueva_Cantidad);
-        } else {
-            shoppingCart.Total_Factura += (Subtotal_Venta - product.Precio_Venta);
-        }
+        // if (Nueva_Cantidad < 0) {
+        //     shoppingCart.Total_Factura += (product.Precio_Venta * Nueva_Cantidad);
+        // } else {
+        //     shoppingCart.Total_Factura += (Subtotal_Venta - product.Precio_Venta);
+        // }
 
+        shoppingCart.Total_Factura += shoppingCartDetail.Subtotal_Venta;
         product.Cantidad_Stock -= Nueva_Cantidad;
         await shoppingCart.save();
         await product.save();
