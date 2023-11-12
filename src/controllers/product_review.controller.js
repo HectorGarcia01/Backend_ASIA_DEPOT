@@ -97,7 +97,7 @@ const readProductReviews = async (req, res) => {
             include: [{
                 model: CustomerModel,
                 as: 'cliente',
-                attributes: ['Nombre_Cliente']
+                attributes: ['id', 'Nombre_Cliente']
             }],
             order: [['createdAt', 'DESC']]
         });
