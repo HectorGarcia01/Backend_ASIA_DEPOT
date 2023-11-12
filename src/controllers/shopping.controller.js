@@ -4,6 +4,7 @@ const ProductModel = require('../models/product');
 const StateModel = require('../models/state');
 const PaymentMethodModel = require('../models/payment_method');
 const ShippingTypeModel = require('../models/shipping_type');
+const CustomerModel = require('../models/customer');
 const { findProduct } = require('../utils/find_product');
 const findState = require('../utils/find_state');
 const { findPaymentMethod, findShippingType } = require('../utils/find_shipment_information');
@@ -505,24 +506,42 @@ const shoppingHistory = async (req, res) => {
                     [Sequelize.Op.notIn]: [inactiveStatusShopping.id, carritoStatusShopping.id]
                 }
             },
-            attributes: ['id', 'Numero_Orden', 'Total_Factura'],
-            include: {
+            attributes: ['id', 'Numero_Orden', 'Total_Factura', 'createdAt'],
+            include: [{
+                model: SalesDetailModel,
+                as: 'detalles_venta',
+                attributes: ['id', 'Cantidad_Producto', 'Precio_Unitario', 'Subtotal_Venta'],
+            }, {
+                model: CustomerModel,
+                as: 'cliente',
+                attributes: ['Nombre_Cliente', 'Apellido_Cliente']
+            }, {
                 model: StateModel,
                 as: 'estado',
                 attributes: ['id', 'Tipo_Estado']
-            }
+            }]
         });
 
         if (customerPurchase.length === 0) {
             return res.status(404).send({ error: "No tienes ninguna compra procesada." });
         }
 
-        res.status(200).send({ shoppingHistory: customerPurchase });
+        let countProducts = [];
+        let sumProduct = 0;
+        for (const details of customerPurchase) {
+            for (const detail of details.detalles_venta) {
+                sumProduct += detail.Cantidad_Producto;
+            }
+            countProducts.push(sumProduct);
+            sumProduct = 0;
+        }
+        
+        res.status(200).send({ shoppingHistory: customerPurchase, countProducts });
     } catch (error) {
         if (error.status === 404) {
             res.status(error.status).send({ error: error.message });
         } else {
-            res.status(500).send({ error: "Error interno del servidor." });
+            res.status(500).send({ error: error.message });
         }
     }
 };
