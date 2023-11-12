@@ -5,7 +5,8 @@ const {
     readProducts,
     readProductId,
     updateProductId,
-    deleteProductId
+    deleteProductId,
+    activateProductId
 } = require('../controllers/product.controller');
 const {
     productSchema,
@@ -32,7 +33,13 @@ router.patch(
     validateMiddleware(updateProductSchema),
     updateProductId
 );
-router.delete('/superAdmin/eliminar/producto/:id', authMiddleware, roleMiddleware('SuperAdmin', 'Eliminiar'), deleteProductId);
+router.patch(
+    '/superAdmin/activar/producto/:id',
+    authMiddleware,
+    roleMiddleware('SuperAdmin', 'Modificar'),
+    activateProductId
+);
+router.delete('/superAdmin/eliminar/producto/:id', authMiddleware, roleMiddleware('SuperAdmin', 'Eliminar'), deleteProductId);
 
 //Rutas (endpoints) para el Admin
 router.post(
