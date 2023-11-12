@@ -37,7 +37,7 @@ const Producto = db.define(`${NAME_PREFIX}_Producto`, {
         allowNull: false
     },
     Imagen_Producto: {
-        type: DataTypes.BLOB,
+        type: DataTypes.BLOB('long'),
         allowNull: true
     },
     Codigo_Barras: {
@@ -145,7 +145,6 @@ Producto.prototype.toJSON = function () {
     delete product.ID_Estado_FK;
     delete product.ID_Categoria_FK;
     delete product.ID_Marca_FK;
-    delete product.createdAt;
     delete product.updatedAt;
 
     return product;
