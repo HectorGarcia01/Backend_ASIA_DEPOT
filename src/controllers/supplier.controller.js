@@ -166,11 +166,40 @@ const deleteSupplierId = async (req, res) => {
     }
 };
 
+/**
+ * Función para activar un proveedor por id
+ * Fecha creación: 23/08/2023
+ * Autor: Hector Armando García González
+ * Referencias:
+ *              Función para buscar proveedor (find_supplier.js),
+ *              Función para buscar estado (find_state.js)
+ */
+
+const activateSupplierId = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const supplier = await findSupplier(id);
+        const stateSupplier = await findState('Activo');
+
+        supplier.ID_Estado_FK = stateSupplier.id;
+        await supplier.save();
+        res.status(200).send({ msg: "Proveedor activado con éxito." });
+    } catch (error) {
+        if (error.status === 404) {
+            res.status(error.status).send({ error: error.message });
+        } else {
+            res.status(500).send({ error: "Error interno del servidor." });
+        }
+    }
+};
+
 //Exportación de controladores para el proveedor
 module.exports = {
     addSupplier,
     readSuppliers,
     readSupplierId,
     updateSupplierId,
-    deleteSupplierId
+    deleteSupplierId,
+    activateSupplierId
 };
