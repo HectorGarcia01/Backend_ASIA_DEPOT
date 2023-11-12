@@ -49,7 +49,7 @@ const Cliente = db.define(`${NAME_PREFIX}_Cliente`, {
         allowNull: false
     },
     Avatar_Cliente: {
-        type: DataTypes.BLOB,
+        type: DataTypes.BLOB('long'),
         allowNull: true
     },
     ID_Municipio_FK: {
@@ -196,7 +196,6 @@ Cliente.prototype.toJSON = function () {
     delete customer.ID_Estado_FK;
     delete customer.ID_Rol_FK;
     delete customer.ID_Municipio_FK;
-    delete customer.createdAt;
     delete customer.updatedAt;
 
     return customer;
