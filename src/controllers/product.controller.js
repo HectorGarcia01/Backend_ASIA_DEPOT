@@ -216,10 +216,39 @@ const deleteProductId = async (req, res) => {
     }
 };
 
+/**
+ * Función para activar un producto por id
+ * Fecha creación: 24/08/2023
+ * Autor: Hector Armando García González
+ * Referencias:
+ *              Función para buscar producto (find_product.js),
+ *              Función para buscar estado (find_state.js),
+ */
+
+const activateProductId = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const product = await findProduct(id);
+        const stateProduct = await findState('Activo');
+
+        product.ID_Estado_FK = stateProduct.id;
+        await product.save();
+        res.status(200).send({ msg: "Producto activado con éxito." });
+    } catch (error) {
+        if (error.status === 404) {
+            res.status(error.status).send({ error: error.message });
+        } else {
+            res.status(500).send({ error: "Error interno del servidor." });
+        }
+    }
+};
+
 module.exports = {
     addProduct,
     readProducts,
     readProductId,
     updateProductId,
-    deleteProductId
+    deleteProductId,
+    activateProductId
 };
