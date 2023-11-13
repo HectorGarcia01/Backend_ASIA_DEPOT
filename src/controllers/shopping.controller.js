@@ -403,7 +403,7 @@ const processCustomerSale = async (req, res) => {
 
         const stateSalesInvoice = await findState('Pendiente');
         const orden = `ASDT-${user.id}-${salesInvoice.id}`;
-        salesInvoice.numero_orden = orden;
+        salesInvoice.Numero_Orden = orden;
         salesInvoice.ID_Estado_FK = stateSalesInvoice.id;
         salesInvoice.ID_Metodo_Pago_FK = payment_method.id;
         salesInvoice.ID_Tipo_Envio_FK = shipping_type.id;
