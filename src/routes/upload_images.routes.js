@@ -58,6 +58,8 @@ router.delete('/usuario/eliminar/avatar', authMiddleware, roleMiddleware('User')
 
 //Configuración de rutas (endpoints) para cliente y empleado
 router.get('/usuario/ver/avatar/:id', getUserAvatarId);
+router.get('/superAdmin/ver/avatar/cliente/:id', authMiddleware, roleMiddleware('SuperAdmin', 'Ver'), getUserAvatarId);
+router.get('/admin/ver/avatar/cliente/:id', authMiddleware, roleMiddleware('Admin', 'Ver'), getUserAvatarId);
 router.get('/superAdmin/ver/avatars/:id', authMiddleware, roleMiddleware('SuperAdmin', 'Ver'), getAdminAvatarId);
 
 //Configuración de rutas (endpoints) para el producto
