@@ -575,7 +575,7 @@ const shoppingHistoryId = async (req, res) => {
                     [Sequelize.Op.notIn]: [inactiveStatusShopping.id, carritoStatusShopping.id]
                 }
             },
-            attributes: ['id', 'Total_Factura'],
+            attributes: ['id', 'Numero_Orden', 'Total_Factura', 'createdAt'],
             include: [{
                 model: SalesDetailModel,
                 as: 'detalles_venta',
@@ -585,8 +585,11 @@ const shoppingHistoryId = async (req, res) => {
                     as: 'producto',
                     attributes: ['id', 'Nombre_Producto', 'Descripcion_Producto']
                 }
-            },
-            {
+            }, {
+                model: CustomerModel,
+                as: 'cliente',
+                attributes: ['Nombre_Cliente', 'Apellido_Cliente']
+            }, {
                 model: StateModel,
                 as: 'estado',
                 attributes: ['id', 'Tipo_Estado']
