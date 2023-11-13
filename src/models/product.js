@@ -41,7 +41,7 @@ const Producto = db.define(`${NAME_PREFIX}_Producto`, {
         allowNull: true
     },
     Codigo_Barras: {
-        type: DataTypes.BLOB,
+        type: DataTypes.STRING(200),
         allowNull: true
     },
     Producto_Destacado: {
