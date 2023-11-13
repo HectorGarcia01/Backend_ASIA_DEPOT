@@ -13,6 +13,10 @@ module.exports = [
         ID_Rol_FK: 2,
         ID_Permiso_FK: 3
     },
+    {
+        ID_Rol_FK: 2,
+        ID_Permiso_FK: 4
+    },
     //Para el superAdmin
     {
         ID_Rol_FK: 3,
