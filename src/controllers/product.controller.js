@@ -83,14 +83,14 @@ const addProduct = async (req, res) => {
 
 const readProducts = async (req, res) => {
     try {
-        const { page, pageSize } = req.query;
+        const { page, pageSize, nombre } = req.query;
         const pageValue = req.query.page ? parseInt(page) : 1;
         const pageSizeValue = req.query.pageSize ? parseInt(pageSize) : 8;
         const where = await buildWhereClause(req.query);
 
-        const count = await ProductModel.count();
+        const count = await ProductModel.count({ where: nombre ? where : {} });
         const products = await ProductModel.findAll({
-            where,
+            where: nombre ? where : {},
             include: [{
                 model: StateModel,
                 as: 'estado',
@@ -115,7 +115,7 @@ const readProducts = async (req, res) => {
         const totalPages = Math.ceil(count / pageSizeValue);
         res.status(200).send({ products, currentPage: pageValue, totalPages });
     } catch (error) {
-        res.status(500).send({ error: "Error interno del servidor." });
+        res.status(500).send({ error: error.message });
     }
 };
 
