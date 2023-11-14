@@ -1,16 +1,9 @@
 const Sequelize = require('sequelize');
-const StateModel = require('../models/state');
-const CategoryModel = require('../models/category');
-const BrandProductModel = require('../models/brand_product');
 
 /**
  * Función para construir el objeto where de la consulta
  * Fecha creación: 29/09/2023
  * Autor: Hector Armando García González
- * Referencias:
- *              Modelo Estado (state.js), 
- *              Modelo Categoria (category.js),
- *              Modelo Marca_Producto (brand_product.js),
  */
 
 const buildWhereClause = async (query) => {
