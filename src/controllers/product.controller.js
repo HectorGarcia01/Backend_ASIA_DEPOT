@@ -110,7 +110,7 @@ const readProducts = async (req, res) => {
         });
 
         if (products.length === 0) {
-            return res.status(404).send({ error: "No hay productos registrados." });
+            return res.status(404).send({ error: "No se encontraron productos que coincidan con los criterios de búsqueda.." });
         }
 
         const totalPages = Math.ceil(count / pageSizeValue);
