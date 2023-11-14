@@ -4,6 +4,7 @@ const ProductModel = require('../models/product');
 const EmployeeModel = require('../models/employee');
 const InventoryModel = require('../models/inventory');
 const StateModel = require('../models/state');
+const findState = require('../utils/find_state');
 
 /**
  * Función para ver todas las ventas
@@ -18,17 +19,20 @@ const StateModel = require('../models/state');
 
 const readSalesInvoices = async (req, res) => {
     try {
-        const { query } = req;
+        const { page, pageSize, estado } = req.query;
+        const pageValue = req.query.page ? parseInt(page) : 1;
+        const pageSizeValue = req.query.pageSize ? parseInt(pageSize) : 10;
         const where = {};
 
-        if (query.estado) {
-            const stateSalesInvoice = await findState(query.estado);
+        if (estado) {
+            const stateSalesInvoice = await findState(estado);
             where.ID_Estado_FK = stateSalesInvoice.id
         }
 
+        const count = await SalesInvoiceModel.count();
         const salesInvoice = await SalesInvoiceModel.findAll({
             where,
-            attributes: ['id', 'Numero_Orden', 'Total_Factura'],
+            attributes: ['id', 'Numero_Orden', 'Total_Factura', 'createdAt'],
             include: [{
                 model: EmployeeModel,
                 as: 'empleado',
@@ -37,14 +41,18 @@ const readSalesInvoices = async (req, res) => {
                 model: StateModel,
                 as: 'estado',
                 attributes: ['id', 'Tipo_Estado']
-            }]
+            }],
+            order: [['createdAt', 'DESC']],
+            offset: (pageValue - 1) * pageSizeValue,
+            limit: pageSizeValue
         });
 
         if (salesInvoice.length === 0) {
             return res.status(404).send({ error: "No hay ninguna venta registrada." });
         }
 
-        res.status(200).send({ salesInvoice });
+        const totalPages = Math.ceil(count / pageSizeValue);
+        res.status(200).send({ salesInvoice, currentPage: pageValue, totalPages });
     } catch (error) {
         if (error.status === 404) {
             res.status(error.status).send({ error: error.message });
@@ -70,7 +78,7 @@ const readSalesInvoiceId = async (req, res) => {
         const { id } = req.params;
 
         const salesInvoice = await SalesInvoiceModel.findByPk(id, {
-            attributes: ['id', 'Total_Factura'],
+            attributes: ['id', 'Numero_Orden', 'Total_Factura', 'createdAt'],
             include: [{
                 model: SalesDetailModel,
                 as: 'detalles_venta',
@@ -195,9 +203,9 @@ const changeSalesInvoiceComplete = async (req, res) => {
 
             if (product) {
                 const inventoryEntry = await InventoryModel.create({
-                    tipo_movimiento: 'Venta',
-                    cantidad_movimiento: salesDetail.Cantidad_Producto,
-                    monto_movimiento: salesInvoice.Total_Factura,
+                    Tipo_Movimiento: 'Venta',
+                    Cantidad_Movimiento: salesDetail.Cantidad_Producto,
+                    Monto_Movimiento: salesInvoice.Total_Factura,
                     ID_Empleado_FK: user.id,
                     ID_Producto_FK: product.id,
                 });
