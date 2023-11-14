@@ -8,7 +8,9 @@ const ProductModel = require('../models/product');
  * Fecha creación: 29/09/2023
  * Autor: Hector Armando García González
  * Referencias: 
- *              Modelo Inventario (inventory.js)
+ *              Modelo Inventario (inventory.js),
+ *              Modelo Empleado (employee.js),
+ *              Modelo Producto (product.js)
  */
 
 const readInventories = async (req, res) => {
@@ -30,7 +32,18 @@ const readInventories = async (req, res) => {
             where.Monto_Movimiento = query.Monto_Movimiento;
         }
 
-        const inventories = await InventoryModel.findAll({ where });
+        const inventories = await InventoryModel.findAll({ 
+            where,
+            include: [{
+                model: EmployeeModel,
+                as: 'empleado',
+                attributes: ['id', 'Nombre_Empleado', 'Apellido_Empleado']
+            }, {
+                model: ProductModel,
+                as: 'producto',
+                attributes: ['id', 'Nombre_Producto']
+            }]
+        });
 
         if (inventories.length === 0) {
             return res.status(404).send({ error: "No se encontraron inventarios que coincidan con los criterios de búsqueda." });
