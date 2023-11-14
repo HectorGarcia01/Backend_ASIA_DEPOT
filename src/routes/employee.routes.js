@@ -48,8 +48,7 @@ router.get('/admin/ver/perfil', authMiddleware, roleMiddleware('Admin', 'Ver'), 
 router.patch(
     '/admin/actualizar/perfil', 
     authMiddleware, 
-    roleMiddleware('Admin', 
-    'Modificar'), 
+    roleMiddleware('Admin', 'Modificar'), 
     updateEmployee
 );
 
