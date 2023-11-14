@@ -2,6 +2,7 @@ const SalesInvoiceModel = require('../models/sales_invoice');
 const SalesDetailModel = require('../models/sales_detail');
 const ProductModel = require('../models/product');
 const EmployeeModel = require('../models/employee');
+const CustomerModel = require('../models/customer');
 const InventoryModel = require('../models/inventory');
 const StateModel = require('../models/state');
 const findState = require('../utils/find_state');
@@ -69,7 +70,8 @@ const readSalesInvoices = async (req, res) => {
  * Referencias: 
  *              Modelo Factura_Venta (sales_invoice.js), 
  *              Modelo Detalle_Venta (sales_detail.js),
- *              Modelo Producto (product.js)
+ *              Modelo Producto (product.js),
+ *              Modelo Cliente (customer.js),
  *              Modelo Estado (state.js)
  */
 
@@ -93,6 +95,11 @@ const readSalesInvoiceId = async (req, res) => {
                 model: StateModel,
                 as: 'estado',
                 attributes: ['id', 'Tipo_Estado']
+            }, 
+            {
+                model: CustomerModel,
+                as: 'cliente',
+                attributes: ['Nombre_Cliente', 'Apellido_Cliente']
             }]
         });
 
