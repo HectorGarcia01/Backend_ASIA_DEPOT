@@ -105,7 +105,7 @@ const readSuppliers = async (req, res) => {
         });
 
         if (suppliers.length === 0) {
-            return res.status(404).send({ error: "No existe ningún proveedor registrado." });
+            return res.status(404).send({ error: "No se encontraron proveedores que coincidan con los criterios de búsqueda." });
         }
 
         const totalPages = Math.ceil(count / pageSizeValue);
