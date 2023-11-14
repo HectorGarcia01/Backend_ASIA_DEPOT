@@ -203,6 +203,10 @@ const readCustomers = async (req, res) => {
             limit: pageSizeValue
         });
 
+        if (customers.length === 0) {
+            return res.status(404).send({ error: "No se encontraron clientes que coincidan con los criterios de búsqueda." });
+        }
+
         const totalPages = Math.ceil(count / pageSizeValue);
         res.status(200).send({ customers, currentPage: pageValue, totalPages });
     } catch (error) {
