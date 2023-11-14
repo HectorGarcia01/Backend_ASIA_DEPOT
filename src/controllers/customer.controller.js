@@ -173,6 +173,11 @@ const readCustomers = async (req, res) => {
                     Correo_Cliente: {
                         [Sequelize.Op.like]: `%${nombre}%`
                     }
+                },
+                {
+                    Telefono_Cliente: {
+                        [Sequelize.Op.like]: `%${nombre}%`
+                    }
                 }
             ]
         };
