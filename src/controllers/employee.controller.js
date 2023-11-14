@@ -141,6 +141,11 @@ const readEmployees = async (req, res) => {
                     Correo_Empleado: {
                         [Sequelize.Op.like]: `%${nombre}%`
                     }
+                },
+                {
+                    Telefono_Empleado: {
+                        [Sequelize.Op.like]: `%${nombre}%`
+                    }
                 }
             ];
         }
