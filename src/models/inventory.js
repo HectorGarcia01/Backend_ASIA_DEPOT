@@ -83,5 +83,20 @@ Inventario.belongsTo(Producto, {
     as: 'producto'
 });
 
+/**
+ * Método personalizado para filtrar información
+ * Fecha creación: 26/09/2023
+ * Autor: Hector Armando García González
+ */
+
+Inventario.prototype.toJSON = function () {
+    const inventory = { ...this.get() };
+
+    delete inventory.ID_Empleado_FK;
+    delete inventory.ID_Producto_FK;
+
+    return inventory;
+};
+
 //Exportación del modelo Inventario
 module.exports = Inventario;
