@@ -9,8 +9,7 @@ const ProductModel = require('../models/product');
  * Autor: Hector Armando García González
  * Referencias: 
  *              Modelo Inventario (inventory.js),
- *              Modelo Empleado (employee.js),
- *              Modelo Producto (product.js)
+ *              Modelo Empleado (employee.js)
  */
 
 const readInventories = async (req, res) => {
@@ -38,10 +37,6 @@ const readInventories = async (req, res) => {
                 model: EmployeeModel,
                 as: 'empleado',
                 attributes: ['id', 'Nombre_Empleado', 'Apellido_Empleado']
-            }, {
-                model: ProductModel,
-                as: 'producto',
-                attributes: ['id', 'Nombre_Producto']
             }]
         });
 
