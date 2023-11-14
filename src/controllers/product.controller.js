@@ -31,12 +31,18 @@ const addProduct = async (req, res) => {
             Precio_Compra,
             Descripcion_Producto,
             Cantidad_Stock,
+            Codigo_Barras,
+            Producto_Destacado,
             ID_Categoria_FK,
             ID_Marca_FK,
         } = req.body;
 
         await findCategory(ID_Categoria_FK);
-        await findProductBrand(ID_Marca_FK);
+
+        if (ID_Marca_FK) {
+            await findProductBrand(ID_Marca_FK);
+        }
+        
         const stateProduct = await findState('Activo');
 
         const newProduct = await ProductModel.create({
@@ -45,6 +51,8 @@ const addProduct = async (req, res) => {
             Precio_Compra,
             Descripcion_Producto,
             Cantidad_Stock,
+            Codigo_Barras,
+            Producto_Destacado,
             ID_Estado_FK: stateProduct.id,
             ID_Categoria_FK,
             ID_Marca_FK
@@ -155,6 +163,8 @@ const updateProductId = async (req, res) => {
             'Precio_Venta',
             'Precio_Compra',
             'Descripcion_Producto',
+            'Codigo_Barras',
+            'Producto_Destacado',
             'Cantidad_Stock',
             'ID_Categoria_FK',
             'ID_Marca_FK',

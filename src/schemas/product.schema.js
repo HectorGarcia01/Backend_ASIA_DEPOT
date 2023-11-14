@@ -54,6 +54,23 @@ const productSchema = Joi.object({
         .error((error) => {
             return customError("La cantidad del producto es obligatoria y no debe de ser negativo.");
         }),
+    Codigo_Barras: Joi.string()
+        .min(5)
+        .max(200)
+        .trim()
+        .error((error) => {
+            return customError("Algo salió mal...", {
+                Minimo: "El código de barras debe de tener un mínimo de 5 carácteres.",
+                Maximo: "El código de barras debe de tener un máximo de 200 carácteres.",
+                Valido: "El código de barras no debe de contener carácteres especiales."
+            });
+        }),
+    Producto_Destacado: Joi.bool()
+        .error((error) => {
+            return customError("Algo salió mal...", {
+                Valido: "Debe de ser un valor booleano."
+            });
+        }),
     ID_Categoria_FK: Joi.number()
         .integer()
         .min(1)
@@ -117,6 +134,23 @@ const updateProductSchema = Joi.object({
         .min(1)
         .error((error) => {
             return customError("La cantidad del producto no debe de ser negativa.");
+        }),
+    Codigo_Barras: Joi.string()
+        .min(5)
+        .max(200)
+        .trim()
+        .error((error) => {
+            return customError("Algo salió mal...", {
+                Minimo: "El código de barras debe de tener un mínimo de 5 carácteres.",
+                Maximo: "El código de barras debe de tener un máximo de 200 carácteres.",
+                Valido: "El código de barras no debe de contener carácteres especiales."
+            });
+        }),
+    Producto_Destacado: Joi.bool()
+        .error((error) => {
+            return customError("Algo salió mal...", {
+                Valido: "Debe de ser un valor booleano."
+            });
         }),
     ID_Categoria_FK: Joi.number()
         .integer()

@@ -403,7 +403,7 @@ const processCustomerSale = async (req, res) => {
 
         const stateSalesInvoice = await findState('Pendiente');
         const orden = `ASDT-${user.id}-${salesInvoice.id}`;
-        salesInvoice.numero_orden = orden;
+        salesInvoice.Numero_Orden = orden;
         salesInvoice.ID_Estado_FK = stateSalesInvoice.id;
         salesInvoice.ID_Metodo_Pago_FK = payment_method.id;
         salesInvoice.ID_Tipo_Envio_FK = shipping_type.id;
@@ -575,7 +575,7 @@ const shoppingHistoryId = async (req, res) => {
                     [Sequelize.Op.notIn]: [inactiveStatusShopping.id, carritoStatusShopping.id]
                 }
             },
-            attributes: ['id', 'Total_Factura'],
+            attributes: ['id', 'Numero_Orden', 'Total_Factura', 'createdAt'],
             include: [{
                 model: SalesDetailModel,
                 as: 'detalles_venta',
@@ -585,8 +585,11 @@ const shoppingHistoryId = async (req, res) => {
                     as: 'producto',
                     attributes: ['id', 'Nombre_Producto', 'Descripcion_Producto']
                 }
-            },
-            {
+            }, {
+                model: CustomerModel,
+                as: 'cliente',
+                attributes: ['Nombre_Cliente', 'Apellido_Cliente']
+            }, {
                 model: StateModel,
                 as: 'estado',
                 attributes: ['id', 'Tipo_Estado']

@@ -53,7 +53,6 @@ Marca_Producto.prototype.toJSON = function () {
     const productBrand = { ...this.get() };
 
     delete productBrand.ID_Estado_FK;
-    delete productBrand.createdAt;
     delete productBrand.updatedAt;
 
     return productBrand;

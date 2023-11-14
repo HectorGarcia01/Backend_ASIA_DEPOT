@@ -5,7 +5,8 @@ const {
     readSuppliers,
     readSupplierId,
     updateSupplierId,
-    deleteSupplierId
+    deleteSupplierId,
+    activateSupplierId
 } = require('../controllers/supplier.controller');
 const {
     supplierValidateSchema,
@@ -32,7 +33,13 @@ router.patch(
     validateMiddleware(updateSupplierValidateSchema),
     updateSupplierId
 );
-router.delete('/superAdmin/eliminar/proveedor/:id', authMiddleware, roleMiddleware('SuperAdmin', 'Eliminiar'), deleteSupplierId);
+router.patch(
+    '/superAdmin/activar/proveedor/:id',
+    authMiddleware,
+    roleMiddleware('SuperAdmin', 'Modificar'),
+    activateSupplierId
+);
+router.delete('/superAdmin/eliminar/proveedor/:id', authMiddleware, roleMiddleware('SuperAdmin', 'Eliminar'), deleteSupplierId);
 
 //Configuración de rutas (endpoints) para el Admin
 router.post(

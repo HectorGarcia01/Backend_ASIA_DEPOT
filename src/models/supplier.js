@@ -72,7 +72,6 @@ Proveedor.prototype.toJSON = function () {
     const supplier = { ...this.get() };
 
     delete supplier.ID_Estado_FK;
-    delete supplier.createdAt;
     delete supplier.updatedAt;
 
     return supplier;
