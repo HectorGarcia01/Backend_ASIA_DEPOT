@@ -122,23 +122,47 @@ const updateEmployee = async (req, res) => {
 
 const readEmployees = async (req, res) => {
     try {
+        const { page, pageSize, nombre } = req.query;
+        const pageValue = req.query.page ? parseInt(page) : 1;
+        const pageSizeValue = req.query.pageSize ? parseInt(pageSize) : 5;
         const roleEmployee = await findRole('Admin');
+        const where = {
+            ID_Rol_FK: roleEmployee.id
+        };
+
+        if (nombre) {
+            where[Sequelize.Op.or] = [
+                {
+                    Nombre_Empleado: {
+                        [Sequelize.Op.like]: `%${nombre}%`
+                    }
+                },
+                {
+                    Correo_Empleado: {
+                        [Sequelize.Op.like]: `%${nombre}%`
+                    }
+                }
+            ];
+        }
+
+        const count = await EmployeeModel.count({ where });
         const employees = await EmployeeModel.findAll({
-            where: {
-                ID_Rol_FK: roleEmployee.id
-            },
+            where,
             include: [{
                 model: StateModel,
                 as: 'estado',
                 attributes: ['Tipo_Estado']
-            }]
+            }],
+            offset: (pageValue - 1) * pageSizeValue,
+            limit: pageSizeValue
         });
 
         if (employees.length === 0) {
             return res.status(404).send({ error: "No existe ningún empleado registrado." });
         }
 
-        res.status(200).send({ employees });
+        const totalPages = Math.ceil(count / pageSizeValue);
+        res.status(200).send({ employees, currentPage: pageValue, totalPages });
     } catch (error) {
         res.status(500).send({ error: "Error interno del servidor." });
     }
