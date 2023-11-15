@@ -25,13 +25,13 @@ const productSchema = Joi.object({
             });
         }),
     Precio_Venta: Joi.number()
-        .min(1)
+        .min(0)
         .required()
         .error((error) => {
             return customError("El precio de venta del producto es obligatorio y no debe de ser negativo.");
         }),
     Precio_Compra: Joi.number()
-        .min(1)
+        .min(0)
         .error((error) => {
             return customError("El precio de compra del producto no debe de ser negativo.");
         }),
@@ -49,7 +49,7 @@ const productSchema = Joi.object({
         }),
     Cantidad_Stock: Joi.number()
         .integer()
-        .min(1)
+        .min(0)
         .required()
         .error((error) => {
             return customError("La cantidad del producto es obligatoria y no debe de ser negativo.");
