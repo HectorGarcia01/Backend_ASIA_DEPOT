@@ -2,6 +2,79 @@ const Sequelize = require('sequelize');
 const InventoryModel = require('../models/inventory');
 const EmployeeModel = require('../models/employee');
 const ProductModel = require('../models/product');
+const findState = require('../utils/find_state');
+const {
+    findCategory,
+    findProductBrand
+} = require('../utils/find_product');
+
+/**
+ * Función para registrar un nuevo producto (ajuste)
+ * Fecha creación: 29/09/2023
+ * Autor: Hector Armando García González
+ * Referencias: 
+ *              Función para buscar estado (find_state.js),
+ *              Función para buscar categoría (find_product.js),
+ *              Función para buscar marca de producto (find_product.js),
+ *              Modelo Producto (product.js), 
+ *              Modelo Estado (state.js),
+ */
+
+const addProductAjustInventory = async (req, res) => {
+    try {
+        const { user } = req;
+        const {
+            Nombre_Producto,
+            Precio_Venta,
+            Precio_Compra,
+            Descripcion_Producto,
+            Cantidad_Stock,
+            Codigo_Barras,
+            Producto_Destacado,
+            ID_Categoria_FK,
+            ID_Marca_FK,
+        } = req.body;
+
+        await findCategory(ID_Categoria_FK);
+
+        if (ID_Marca_FK) {
+            await findProductBrand(ID_Marca_FK);
+        }
+
+        const stateProduct = await findState('Activo');
+
+        const newProduct = await ProductModel.create({
+            Nombre_Producto,
+            Precio_Venta,
+            Precio_Compra,
+            Descripcion_Producto,
+            Cantidad_Stock,
+            Codigo_Barras,
+            Producto_Destacado,
+            ID_Estado_FK: stateProduct.id,
+            ID_Categoria_FK,
+            ID_Marca_FK
+        });
+
+        await InventoryModel.create({
+            Tipo_Movimiento: 'Ajuste',
+            Cantidad_Movimiento: newProduct.Cantidad_Stock,
+            Monto_Movimiento: (newProduct.Cantidad_Stock * newProduct.Precio_Compra),
+            ID_Empleado_FK: user.id,
+            ID_Producto_FK: newProduct.id,
+        });
+
+        res.status(201).send({ msg: "Se ha registrado un nuevo producto." })
+    } catch (error) {
+        if (error instanceof Sequelize.UniqueConstraintError) {
+            res.status(400).send({ error: "¡El producto ya existe!" });
+        } else if (error.status === 404) {
+            res.status(error.status).send({ error: error.message });
+        } else {
+            res.status(500).send({ error: error.message });
+        }
+    }
+};
 
 /**
  * Función para ver todo el inventario
@@ -100,6 +173,7 @@ const readInventoryId = async (req, res) => {
 };
 
 module.exports = {
+    addProductAjustInventory,
     readInventories,
     readInventoryId
 }
