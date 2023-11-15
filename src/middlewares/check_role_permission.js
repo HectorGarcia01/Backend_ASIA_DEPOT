@@ -6,6 +6,10 @@ const RolePermissionModel = require('../models/role_permission');
  * Middleware de validación de rol y permisos
  * Fecha creación: 16/08/2023
  * Autor: Hector Armando García González
+ * Referencias:
+ *              Modelo Rol (role.js),
+ *              Modelo Permisos (permission.js),
+ *              Modelo Rol_Permiso (role_permission.js)
  */
 
 const checkRolePermission = ( roleName, permissionName ) => async (req, res, next) => {
