@@ -21,6 +21,7 @@ const salesInvoiceRoutes = require('./routes/sales_invoice.routes');
 const purchaseInvoiceRoutes = require('./routes/purchase_invoice.routes');
 const productReviewRoutes = require('./routes/product_review.routes');
 const favoriteProductRoutes = require('./routes/favorite_product.routes');
+const KPIRoutes = require('./routes/kpi.routes');
 const nonexistentRoutes = require('./routes/nonexistent.routes');
 const captchaRoutes = require('./routes/recaptcha.routes');
 
@@ -70,6 +71,7 @@ app.use(salesInvoiceRoutes);
 app.use(purchaseInvoiceRoutes);
 app.use(productReviewRoutes);
 app.use(favoriteProductRoutes);
+app.use(KPIRoutes);
 app.use(captchaRoutes);
 app.use(nonexistentRoutes);
 
