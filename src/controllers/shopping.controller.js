@@ -498,7 +498,11 @@ const cancelCustomerSaleId = async (req, res) => {
 const shoppingHistory = async (req, res) => {
     try {
         const { user } = req;
+        const { page, pageSize, estado } = req.query;
+        const pageValue = req.query.page ? parseInt(page) : 1;
+        const pageSizeValue = req.query.pageSize ? parseInt(pageSize) : 10;
 
+        const count = await SalesInvoiceModel.count();
         const inactiveStatusShopping = await findState('Inactivo');
         const carritoStatusShopping = await findState('Carrito');
         const customerPurchase = await SalesInvoiceModel.findAll({
@@ -521,7 +525,10 @@ const shoppingHistory = async (req, res) => {
                 model: StateModel,
                 as: 'estado',
                 attributes: ['id', 'Tipo_Estado']
-            }]
+            }],
+            order: [['createdAt', 'DESC']],
+            offset: (pageValue - 1) * pageSizeValue,
+            limit: pageSizeValue
         });
 
         if (customerPurchase.length === 0) {
@@ -537,8 +544,9 @@ const shoppingHistory = async (req, res) => {
             countProducts.push(sumProduct);
             sumProduct = 0;
         }
-        
-        res.status(200).send({ shoppingHistory: customerPurchase, countProducts });
+
+        const totalPages = Math.ceil(count / pageSizeValue);
+        res.status(200).send({ shoppingHistory: customerPurchase, countProducts, currentPage: pageValue, totalPages });
     } catch (error) {
         if (error.status === 404) {
             res.status(error.status).send({ error: error.message });
