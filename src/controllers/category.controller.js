@@ -75,17 +75,36 @@ const readCategories = async (req, res) => {
 
 const categoryPagination = async (req, res) => {
     try {
-        const { page, pageSize } = req.query;
+        const { page, pageSize, nombre } = req.query;
         const pageValue = req.query.page ? parseInt(page) : 1;
         const pageSizeValue = req.query.pageSize ? parseInt(pageSize) : 6;
 
-        const count = await CategoryModel.count();
+        const where = {
+            [Sequelize.Op.or]: [
+                {
+                    Nombre_Categoria: {
+                        [Sequelize.Op.like]: `%${nombre}%`
+                    }
+                }
+            ]
+        };
+
+        if (!nombre) {
+            delete where[Sequelize.Op.or];
+        }
+
+        const count = await CategoryModel.count({
+            where: nombre ? where : {}
+        });
+
         const categories = await CategoryModel.findAll({
+            where: nombre ? where : {},
             include: [{
                 model: StateModel,
                 as: 'estado',
                 attributes: ['id', 'Tipo_Estado']
             }],
+            order: [['Nombre_Categoria', 'ASC']],
             offset: (pageValue - 1) * pageSizeValue,
             limit: pageSizeValue
         });
@@ -192,11 +211,39 @@ const deleteCategoryId = async (req, res) => {
     }
 };
 
+/**
+ * Función para activar una categoría por id
+ * Fecha creación: 24/08/2023
+ * Autor: Hector Armando García González
+ * Referencias:
+ *              Función para buscar categoría (find_product.js)
+ *              Función para buscar estado (find_state.js)
+ */
+
+const activateCategoryId = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const category = await findCategory(id);
+        const stateCategory = await findState('Activo');
+
+        category.ID_Estado_FK = stateCategory.id;
+        await category.save();
+        res.status(200).send({ msg: "Categoría activada con éxito." });
+    } catch (error) {
+        if (error.status === 404) {
+            res.status(error.status).send({ error: error.message });
+        } else {
+            res.status(500).send({ error: "Error interno del servidor." });
+        }
+    }
+};
+
 module.exports = {
     addCategory,
     readCategories,
     categoryPagination,
     readCategoryId,
     updateCategoryId,
-    deleteCategoryId
+    deleteCategoryId,
+    activateCategoryId
 };
