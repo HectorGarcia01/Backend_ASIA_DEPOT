@@ -3,6 +3,7 @@ const db = require('../database/db_connection');
 const { NAME_PREFIX } = require('../config/config');
 const Empleado = require('../models/employee');
 const Proveedor = require('../models/supplier');
+const Estado = require('../models/employee');
 
 /**
  * Creación del modelo Factura_Compra
@@ -33,6 +34,14 @@ const Factura_Compra = db.define(`${NAME_PREFIX}_Factura_Compra`, {
             model: `${NAME_PREFIX}_Proveedors`,
             key: 'id'
         }
+    },
+    ID_Estado_FK: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+            model: `${NAME_PREFIX}_Estados`,
+            key: 'id'
+        }
     }
 });
 
@@ -43,7 +52,7 @@ const Factura_Compra = db.define(`${NAME_PREFIX}_Factura_Compra`, {
  * Referencia:
  *              Modelo Empleado (employee.js) -> uno
  *              Modelo Factura_Compra (purchase_invoice.js)  -> muchos
- */
+ */ 
 
 Empleado.hasMany(Factura_Compra, {
     foreignKey: 'ID_Empleado_FK',
@@ -72,6 +81,24 @@ Proveedor.hasMany(Factura_Compra, {
 Factura_Compra.belongsTo(Proveedor, {
     foreignKey: 'ID_Proveedor_FK',
     as: 'proveedor'
+});
+
+/**
+ * Configurando la relación de uno a uno
+ * Fecha creación: 29/09/2023
+ * Autor: Hector Armando García González
+ * Referencia:
+ *              Modelo Factura_Compra (purchase_invoice.js) -> uno
+ *              Modelo Estado (state.js)  -> uno
+ */
+
+Estado.hasOne(Factura_Compra, {
+    foreignKey: 'ID_Estado_FK'
+});
+
+Factura_Compra.belongsTo(Estado, {
+    foreignKey: 'ID_Estado_FK',
+    as: 'estado'
 });
 
 //Exportación del modelo Factura_Compra
