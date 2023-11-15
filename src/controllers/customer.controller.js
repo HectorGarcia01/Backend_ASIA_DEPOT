@@ -159,23 +159,61 @@ const updateCustomer = async (req, res) => {
 
 const readCustomers = async (req, res) => {
     try {
+        const { page, pageSize, nombre } = req.query;
+        const pageValue = req.query.page ? parseInt(page) : 1;
+        const pageSizeValue = req.query.pageSize ? parseInt(pageSize) : 5;
+        const where = {
+            [Sequelize.Op.or]: [
+                {
+                    Nombre_Cliente: {
+                        [Sequelize.Op.like]: `%${nombre}%`
+                    }
+                },
+                {
+                    Correo_Cliente: {
+                        [Sequelize.Op.like]: `%${nombre}%`
+                    }
+                },
+                {
+                    Telefono_Cliente: {
+                        [Sequelize.Op.like]: `%${nombre}%`
+                    }
+                }
+            ]
+        };
+
+        if (!nombre) {
+            delete where[Sequelize.Op.or];
+        }
+
+        const count = await CustomerModel.count({
+            where: nombre ? where : {}
+        });
+
         const customers = await CustomerModel.findAll({
-            include: [{
-                model: StateModel,
-                as: 'estado',
-                attributes: ['Tipo_Estado']
-            }]
+            where: nombre ? where : {},
+            include: [
+                {
+                    model: StateModel,
+                    as: 'estado',
+                    attributes: ['Tipo_Estado']
+                }
+            ],
+            offset: (pageValue - 1) * pageSizeValue,
+            limit: pageSizeValue
         });
 
         if (customers.length === 0) {
-            return res.status(404).send({ error: "No existe ningún cliente registrado." });
+            return res.status(404).send({ error: "No se encontraron clientes que coincidan con los criterios de búsqueda." });
         }
 
-        res.status(200).send({ customers });
+        const totalPages = Math.ceil(count / pageSizeValue);
+        res.status(200).send({ customers, currentPage: pageValue, totalPages });
     } catch (error) {
-        res.status(500).send({ error: "Error interno del servidor." });
+        res.status(500).send({ error: error.message });
     }
 };
+
 
 /**
  * Función para ver un cliente por ID

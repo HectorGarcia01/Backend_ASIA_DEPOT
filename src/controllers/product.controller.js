@@ -10,6 +10,7 @@ const StateModel = require('../models/state');
 const CategoryModel = require('../models/category');
 const BrandProductModel = require('../models/brand_product');
 const buildWhereClause = require('../utils/build_where_clause');
+const filterProductWhere = require('../utils/filter_product_where');
 
 /**
  * Función para registrar un nuevo producto
@@ -71,7 +72,7 @@ const addProduct = async (req, res) => {
 };
 
 /**
- * Función para ver todos los productos
+ * Función para ver todos los productos con filtros
  * Fecha creación: 24/08/2023
  * Autor: Hector Armando García González
  * Referencias:
@@ -83,12 +84,61 @@ const addProduct = async (req, res) => {
 
 const readProducts = async (req, res) => {
     try {
-        const { page, pageSize } = req.query;
+        const { page, pageSize, nombre } = req.query;
         const pageValue = req.query.page ? parseInt(page) : 1;
         const pageSizeValue = req.query.pageSize ? parseInt(pageSize) : 8;
         const where = await buildWhereClause(req.query);
 
-        const count = await ProductModel.count();
+        const count = await ProductModel.count({ where: nombre ? where : {} });
+        const products = await ProductModel.findAll({
+            where: nombre ? where : {},
+            include: [{
+                model: StateModel,
+                as: 'estado',
+                attributes: ['id', 'Tipo_Estado']
+            }, {
+                model: CategoryModel,
+                as: 'categoria',
+                attributes: ['id', 'Nombre_Categoria']
+            }, {
+                model: BrandProductModel,
+                as: 'marca',
+                attributes: ['id', 'Nombre_Marca']
+            }],
+            offset: (pageValue - 1) * pageSizeValue,
+            limit: pageSizeValue
+        });
+
+        if (products.length === 0) {
+            return res.status(404).send({ error: "No se encontraron productos que coincidan con los criterios de búsqueda.." });
+        }
+
+        const totalPages = Math.ceil(count / pageSizeValue);
+        res.status(200).send({ products, currentPage: pageValue, totalPages });
+    } catch (error) {
+        res.status(500).send({ error: error.message });
+    }
+};
+
+/**
+ * Función para ver todos los productos por categoría
+ * Fecha creación: 24/08/2023
+ * Autor: Hector Armando García González
+ * Referencias:
+ *              Modelo Producto (product.js), 
+ *              Modelo Estado (state.js),
+ *              Modelo Categoría (category.js),
+ *              Modelo Marca_Producto (brand_product.js)
+ */
+
+const readProductsCategory = async (req, res) => {
+    try {
+        const { page, pageSize } = req.query;
+        const pageValue = req.query.page ? parseInt(page) : 1;
+        const pageSizeValue = req.query.pageSize ? parseInt(pageSize) : 8;
+        const where = await filterProductWhere(req.query);
+
+        const count = await ProductModel.count({ where });
         const products = await ProductModel.findAll({
             where,
             include: [{
@@ -115,7 +165,7 @@ const readProducts = async (req, res) => {
         const totalPages = Math.ceil(count / pageSizeValue);
         res.status(200).send({ products, currentPage: pageValue, totalPages });
     } catch (error) {
-        res.status(500).send({ error: "Error interno del servidor." });
+        res.status(500).send({ error: error.message });
     }
 };
 
@@ -257,6 +307,7 @@ const activateProductId = async (req, res) => {
 module.exports = {
     addProduct,
     readProducts,
+    readProductsCategory,
     readProductId,
     updateProductId,
     deleteProductId,

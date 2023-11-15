@@ -8,35 +8,56 @@ const ProductModel = require('../models/product');
  * Fecha creación: 29/09/2023
  * Autor: Hector Armando García González
  * Referencias: 
- *              Modelo Inventario (inventory.js)
+ *              Modelo Inventario (inventory.js),
+ *              Modelo Empleado (employee.js)
  */
 
 const readInventories = async (req, res) => {
     try {
-        const { query } = req;
-        const where = {};
+        const { page, pageSize, nombre } = req.query;
+        const pageValue = req.query.page ? parseInt(page) : 1;
+        const pageSizeValue = req.query.pageSize ? parseInt(pageSize) : 10;
+        const where = {
+            [Sequelize.Op.or]: [
+                {
+                    Tipo_Movimiento: {
+                        [Sequelize.Op.like]: `%${nombre}%`
+                    }
+                },
+                {
+                    Cantidad_Movimiento: nombre 
+                },
+                {
+                    Monto_Movimiento: nombre 
+                }
+            ]
+        };
 
-        if (query.Tipo_Movimiento) {
-            where.Tipo_Movimiento = {
-                [Sequelize.Op.like]: `%${query.Tipo_Movimiento}%`
-            };
+        if (!nombre) {
+            delete where[Sequelize.Op.or];
         }
 
-        if (query.Cantidad_Movimiento) {
-            where.Cantidad_Movimiento = query.Cantidad_Movimiento;
-        }
+        const count = await InventoryModel.count({
+            where: nombre ? where : {}
+        });
 
-        if (query.Monto_Movimiento) {
-            where.Monto_Movimiento = query.Monto_Movimiento;
-        }
-
-        const inventories = await InventoryModel.findAll({ where });
+        const inventories = await InventoryModel.findAll({ 
+            where,
+            include: [{
+                model: EmployeeModel,
+                as: 'empleado',
+                attributes: ['id', 'Nombre_Empleado', 'Apellido_Empleado']
+            }],
+            offset: (pageValue - 1) * pageSizeValue,
+            limit: pageSizeValue
+        });
 
         if (inventories.length === 0) {
             return res.status(404).send({ error: "No se encontraron inventarios que coincidan con los criterios de búsqueda." });
         }
 
-        res.status(200).send({ inventories });
+        const totalPages = Math.ceil(count / pageSizeValue);
+        res.status(200).send({ inventories, currentPage: pageValue, totalPages });
     } catch (error) {
         res.status(500).send({ error: "Error interno del servidor." });
     }

@@ -3,6 +3,7 @@ const FavoriteProductModel = require('../models/favorite_product');
 const ProductModel = require('../models/product');
 const StateModel = require('../models/state');
 const { findProduct } = require('../utils/find_product');
+const findState = require('../utils/find_state');
 
 /**
  * Función para agregar un producto a favoritos
@@ -49,15 +50,20 @@ const addFavoriteProduct = async (req, res) => {
 const readFavoriteProduct = async (req, res) => {
     try {
         const { user } = req;
-        const { page, pageSize } = req.query;
+        const { page, pageSize, name } = req.query;
         const pageValue = req.query.page ? parseInt(page) : 1;
         const pageSizeValue = req.query.pageSize ? parseInt(pageSize) : 6;
+        const where = {};
 
-        const count = await FavoriteProductModel.count();
+        if (name) {
+            where.Nombre_Producto = name;
+        }
+
+        where.ID_Cliente_FK = user.id;
+
+        const count = await FavoriteProductModel.count({ where });
         const favoriteProduct = await FavoriteProductModel.findAll({
-            where: { 
-                ID_Cliente_FK: user.id 
-            },
+            where,
             attributes: ['id'],
             include: [{
                 model: ProductModel,

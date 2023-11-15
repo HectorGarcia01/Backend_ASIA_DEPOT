@@ -141,7 +141,6 @@ Producto.prototype.toJSON = function () {
     const product = { ...this.get() };
 
     delete product.Imagen_Producto;
-    delete product.Codigo_Barras;
     delete product.ID_Estado_FK;
     delete product.ID_Categoria_FK;
     delete product.ID_Marca_FK;

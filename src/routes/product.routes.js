@@ -3,6 +3,7 @@ const router = new express.Router();
 const {
     addProduct,
     readProducts,
+    readProductsCategory,
     readProductId,
     updateProductId,
     deleteProductId,
@@ -61,6 +62,7 @@ router.patch(
 
 //Rutas (endpoints) para el User
 router.get('/usuario/ver/productos', readProducts);
+router.get('/usuario/ver/productos/categoria', readProductsCategory);
 router.get('/usuario/ver/producto/:id', readProductId);
 
 //Exportación de todas las rutas de categoría

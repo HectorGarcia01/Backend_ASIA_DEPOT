@@ -56,10 +56,10 @@ const addEmployee = async (req, res) => {
         await createToken(roleEmployee.Nombre_Rol, token, stateToken.id, newEmployee.id);
         await accountActivationEmail(newEmployee.Correo_Empleado, token);
         
-        res.status(201).send({ msg: "Empleado creado con éxito." });
+        res.status(201).send({ msg: "Administrador creado con éxito." });
     } catch (error) {
         if (error instanceof Sequelize.UniqueConstraintError) {
-            res.status(400).send({ error: "¡El empleado ya existe!" });
+            res.status(400).send({ error: "¡El administrador ya existe!" });
         } else if (error.status === 404) {
             res.status(error.status).send({ error: error.message });
         } else {
@@ -122,23 +122,52 @@ const updateEmployee = async (req, res) => {
 
 const readEmployees = async (req, res) => {
     try {
+        const { page, pageSize, nombre } = req.query;
+        const pageValue = req.query.page ? parseInt(page) : 1;
+        const pageSizeValue = req.query.pageSize ? parseInt(pageSize) : 5;
         const roleEmployee = await findRole('Admin');
+        const where = {
+            ID_Rol_FK: roleEmployee.id
+        };
+
+        if (nombre) {
+            where[Sequelize.Op.or] = [
+                {
+                    Nombre_Empleado: {
+                        [Sequelize.Op.like]: `%${nombre}%`
+                    }
+                },
+                {
+                    Correo_Empleado: {
+                        [Sequelize.Op.like]: `%${nombre}%`
+                    }
+                },
+                {
+                    Telefono_Empleado: {
+                        [Sequelize.Op.like]: `%${nombre}%`
+                    }
+                }
+            ];
+        }
+
+        const count = await EmployeeModel.count({ where });
         const employees = await EmployeeModel.findAll({
-            where: {
-                ID_Rol_FK: roleEmployee.id
-            },
+            where,
             include: [{
                 model: StateModel,
                 as: 'estado',
                 attributes: ['Tipo_Estado']
-            }]
+            }],
+            offset: (pageValue - 1) * pageSizeValue,
+            limit: pageSizeValue
         });
 
         if (employees.length === 0) {
-            return res.status(404).send({ error: "No existe ningún empleado registrado." });
+            return res.status(404).send({ error: "No se encontraron administradores que coincidan con los criterios de búsqueda." });
         }
 
-        res.status(200).send({ employees });
+        const totalPages = Math.ceil(count / pageSizeValue);
+        res.status(200).send({ employees, currentPage: pageValue, totalPages });
     } catch (error) {
         res.status(500).send({ error: "Error interno del servidor." });
     }
@@ -164,7 +193,7 @@ const readEmployeeId = async (req, res) => {
         });
 
         if (!employee) {
-            return res.status(404).send({ error: "Empleado no encontrado." });
+            return res.status(404).send({ error: "Administrador no encontrado." });
         }
 
         res.status(200).send({ employee });
@@ -188,14 +217,14 @@ const deleteEmployeeId = async (req, res) => {
         const employee = await EmployeeModel.findByPk(id);
 
         if (!employee) {
-            return res.status(404).send({ error: "Empleado no encontrado." });
+            return res.status(404).send({ error: "Administrador no encontrado." });
         }
 
         const stateEmployee = await findState('Inactivo');
 
         employee.ID_Estado_FK = stateEmployee.id;
         await employee.save();
-        res.status(200).send({ msg: "Empleado eliminado con éxito." });
+        res.status(200).send({ msg: "Administrador eliminado con éxito." });
     } catch (error) {
         if (error.status === 404) {
             res.status(error.status).send({ error: error.message });
@@ -220,14 +249,14 @@ const activateEmployeeId = async (req, res) => {
         const employee = await EmployeeModel.findByPk(id);
 
         if (!employee) {
-            return res.status(404).send({ error: "Empleado no encontrado." });
+            return res.status(404).send({ error: "Administrador no encontrado." });
         }
 
         const stateEmployee = await findState('Activo');
 
         employee.ID_Estado_FK = stateEmployee.id;
         await employee.save();
-        res.status(200).send({ msg: "Empleado activado con éxito." });
+        res.status(200).send({ msg: "Administrador activado con éxito." });
     } catch (error) {
         if (error.status === 404) {
             res.status(error.status).send({ error: error.message });
