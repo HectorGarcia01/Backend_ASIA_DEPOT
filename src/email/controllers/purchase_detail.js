@@ -1,4 +1,4 @@
-const transporter = require('./email');
+// const transporter = require('./email');
 const ejs = require('ejs');
 const path = require('path');
 
@@ -25,7 +25,7 @@ const sendPurchaseDetail = async (destination, orden, purchaseDetail, total) => 
             html
         };
 
-        const info = await transporter.sendMail(mailOptions);
+        // const info = await transporter.sendMail(mailOptions);
     } catch (error) {
         throw new Error(error);
     }

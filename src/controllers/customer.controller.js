@@ -9,7 +9,7 @@ const createToken = require('../utils/create_token');
 const CustomerModel = require('../models/customer');
 const EmployeeModel = require('../models/employee');
 const StateModel = require('../models/state');
-const { accountActivationEmail } = require('../email/controllers/activate_account');
+// const { accountActivationEmail } = require('../email/controllers/activate_account');
 
 /**
  * Función para crear un nuevo cliente
@@ -68,7 +68,7 @@ const addCustomer = async (req, res) => {
         const stateToken = await findState('Activo');
         const token = await newCustomer.generateAuthToken(newCustomer.id, roleCustomer.Nombre_Rol);
         await createToken(roleCustomer.Nombre_Rol, token, stateToken.id, newCustomer.id);
-        await accountActivationEmail(newCustomer.Correo_Cliente, token);
+        // await accountActivationEmail(newCustomer.Correo_Cliente, token);
 
         res.status(201).send({ msg: "Se ha registrado con éxito." });
     } catch (error) {

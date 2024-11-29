@@ -31,7 +31,7 @@ const nonexistentRoutes = require('./routes/nonexistent.routes');
 
 const app = express();
 
-const sslPath = path.join(__dirname, 'utils');
+// const sslPath = path.join(__dirname, 'utils');
 // app.set('view engine', 'ejs');
 // app.set('views', path.join(__dirname, 'email/views'));
 

@@ -6,8 +6,8 @@ const findState = require('../utils/find_state');
 const findRole = require('../utils/find_role');
 const RoleModel = require('../models/role');
 const TokenModel = require('../models/token');
-const welcomeEmail = require('../email/controllers/welcome');
-const { accountActivationEmail } = require('../email/controllers/activate_account')
+// const welcomeEmail = require('../email/controllers/welcome');
+// const { accountActivationEmail } = require('../email/controllers/activate_account')
 
 /**
  * Función para activar una cuenta de usuario (cliente/empleado)
@@ -77,11 +77,11 @@ const activateUserAccount = async (req, res) => {
         await user.save();
         await validateToken.save();
 
-        if (user.Correo_Cliente) {
-            await welcomeEmail(user.Correo_Cliente);
-        } else if (user.Correo_Empleado) {
-            await welcomeEmail(user.Correo_Empleado);
-        }
+        // if (user.Correo_Cliente) {
+        //     await welcomeEmail(user.Correo_Cliente);
+        // } else if (user.Correo_Empleado) {
+        //     await welcomeEmail(user.Correo_Empleado);
+        // }
 
         res.status(200).send({ msg: "Tu cuenta ha sido activada, ya puedes iniciar sesión." });
     } catch (error) {

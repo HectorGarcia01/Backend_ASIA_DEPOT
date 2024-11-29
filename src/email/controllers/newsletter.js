@@ -1,4 +1,4 @@
-const transporter = require('./email');
+// const transporter = require('./email');
 const fs = require('fs');
 const path = require('path');
 
@@ -22,7 +22,7 @@ const newsletterEmail = async (destination) => {
             html
         };
 
-        const info = await transporter.sendMail(mailOptions);
+        // const info = await transporter.sendMail(mailOptions);
     } catch (error) {
         throw new Error(error);
     }
@@ -48,7 +48,7 @@ const unsubscriptionNewsletterEmail = async (destination) => {
             html
         };
 
-        const info = await transporter.sendMail(mailOptions);
+        // const info = await transporter.sendMail(mailOptions);
     } catch (error) {
         throw new Error(error);
     }

@@ -1,10 +1,10 @@
 const Sequelize = require('sequelize');
 const CustomerModel = require('../models/customer');
 const NewsletterModel = require('../models/newsletter');
-const { 
-    newsletterEmail, 
-    unsubscriptionNewsletterEmail 
-} = require('../email/controllers/newsletter');
+// const { 
+//     newsletterEmail, 
+//     unsubscriptionNewsletterEmail 
+// } = require('../email/controllers/newsletter');
 
 /**
  * Función para suscribirse al newsletter
@@ -26,7 +26,7 @@ const subscriptionNewsletter = async (req, res) => {
         }
 
         await NewsletterModel.create({ ID_Cliente_FK: user.id });
-        await newsletterEmail(user.Correo_Cliente);
+        // await newsletterEmail(user.Correo_Cliente);
         res.status(200).send({ msg: "¡Gracias por suscribirte a nuestro newsletter! Ahora estarás al tanto de nuestras últimas noticias y ofertas especiales." });
     } catch (error) {
         if (error instanceof Sequelize.UniqueConstraintError) {
@@ -56,7 +56,7 @@ const unsubscriptionNewsletter = async (req, res) => {
             return res.status(404).send({ error: "Lo siento, no estás suscrito al newsletter." });
         }
 
-        await unsubscriptionNewsletterEmail(user.Correo_Cliente);
+        // await unsubscriptionNewsletterEmail(user.Correo_Cliente);
         res.status(200).send({ msg: "Tu solicitud de anulación de suscripción se ha completado con éxito." });
     } catch (error) {
         res.status(500).send({ error: error.message });

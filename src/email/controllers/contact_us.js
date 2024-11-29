@@ -1,4 +1,4 @@
-const transporter = require('./email');
+// const transporter = require('./email');
 
 /**
  * Función para enviar un correo de contáctanos
@@ -19,7 +19,7 @@ const contactUsEmail = async (customer, email, subject, message) => {
             html
         };
 
-        const info = await transporter.sendMail(mailOptions);
+        // const info = await transporter.sendMail(mailOptions);
     } catch (error) {
         throw new Error(error);
     }

@@ -5,7 +5,7 @@ const createToken = require('../utils/create_token');
 const EmployeeModel = require('../models/employee');
 const CustomerModel = require('../models/customer');
 const StateModel = require('../models/state');
-const { accountActivationEmail } = require('../email/controllers/activate_account');
+// const { accountActivationEmail } = require('../email/controllers/activate_account');
 
 /**
  * Función para crear un nuevo empleado
@@ -54,7 +54,7 @@ const addEmployee = async (req, res) => {
         const stateToken = await findState('Activo');
         const token = await newEmployee.generateAuthToken(newEmployee.id, roleEmployee.Nombre_Rol);
         await createToken(roleEmployee.Nombre_Rol, token, stateToken.id, newEmployee.id);
-        await accountActivationEmail(newEmployee.Correo_Empleado, token);
+        // await accountActivationEmail(newEmployee.Correo_Empleado, token);
         
         res.status(201).send({ msg: "Administrador creado con éxito." });
     } catch (error) {
