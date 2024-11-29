@@ -5,3 +5,5 @@
 /.prod.env
 
 /.local.env
+
+/.dev.env
