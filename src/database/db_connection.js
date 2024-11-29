@@ -14,8 +14,7 @@ const {
 
 const db = new Sequelize(DATABASE, USERNAME_DB, PASSWORD_DB, {
     host: HOST_DB,
-    dialect: 'mysql',
-    timezone: 'America/Guatemala'
+    dialect: 'mysql'
 });
 
 //Exportación de la configuración de db
