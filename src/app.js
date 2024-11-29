@@ -1,13 +1,17 @@
-const { PORT } = require('./config/config');
 const express = require('express');
-const path = require('path');
+const https = require('https');
+// const path = require('path');
+const fs = require('fs');
+
+const { PORT } = require('./config/config');
 const db = require('./database/db_connection');
 const predefinedData = require('./controllers/seed_data.controller');
+
 const customerRoutes = require('./routes/customer.routes');
 const addressRoutes = require('./routes/address.routes');
 const employeeRoutes = require('./routes/employee.routes');
 const authRoutes = require('./routes/auth.routes');
-const activateAccoutnRoutes = require('./routes/activate_account.routes');
+// const activateAccoutnRoutes = require('./routes/activate_account.routes');
 const contactUsRoutes = require('./routes/contact_us.routes');
 const newsletterRoutes = require('./routes/newsletter.routes');
 const imagesRoutes = require('./routes/upload_images.routes');
@@ -23,12 +27,13 @@ const productReviewRoutes = require('./routes/product_review.routes');
 const favoriteProductRoutes = require('./routes/favorite_product.routes');
 const KPIRoutes = require('./routes/kpi.routes');
 const nonexistentRoutes = require('./routes/nonexistent.routes');
-const captchaRoutes = require('./routes/recaptcha.routes');
+// const captchaRoutes = require('./routes/recaptcha.routes');
 
 const app = express();
 
-app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'email/views'));
+const sslPath = path.join(__dirname, 'utils');
+// app.set('view engine', 'ejs');
+// app.set('views', path.join(__dirname, 'email/views'));
 
 //Conexión a la base de datos
 (async () => {
@@ -57,7 +62,7 @@ app.use(customerRoutes);
 app.use(addressRoutes);
 app.use(employeeRoutes);
 app.use(authRoutes);
-app.use(activateAccoutnRoutes);
+// app.use(activateAccoutnRoutes);
 app.use(contactUsRoutes);
 app.use(newsletterRoutes);
 app.use(imagesRoutes);
@@ -72,10 +77,17 @@ app.use(purchaseInvoiceRoutes);
 app.use(productReviewRoutes);
 app.use(favoriteProductRoutes);
 app.use(KPIRoutes);
-app.use(captchaRoutes);
+// app.use(captchaRoutes);
 app.use(nonexistentRoutes);
 
-//Inicializando el servidor 
+//Inicializando el servidor
+// https.createServer({
+//     cert: fs.readFileSync(path.join(sslPath, '/ssl/server.cer')),
+//     key: fs.readFileSync(path.join(sslPath, '/ssl/server.key'))
+// }, app).listen(PORT, () => {
+//     console.log(`Servidor inicializado en el puerto: ${ PORT }`);
+// });
+
 app.listen(PORT, () => {
     console.log(`Servidor inicializado en el puerto: ${ PORT }`);
 });
